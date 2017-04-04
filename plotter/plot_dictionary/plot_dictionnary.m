@@ -14,6 +14,8 @@ function H = plot_dictionnary(D,X,nb, options)
 %
 %   Copyright (c) 2007 Gabriel Peyre
 
+figure; % Added by H.Kasai for NMFLibrary
+
 if nargin<2
     X = [];
 end
