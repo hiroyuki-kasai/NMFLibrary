@@ -146,7 +146,6 @@ rank = 5;
 
 Now, you can perform optimization solvers, i.e., MU and Hierarchical ALS (HALS), calling [solver functions](#supp_solver), i.e., `nmf_mu()` function and `nmf_als()` function after setting some optimization options. 
 ```Matlab
-%% perform factroization
 % MU
 options.alg = 'mu';
 [w_nmf_mu, infos_nmf_mu] = nmf_mu(V, rank, options);
