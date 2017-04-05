@@ -24,15 +24,15 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
     - Modified MU
     - Acceralated MU
 
-- **ALS** (alternative least squares)
-    - ALS
-    - Hierarchical ALS
-
 - **PGD** (projected gradient descent)
     - PGD
     - Direct PGD
 
-- **ANAL** (alternative non-negative least squares)
+- **ALS** (alternative least squares)
+    - ALS
+    - Hierarchical ALS
+
+- **ANAS** (alternative non-negative least squares)
     - ASGROUP (ANLS with Active Set Method and Column Grouping)
     - ASGIVENS (ANLS with Active Set Method and Givens Updating)
     - BPP (ANLS with Block Principal Pivoting Method)
