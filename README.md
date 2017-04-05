@@ -192,6 +192,9 @@ License
 - The NMFLibrary is **free**, **non-commercial** and **open** source.
 - The code provided iin NMFLibrary should only be used for **academic/research purposes**.
 - Third party files are included.
+    - For ANLS algorithms `nnlsm_activeset.m`, `nnls1_asgivens.m`, `nnlsm_blockpivot.m`, and `normalEqComb.m`.
+    - For PGD algorithm: `nlssubprob.m`.
+    - For dictionaly illustrations: `plot_dictionnary.m`, `rescale.m`, and `getoptions.m`.
 
 
 <br />
