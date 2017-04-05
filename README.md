@@ -22,20 +22,29 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
     - MU
         - Daniel D. Lee and H. Sebastian Seung, "[Algorithms for non-negative matrix factorization](https://papers.nips.cc/paper/1861-algorithms-for-non-negative-matrix-factorization.pdf)," NIPS 2000.
     - Modified MU
+        - C.-J. Lin, "[On the convergence of multiplicative update algorithms for nonnegative matrix factorization](http://ieeexplore.ieee.org/document/4359171/)," IEEE Trans. Neural Netw. vol.18, no.6, pp.1589-1596, 2007. 
     - Acceralated MU
+        - N. Gillis and F. Glineur, "[Accelerated multiplicative updates and hierarchical ALS algorithms for nonnegative matrix factorization](https://arxiv.org/pdf/1107.5194.pdf)," Neural Computation, vol.24, no.4, pp. 1085-1105, 2012. 
 
 - **PGD** (projected gradient descent)
     - PGD
     - Direct PGD
+        - C.-J. Lin, "[Projected gradient methods for nonnegative matrix factorization](https://www.csie.ntu.edu.tw/~cjlin/papers/pgradnmf.pdf)," Neural Computation, vol.19, no.10, pp.2756-2779, 2007.
 
 - **ALS** (alternative least squares)
     - ALS
-    - Hierarchical ALS
+    - Hierarchical ALS (HALS)
+        - Andrzej Cichocki and PHAN Anh-Huy, "Fast local algorithms for large scale nonnegative matrix and tensor factorizations," IEICE Trans. on Fundamentals of Electronics, Communications and Computer Sciences, vol.92, no.3, pp. 708-721, 2009.
+    - Acceralated Hierarchical ALS
+        - N. Gillis and F. Glineur, "[Accelerated multiplicative updates and hierarchical ALS algorithms for nonnegative matrix factorization](https://arxiv.org/pdf/1107.5194.pdf)," Neural Computation, vol.24, no.4, pp. 1085-1105, 2012. 
+
 
 - **ANLS** (alternative non-negative least squares)
     - ASGROUP (ANLS with Active Set Method and Column Grouping)
     - ASGIVENS (ANLS with Active Set Method and Givens Updating)
     - BPP (ANLS with Block Principal Pivoting Method)
+        - Jingu Kim, Yunlong He, and Haesun Park, "Algorithms for nonnegative matrix and tensor factorizations: A unified view based on block coordinate descent framework," Journal of Global Optimization, 58(2), pp. 285-319, 2014.
+        - Jingu Kim and Haesun Park, "Fast nonnegative matrix factorization: An active-set-like method and comparisons," SIAM Journal on Scientific Computing (SISC), 33(6), pp. 3261-3281, 2011.
 
 
 <br />
@@ -46,12 +55,13 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 |Algorithm name in example codes| function | `options.alg` | other `options` |
 |---|---|---|---|
 |MU|`nmf_mu`|`mu`||
+|Modified MU|`nmf_mu`|`mod_mu`||
 |Acceralated MU|`nmf_mu`|`acc_mu`||
+|PGD|`nmf_pgd`|`pgd`||
+|Direct PGD|`nmf_pgd`|`direct_pgd`||
 |ALS|`nmf_als`|`als`||
 |Hierarchical ALS|`nmf_als`|`hals_mu`||
 |Acceralated hierarchical ALS|`nmf_als`|`acc_hals_mu`||
-|PGD|`nmf_pgd`|`pgd`||
-|Direct PGD|`nmf_pgd`|`direct_pgd`||
 |ASGROUP|`nmf_anls`|`anls_asgroup`||
 |ASGIVENS|`nmf_anls`|`anls_asgivens`||
 |BPP|`nmf_anls`|`anls_bpp`||
