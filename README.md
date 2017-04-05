@@ -134,7 +134,8 @@ display_graph('epoch','cost', {'MU', 'HALS'}, {w_nmf_mu, w_nmf_hals}, {infos_nmf
 ```
 
 <br />
-Let take a closer look at the code above bit by bit. The procedure has only **4 steps**!
+
+Let's take a closer look at the code above bit by bit. The procedure has only **4 steps**!
 <br />
 
 **Step 1: Generate data**
