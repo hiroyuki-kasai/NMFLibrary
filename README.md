@@ -18,8 +18,25 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 ## <a name="supp_solver"> List of the algorithms available in NMFLibrary </a>
 
 
-- **MU** (stochastic gradient descent)
-    - Daniel D. Lee and H. Sebastian Seung, "[Algorithms for non-negative matrix factorization](https://papers.nips.cc/paper/1861-algorithms-for-non-negative-matrix-factorization.pdf)," NIPS 2000.
+- **MU** (multiplicative updates)
+    - MU
+        - Daniel D. Lee and H. Sebastian Seung, "[Algorithms for non-negative matrix factorization](https://papers.nips.cc/paper/1861-algorithms-for-non-negative-matrix-factorization.pdf)," NIPS 2000.
+    - Modified MU
+    - Acceralated MU
+
+- **ALS** (alternative least squares)
+    - ALS
+    - Hierarchical ALS
+
+- **PGD** (projected gradient descent)
+    - PGD
+    - Direct PGD
+
+- **ANAL** (alternative non-negative least squares)
+    - ASGROUP (ANLS with Active Set Method and Column Grouping)
+    - ASGIVENS (ANLS with Active Set Method and Givens Updating)
+    - BPP (ANLS with Block Principal Pivoting Method)
+
 
 <br />
 
@@ -29,7 +46,15 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 |Algorithm name in example codes| function | `options.alg` | other `options` |
 |---|---|---|---|
 |MU|`nmf_mu`|`mu`||
-|Acceralated MU|`nmf_mu`|`mu`||
+|Acceralated MU|`nmf_mu`|`acc_mu`||
+|ALS|`nmf_als`|`als`||
+|Hierarchical ALS|`nmf_als`|`hals_mu`||
+|Acceralated hierarchical ALS|`nmf_als`|`acc_hals_mu`||
+|PGD|`nmf_pgd`|`pgd`||
+|Direct PGD|`nmf_pgd`|`direct_pgd`||
+|ASGROUP|`nmf_anls`|`anls_asgroup`||
+|ASGIVENS|`nmf_anls`|`anls_asgivens`||
+|BPP|`nmf_anls`|`anls_bpp`||
 
 
 <br />
@@ -50,7 +75,7 @@ Folders and files
     - Some auxiliary tools for this project.
 
 - solver/
-    - Contains various stochastic optimization algorithms.
+    - Contains various optimization algorithms.
 
                   
 <br />                              
@@ -82,10 +107,8 @@ m = 500;
 n = 100;
 V = rand(m,n);
     
-    
 %% Initialize of rank to be factorized
 rank = 5;
-
 
 %% perform factroization
 % MU
@@ -93,8 +116,7 @@ options.alg = 'mu';
 [w_nmf_mu, infos_nmf_mu] = nmf_mu(V, rank, options);
 % Hierarchical ALS
 options.alg = 'hals';
-[w_nmf_hals, infos_nmf_hals] = nmf_als(V, rank, options);       
-    
+[w_nmf_hals, infos_nmf_hals] = nmf_als(V, rank, options);        
     
  %% plot
 display_graph('epoch','cost', {'MU', 'HALS'}, {w_nmf_mu, w_nmf_hals}, {infos_nmf_mu, infos_nmf_hals});
@@ -117,7 +139,6 @@ V = rand(m,n);
 
 We set the rank value.
 ```Matlab
-%% Initialize of rank to be factorized
 rank = 5;
 ```
 
@@ -155,8 +176,6 @@ More plots
 
 "**demo_face.m**" illustrates the learned basis (dictrionary) in case of [CBCL face datasets](http://cbcl.mit.edu/software-datasets/FaceData2.html).
 
-
-For the calculation of "optimality gap", you need optimal solution `w_opt` beforehand by calling `calc_solution()` function of the problem definition function. 
 ```Matlab
 %% display basis elements obtained with different algorithms
 plot_dictionnary(w_nmf_mu.W, [], [7 7]); 
