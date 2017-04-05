@@ -112,12 +112,12 @@ demo;
 
 The "**demo.m**" file contains below.
 ```Matlab
- %% generate synthetic data of (mxn) matrix       
+%% generate synthetic data non-negative matrix V size of (mxn)
 m = 500;
 n = 100;
 V = rand(m,n);
     
-%% Initialize of rank to be factorized
+%% Initialize rank to be factorized
 rank = 5;
 
 %% perform factroization
@@ -128,13 +128,14 @@ options.alg = 'mu';
 options.alg = 'hals';
 [w_nmf_hals, infos_nmf_hals] = nmf_als(V, rank, options);        
     
- %% plot
+%% plot
 display_graph('epoch','cost', {'MU', 'HALS'}, {w_nmf_mu, w_nmf_hals}, {infos_nmf_mu, infos_nmf_hals});
 
 ```
 
 <br />
 Let take a closer look at the code above bit by bit. The procedure has only **4 steps**!
+<br />
 
 **Step 1: Generate data**
 
@@ -154,7 +155,7 @@ rank = 5;
 
 **Step 3: Perform solver**
 
-Now, you can perform optimization solvers, i.e., MU and Hierarchical ALS (HALS), calling [solver functions](#supp_solver), i.e., `nmf_mu()` function and `nmf_als()` function after setting some optimization options. 
+Now, you can perform optimization solvers, e.g., MU and Hierarchical ALS (HALS), calling [solver functions](#supp_solver), i.e., `nmf_mu()` function and `nmf_als()` function after setting some optimization options. 
 ```Matlab
 % MU
 options.alg = 'mu';
@@ -185,8 +186,16 @@ More plots
 
 "**demo_face.m**" illustrates the learned basis (dictrionary) in case of [CBCL face datasets](http://cbcl.mit.edu/software-datasets/FaceData2.html).
 
+The datasets is first loaded instead of generating synthetic data in **Step 1**.
+
 ```Matlab
-%% display basis elements obtained with different algorithms
+%% load CBCL face datasets
+V = importdata('./data/CBCL_face.mat');
+```
+
+Then, we can display basis elements (W: dictionary) obtained with different algorithms additionally in **Step 4**.
+
+```Matlab
 plot_dictionnary(w_nmf_mu.W, [], [7 7]); 
 plot_dictionnary(w_nmf_hals.W, [], [7 7]); 
 ```
