@@ -32,7 +32,7 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
     - ALS
     - Hierarchical ALS
 
-- **ANAS** (alternative non-negative least squares)
+- **ANLS** (alternative non-negative least squares)
     - ASGROUP (ANLS with Active Set Method and Column Grouping)
     - ASGIVENS (ANLS with Active Set Method and Givens Updating)
     - BPP (ANLS with Block Principal Pivoting Method)
