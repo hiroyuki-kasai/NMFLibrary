@@ -186,10 +186,9 @@ More plots
 
 "**demo_face.m**" illustrates the learned basis (dictrionary) in case of [CBCL face datasets](http://cbcl.mit.edu/software-datasets/FaceData2.html).
 
-The datasets is first loaded instead of generating synthetic data in **Step 1**.
+The dataset is first loaded into V instead of generating synthetic data in **Step 1**.
 
 ```Matlab
-%% load CBCL face datasets
 V = importdata('./data/CBCL_face.mat');
 ```
 
@@ -210,9 +209,9 @@ License
 - The NMFLibrary is **free**, **non-commercial** and **open** source.
 - The code provided iin NMFLibrary should only be used for **academic/research purposes**.
 - Third party files are included.
-    - For ANLS algorithms `nnlsm_activeset.m`, `nnls1_asgivens.m`, `nnlsm_blockpivot.m`, and `normalEqComb.m`.
+    - For ANLS algorithms: `nnlsm_activeset.m`, `nnls1_asgivens.m`, `nnlsm_blockpivot.m`, and `normalEqComb.m`.
     - For PGD algorithm: `nlssubprob.m`.
-    - For dictionaly illustrations: `plot_dictionnary.m`, `rescale.m`, and `getoptions.m`.
+    - For dictionaly visualization: `plot_dictionnary.m`, `rescale.m`, and `getoptions.m`.
 
 
 <br />
