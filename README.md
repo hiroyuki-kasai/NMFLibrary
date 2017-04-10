@@ -72,13 +72,13 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 Folders and files
 ---------
 <pre>
-./ The top directory with README.md
+./                  - The top directory with README.md
 ./run_me_first.m    - The scipt that you need to run first.
 ./demo.m            - Demonstration script to check and understand this package easily. 
 ./demo_face.m       - Demonstration script to check and understand this package easily. 
-|plotter        - Contains plotting tools to show convergence results and various plots.
-|auxiliary      - Some auxiliary tools for this project.
-|solver         - Contains various optimization algorithms.
+|plotter            - Contains plotting tools to show convergence results and various plots.
+|auxiliary          - Some auxiliary tools for this project.
+|solver             - Contains various optimization algorithms.
 </pre>
 
 <br />                              
