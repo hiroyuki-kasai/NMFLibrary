@@ -72,7 +72,7 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 Folders and files
 ---------
 <pre>
-./                      - The top directory
+./                      - Top directory.
 ./README.md             - This readme file.
 ./run_me_first.m        - The scipt that you need to run first.
 ./demo.m                - Demonstration script to check and understand this package easily. 
@@ -208,6 +208,7 @@ License
 - Third party files are included.
     - For ANLS algorithms: `nnlsm_activeset.m`, `nnls1_asgivens.m`, `nnlsm_blockpivot.m`, and `normalEqComb.m`.
     - For PGD algorithm: `nlssubprob.m`.
+    - For [acceleraton sub-routines](https://sites.google.com/site/nicolasgillis/publications) in `[nmf_mu.m](https://github.com/hiroyuki-kasai/NMFLibrary/blob/master/solver/base/nmf_mu.m)` and `[nmf_als.m](https://github.com/hiroyuki-kasai/NMFLibrary/blob/master/solver/base/nmf_als.m)` for MU and HALS.
     - For dictionaly visualization: `plot_dictionnary.m`, `rescale.m`, and `getoptions.m`.
 
 
