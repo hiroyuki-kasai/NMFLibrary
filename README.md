@@ -3,9 +3,9 @@ Matlab library for non-negative matrix factorization (NMF)
 
 Authors: [Hiroyuki Kasai](http://www.kasailab.com/)
 
-Last page update: April 04, 2017
+Last page update: April 17, 2018
 
-Latest library version: 1.0.0 (see Release notes for more info)
+Latest library version: 1.1.0 (see Release notes for more info)
 
 <br />
 
@@ -17,34 +17,40 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 
 ## <a name="supp_solver"> List of the algorithms available in NMFLibrary </a>
 
+- Base NMF
+    - **MU** (multiplicative updates)
+        - MU
+            - D. D. Lee and H. S. Seung, "[Algorithms for non-negative matrix factorization](https://papers.nips.cc/paper/1861-algorithms-for-non-negative-matrix-factorization.pdf)," NIPS 2000.
+        - Modified MU
+            - C.-J. Lin, "[On the convergence of multiplicative update algorithms for nonnegative matrix factorization](http://ieeexplore.ieee.org/document/4359171/)," IEEE Trans. Neural Netw. vol.18, no.6, pp.1589-1596, 2007. 
+        - Acceralated MU
+            - N. Gillis and F. Glineur, "[Accelerated multiplicative updates and hierarchical ALS algorithms for nonnegative matrix factorization](https://arxiv.org/pdf/1107.5194.pdf)," Neural Computation, vol.24, no.4, pp. 1085-1105, 2012. 
 
-- **MU** (multiplicative updates)
-    - MU
-        - D. D. Lee and H. S. Seung, "[Algorithms for non-negative matrix factorization](https://papers.nips.cc/paper/1861-algorithms-for-non-negative-matrix-factorization.pdf)," NIPS 2000.
-    - Modified MU
-        - C.-J. Lin, "[On the convergence of multiplicative update algorithms for nonnegative matrix factorization](http://ieeexplore.ieee.org/document/4359171/)," IEEE Trans. Neural Netw. vol.18, no.6, pp.1589-1596, 2007. 
-    - Acceralated MU
-        - N. Gillis and F. Glineur, "[Accelerated multiplicative updates and hierarchical ALS algorithms for nonnegative matrix factorization](https://arxiv.org/pdf/1107.5194.pdf)," Neural Computation, vol.24, no.4, pp. 1085-1105, 2012. 
+    - **PGD** (projected gradient descent)
+        - PGD
+        - Direct PGD
+            - C.-J. Lin, "[Projected gradient methods for nonnegative matrix factorization](https://www.csie.ntu.edu.tw/~cjlin/papers/pgradnmf.pdf)," Neural Computation, vol.19, no.10, pp.2756-2779, 2007.
 
-- **PGD** (projected gradient descent)
-    - PGD
-    - Direct PGD
-        - C.-J. Lin, "[Projected gradient methods for nonnegative matrix factorization](https://www.csie.ntu.edu.tw/~cjlin/papers/pgradnmf.pdf)," Neural Computation, vol.19, no.10, pp.2756-2779, 2007.
-
-- **ALS** (alternative least squares)
-    - ALS
-    - Hierarchical ALS (HALS)
-        - A. Cichocki and P. Anh-Huy, "[Fast local algorithms for large scale nonnegative matrix and tensor factorizations](http://www.bsp.brain.riken.jp/publications/2009/Cichocki-Phan-IEICE_col.pdf)," IEICE Trans. on Fundamentals of Electronics, Communications and Computer Sciences, vol.92, no.3, pp. 708-721, 2009.
-    - Acceralated Hierarchical ALS
-        - N. Gillis and F. Glineur, "[Accelerated multiplicative updates and hierarchical ALS algorithms for nonnegative matrix factorization](https://arxiv.org/pdf/1107.5194.pdf)," Neural Computation, vol.24, no.4, pp. 1085-1105, 2012. 
+    - **ALS** (alternative least squares)
+        - ALS
+        - Hierarchical ALS (HALS)
+            - A. Cichocki and P. Anh-Huy, "[Fast local algorithms for large scale nonnegative matrix and tensor factorizations](http://www.bsp.brain.riken.jp/publications/2009/Cichocki-Phan-IEICE_col.pdf)," IEICE Trans. on Fundamentals of Electronics, Communications and Computer Sciences, vol.92, no.3, pp. 708-721, 2009.
+        - Acceralated Hierarchical ALS
+            - N. Gillis and F. Glineur, "[Accelerated multiplicative updates and hierarchical ALS algorithms for nonnegative matrix factorization](https://arxiv.org/pdf/1107.5194.pdf)," Neural Computation, vol.24, no.4, pp. 1085-1105, 2012. 
 
 
-- **ANLS** (alternative non-negative least squares)
-    - ASGROUP (ANLS with Active Set Method and Column Grouping)
-    - ASGIVENS (ANLS with Active Set Method and Givens Updating)
-    - BPP (ANLS with Block Principal Pivoting Method)
-        - J. Kim, Y. He, and H. Park, "[Algorithms for nonnegative matrix and tensor factorizations: A unified view based on block coordinate descent framework](https://link.springer.com/article/10.1007/s10898-013-0035-4)," Journal of Global Optimization, 58(2), pp. 285-319, 2014.
-        - J. Kim and H. Park, "[Fast nonnegative matrix factorization: An active-set-like method and comparisons](http://epubs.siam.org/doi/abs/10.1137/110821172)," SIAM Journal on Scientific Computing (SISC), 33(6), pp. 3261-3281, 2011.
+    - **ANLS** (alternative non-negative least squares)
+        - ASGROUP (ANLS with Active Set Method and Column Grouping)
+        - ASGIVENS (ANLS with Active Set Method and Givens Updating)
+        - BPP (ANLS with Block Principal Pivoting Method)
+            - J. Kim, Y. He, and H. Park, "[Algorithms for nonnegative matrix and tensor factorizations: A unified view based on block coordinate descent framework](https://link.springer.com/article/10.1007/s10898-013-0035-4)," Journal of Global Optimization, 58(2), pp. 285-319, 2014.
+            - J. Kim and H. Park, "[Fast nonnegative matrix factorization: An active-set-like method and comparisons](http://epubs.siam.org/doi/abs/10.1137/110821172)," SIAM Journal on Scientific Computing (SISC), 33(6), pp. 3261-3281, 2011.
+
+- Online/stochstic NMF
+
+    - **SMU** (Stochastic multiplicative updates)
+    - **SVRMU** (Stochastic variance reduced multiplicative updates)
+        - H. Kasai, "[Stochastic variance reduced multiplicative update for nonnegative matrix factorization](https://arxiv.org/abs/1710.10781)," IEEE ICASSP2018, 2018.
 
 
 <br />
@@ -65,6 +71,8 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 |ASGROUP|`nmf_anls`|`anls_asgroup`||
 |ASGIVENS|`nmf_anls`|`anls_asgivens`||
 |BPP|`nmf_anls`|`anls_bpp`||
+|SMU|`smu_nmf`|||
+|SVRMU|`svrmu_nmf`|||
 
 
 <br />
@@ -222,7 +230,8 @@ If you have any problems or questions, please contact the author: [Hiroyuki Kasa
 
 Release notes
 --------------
-
+* Version 1.1.0 (Apr. 04, 2017)
+    - Online/stochastic solvers are added.
 * Version 1.0.0 (Apr. 04, 2017)
     - Initial version.
 
