@@ -1,4 +1,4 @@
-function [x, infos] = nmf_als(V, rank, options)
+function [x, infos] = nmf_als(V, rank, in_options)
 % Alternative least squares (ALS) for non-negative matrix factorization (NMF).
 %
 % The problem of interest is defined as
@@ -13,7 +13,7 @@ function [x, infos] = nmf_als(V, rank, options)
 % Inputs:
 %       V           : (m x n) non-negative matrix to factorize
 %       rank        : rank
-%       options     
+%       in_options     
 %           alg     : als: Alternative least squares (ALS)
 %
 %                   : hals: Hierarchical alternative least squares (Hierarchical ALS)
@@ -45,114 +45,74 @@ function [x, infos] = nmf_als(V, rank, options)
 %
 %
 % Created by H.Kasai on Mar. 24, 2017
-% Modified by H.Kasai on Apr. 04, 2017
+% Modified by H.Kasai on Oct. 27, 2017
 
 
+    % set dimensions and samples
     m = size(V, 1);
     n = size(V, 2); 
     
-    if ~isfield(options, 'alg')
-        alg = 'hals';
-    else
-        if ~strcmp(options.alg, 'als') && ~strcmp(options.alg, 'hals') ...
-           && ~strcmp(options.alg, 'acc_hals')
-            fprintf('Invalid algorithm: %s. Therfore, we use hals (i.e., Hierarchical ALS).\n', options.alg);
-            alg = 'hals';
-        else
-            alg = options.alg;
-        end
-    end     
-
-    if ~isfield(options, 'max_epoch')
-        max_epoch = 100;
-    else
-        max_epoch = options.max_epoch;
-    end 
+    % set local options 
+    local_options.alg   = 'hals';
+    local_options.alpha = 2;
+    local_options.delta = 0.1;
     
-    if ~isfield(options, 'f_opt')
-        f_opt = -Inf;
-    else
-        f_opt = options.f_opt;
-    end   
-    
-    if ~isfield(options, 'tol_optgap')
-        tol_optgap = 1.0e-12;
-    else
-        tol_optgap = options.tol_optgap;
-    end       
+    % merge options
+    options = mergeOptions(get_nmf_default_options(), local_options);   
+    options = mergeOptions(options, in_options);    
 
-    if ~isfield(options, 'verbose')
-        verbose = false;
-    else
-        verbose = options.verbose;
+    % set paramters
+    if ~strcmp(options.alg, 'als') && ~strcmp(options.alg, 'hals') ...
+       && ~strcmp(options.alg, 'acc_hals')
+        fprintf('Invalid algorithm: %s. Therfore, we use hals (i.e., Hierarchical ALS).\n', options.alg);
+        options.alg = 'hals';
     end
-
+    
+    if options.verbose > 0
+        fprintf('# ALS (%s): started ...\n', options.alg);           
+    end  
+    
+    % initialize
+    epoch = 0;    
+    grad_calc_count = 0; 
+    R_zero = zeros(m, n);
+    
     if ~isfield(options, 'x_init')
         W = rand(m, rank);
         H = rand(rank, n);
     else
         W = options.x_init.W;
         H = options.x_init.H;
-    end 
-    
-    if strcmp(alg, 'acc_hals')       
-        if ~isfield(options, 'alpha')
-            alpha = 2;
-        else
-            alpha = options.alpha;
-        end 
-        
-        if ~isfield(options, 'delta')
-            delta = 0.1;
-        else
-            delta = options.delta;
-        end          
-    end
-    
-
-    % initialize
-    epoch = 0;    
-    R = zeros(m, n);
-    grad_calc_count = 0; 
-    
-    % store initial info
-    clear infos;
-    infos.epoch = 0;
-    f_val = nmf_cost(V, W, H, R);
-    infos.cost = f_val;
-    optgap = f_val - f_opt;
-    infos.optgap = optgap;   
-    infos.time = 0;
-    infos.grad_calc_count = grad_calc_count;
-    if verbose > 0
-        fprintf('ALS (%s): Epoch = 000, cost = %.16e, optgap = %.4e\n', alg, f_val, optgap); 
     end  
     
-    % select disp_freq 
-    if verbose > 0
-        disp_freq = floor(max_epoch/100);
-        if disp_freq < 1 || max_epoch < 200
-            disp_freq = 1;
-        end
-    end    
-    
-    if strcmp(alg, 'acc_hals')
+    if strcmp(options.alg, 'acc_hals')
         eit1 = cputime; 
         VHt = V*H'; 
         HHt = H*H'; 
         eit1 = cputime-eit1; 
         
         scaling = sum(sum(VHt.*W))/sum(sum( HHt.*(W'*W) )); 
-        W = W*scaling;         
-    end
-
+        W = W * scaling;         
+    end    
+    
+    % select disp_freq 
+    disp_freq = set_disp_frequency(options);        
+     
+    % store initial info
+    clear infos;
+    [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, [], epoch, grad_calc_count, 0);
+    
+    if options.verbose > 1
+        fprintf('ALS (%s): Epoch = 0000, cost = %.16e, optgap = %.4e\n', options.alg, f_val, optgap); 
+    end  
+    
     % set start time
     start_time = tic();
 
     % main loop
-    while (optgap > tol_optgap) && (epoch < max_epoch)           
+    while (optgap > options.tol_optgap) && (epoch < options.max_epoch)           
 
-        if strcmp(alg, 'als')
+        if strcmp(options.alg, 'als')
             % update H
             %H = (W*pinv(W'*W))' * V;
             H = (W'*W) \ W' * V;        % H = inv(W'*W) * W' * V;
@@ -164,7 +124,7 @@ function [x, infos] = nmf_als(V, rank, options)
             % normalize columns to unit 
             W = W ./ (repmat(sum(W),m,1)+eps); 
 
-        elseif strcmp(alg, 'hals')
+        elseif strcmp(options.alg, 'hals')
             % update H
             VtW = V'*W;
             WtW = W'*W;            
@@ -183,17 +143,17 @@ function [x, infos] = nmf_als(V, rank, options)
                 W(:,k) = tmp;
             end
             
-        elseif strcmp(alg, 'acc_hals')
+        elseif strcmp(options.alg, 'acc_hals')
             
             % Update of W
-            if epoch > 0, % Do not recompute A and B at first pass
+            if epoch > 0 % Do not recompute A and B at first pass
                 % Use actual computational time instead of estimates rhoU
                 eit1 = cputime; 
                 VHt = V*H'; 
                 HHt = H*H'; 
                 eit1 = cputime-eit1; 
             end
-            W = HALSupdt(W',HHt',VHt', eit1, alpha, delta); 
+            W = HALSupdt(W',HHt',VHt', eit1, options.alpha, options.delta); 
             W = W';
             
             % Update of H
@@ -201,7 +161,7 @@ function [x, infos] = nmf_als(V, rank, options)
             WtV = W'*V; 
             WtW = W'*W; 
             eit1 = cputime-eit1;
-            H = HALSupdt(H, WtW, WtV, eit1, alpha, delta); 
+            H = HALSupdt(H, WtW, WtV, eit1, options.alpha, options.delta); 
 
         end
         
@@ -210,34 +170,28 @@ function [x, infos] = nmf_als(V, rank, options)
         
         % measure gradient calc count
         grad_calc_count = grad_calc_count + m*n;
-
-        % calculate cost and optgap 
-        f_val = nmf_cost(V, W, H, R);
-        optgap = f_val - f_opt;    
         
         % update epoch
         epoch = epoch + 1;         
         
         % store info
-        infos.epoch = [infos.epoch epoch];
-        infos.cost = [infos.cost f_val];
-        infos.optgap = [infos.optgap optgap];     
-        infos.time = [infos.time elapsed_time];
-        infos.grad_calc_count = [infos.grad_calc_count grad_calc_count];
+        [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, infos, epoch, grad_calc_count, elapsed_time);       
         
         % display infos
-        if verbose > 0
+        if options.verbose > 1
             if ~mod(epoch, disp_freq)
-                fprintf('ALS (%s): Epoch = %03d, cost = %.16e, optgap = %.4e\n', alg, epoch, f_val, optgap);
+                fprintf('ALS (%s): Epoch = %04d, cost = %.16e, optgap = %.4e\n', options.alg, epoch, f_val, optgap);
             end
         end        
     end
     
-    if optgap < tol_optgap
-        fprintf('Optimality gap tolerance reached: f_val = %.4e < f_opt = %.4e (%.4e)\n', f_val, f_opt, tol_optgap);
-    elseif epoch == max_epoch
-        fprintf('Max epoch reached: max_epoch = %g\n', max_epoch);
-    end 
+    if options.verbose > 0
+        if optgap < options.tol_optgap
+            fprintf('# ALS (%s): Optimality gap tolerance reached: f_val = %.4e < f_opt = %.4e (%.4e)\n', options.alg, f_val, f_opt, options.tol_optgap);
+        elseif epoch == options.max_epoch
+            fprintf('# ALS (%s): Max epoch reached (%g).\n', options.alg, options.max_epoch);
+        end 
+    end
     
     x.W = W;
     x.H = H;

@@ -1,2 +1,5 @@
+old/
+solver_new/
 tmp_test/
+data_org/
 !.gitignore

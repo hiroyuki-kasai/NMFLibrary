@@ -66,26 +66,26 @@ function [ ] = display_graph(x_category, y_category, algorithm_list, w_list, inf
     hold off;
 
     % X label
-    if strcmp(x_category, 'numofgrad');    
+    if strcmp(x_category, 'numofgrad')    
         xlabel('Number of gradient evaluations', 'FontSize', fontsize);
-    elseif strcmp(x_category, 'iter');
+    elseif strcmp(x_category, 'iter')
         xlabel('Iteration', 'FontSize', fontsize);  
-    elseif strcmp(x_category, 'epoch');
+    elseif strcmp(x_category, 'epoch')
         xlabel('Epoch', 'FontSize', fontsize);   
-    elseif strcmp(x_category, 'grad_calc_count');
+    elseif strcmp(x_category, 'grad_calc_count')
         xlabel('# of grad', 'FontSize', fontsize);           
-    elseif strcmp(x_category, 'time');
+    elseif strcmp(x_category, 'time')
         xlabel('Time', 'FontSize', fontsize);             
     end    
     
     % Y label    
-    if strcmp(y_category, 'cost');    
+    if strcmp(y_category, 'cost')    
         ylabel('Cost', 'FontSize', fontsize);
-    elseif strcmp(y_category, 'optimality_gap');
+    elseif strcmp(y_category, 'optimality_gap')
         ylabel('Optimality gap', 'FontSize', fontsize);
-    elseif strcmp(y_category, 'gnorm');
+    elseif strcmp(y_category, 'gnorm')
         ylabel('Norm of gradient', 'FontSize', fontsize);   
-    elseif strcmp(y_category, 'K');
+    elseif strcmp(y_category, 'K')
         ylabel('Batch size', 'FontSize', fontsize);          
     end
     legend(legend_str);

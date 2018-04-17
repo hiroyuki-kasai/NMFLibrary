@@ -1,4 +1,4 @@
-function [x, infos] = nmf_anls(V, rank, options)
+function [x, infos] = nmf_anls(V, rank, in_options)
 % Alternative non-negative least squares (ANLS) for non-negative matrix factorization (NMF).
 %
 % The problem of interest is defined as
@@ -13,7 +13,7 @@ function [x, infos] = nmf_anls(V, rank, options)
 % Inputs:
 %       V           : (m x n) non-negative matrix to factorize
 %       rank        : rank
-%       options     : options
+%       in_options  : options
 %
 %
 % References:
@@ -41,95 +41,68 @@ function [x, infos] = nmf_anls(V, rank, options)
 % written by Jingu Kim. See https://github.com/kimjingu/nonnegfac-matlab.
 %
 % Created by H.Kasai on Apr. 04, 2017
-% Modified by H.Kasai on Apr. 04, 2017
+% Modified by H.Kasai on Oct. 27, 2017
 
 
+    % set dimensions and samples
     m = size(V, 1);
     n = size(V, 2); 
     
-    if ~isfield(options, 'alg')
-        alg = 'anls_asgroup';
-    else
-        if ~strcmp(options.alg, 'anls_asgroup') && ~strcmp(options.alg, 'anls_bpp') ...
-                && ~strcmp(options.alg, 'anls_asgivens') 
-            fprintf('Invalid algorithm: %s. Therfore, we use anls_asgroup (i.e., ANLS with Active Set Method and Column Grouping).\n', options.alg);
-            alg = 'anls_asgroup';
-        else
-            alg = options.alg;
-        end
-    end     
+    % set local options 
+    local_options.options.alg   = 'anls_asgroup';
 
-    if ~isfield(options, 'max_epoch')
-        max_epoch = 100;
-    else
-        max_epoch = options.max_epoch;
-    end 
-    
-    if ~isfield(options, 'f_opt')
-        f_opt = -Inf;
-    else
-        f_opt = options.f_opt;
-    end   
-    
-    if ~isfield(options, 'tol_optgap')
-        tol_optgap = 1.0e-12;
-    else
-        tol_optgap = options.tol_optgap;
-    end       
+    % merge options
+    options = mergeOptions(get_nmf_default_options(), local_options);   
+    options = mergeOptions(options, in_options);    
 
-    if ~isfield(options, 'verbose')
-        verbose = false;
-    else
-        verbose = options.verbose;
+    % set paramters
+    if ~strcmp(options.alg, 'anls_asgroup') && ~strcmp(options.alg, 'anls_asgivens') ...
+            && ~strcmp(options.alg, 'anls_bpp') 
+        fprintf('Invalid algorithm: %s. Therfore, we use anls_asgroup (i.e., ANLS with Active Set Method and Column Grouping).\n', options.alg);
+        options.alg = 'anls_asgroup';
     end
-
+    
+    if options.verbose > 0
+        fprintf('# ANLS (%s): started ...\n', options.alg);           
+    end      
+    
+    % initialize
+    epoch = 0;    
+    R_zero = zeros(m, n);
+    grad_calc_count = 0;
+    
     if ~isfield(options, 'x_init')
         W = rand(m, rank);
         H = rand(rank, n);
     else
         W = options.x_init.W;
         H = options.x_init.H;
-    end 
-    
-    % initialize
-    epoch = 0;    
-    R = zeros(m, n);
-    grad_calc_count = 0; 
+    end     
     
     % store initial info
     clear infos;
-    infos.epoch = 0;
-    f_val = nmf_cost(V, W, H, R);
-    infos.cost = f_val;
-    optgap = f_val - f_opt;
-    infos.optgap = optgap;   
-    infos.time = 0;
-    infos.grad_calc_count = grad_calc_count;
-    if verbose > 0
-        fprintf('ANLS (%s): Epoch = 000, cost = %.16e, optgap = %.4e\n', alg, f_val, optgap); 
+    [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, [], epoch, grad_calc_count, 0);
+    
+    if options.verbose > 0
+        fprintf('ANLS (%s): Epoch = 0000, cost = %.16e, optgap = %.4e\n', options.alg, f_val, optgap); 
     end  
     
     % select disp_freq 
-    if verbose > 0
-        disp_freq = floor(max_epoch/100);
-        if disp_freq < 1 || max_epoch < 200
-            disp_freq = 1;
-        end
-    end    
+    disp_freq = set_disp_frequency(options);    
 
     % set start time
     start_time = tic();
 
     % main loop
-    while (optgap > tol_optgap) && (epoch < max_epoch)           
+    while (optgap > options.tol_optgap) && (epoch < options.max_epoch)           
 
-        if strcmp(alg, 'anls_asgroup')
+        if strcmp(options.alg, 'anls_asgroup')
             ow = 0;
             H = nnlsm_activeset(W'*W, W'*V, ow, 1, H);
             W = nnlsm_activeset(H*H', H*V', ow, 1, W');
             W = W';
             
-        elseif strcmp(alg, 'anls_asgivens')
+        elseif strcmp(options.alg, 'anls_asgivens')
             ow = 0;
             WtV = W' * V;
             for i=1:size(H,2)
@@ -143,7 +116,7 @@ function [x, infos] = nmf_anls(V, rank, options)
             end
             W = Wt';
             
-        elseif strcmp(alg, 'anls_bpp')
+        elseif strcmp(options.alg, 'anls_bpp')
             H = nnlsm_blockpivot(W'*W, W'*V, 1, H);
             W = nnlsm_blockpivot(H*H', H*V', 1, W');
             W = W';
@@ -156,33 +129,27 @@ function [x, infos] = nmf_anls(V, rank, options)
         % measure gradient calc count
         grad_calc_count = grad_calc_count + m*n;
 
-        % calculate cost and optgap 
-        f_val = nmf_cost(V, W, H, R);
-        optgap = f_val - f_opt;    
-        
         % update epoch
         epoch = epoch + 1;         
         
         % store info
-        infos.epoch = [infos.epoch epoch];
-        infos.cost = [infos.cost f_val];
-        infos.optgap = [infos.optgap optgap];     
-        infos.time = [infos.time elapsed_time];
-        infos.grad_calc_count = [infos.grad_calc_count grad_calc_count];
+        [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, infos, epoch, grad_calc_count, elapsed_time);  
         
         % display infos
-        if verbose > 0
+        if options.verbose > 1
             if ~mod(epoch, disp_freq)
-                fprintf('ANLS (%s): Epoch = %03d, cost = %.16e, optgap = %.4e\n', alg, epoch, f_val, optgap);
+                fprintf('ANLS (%s): Epoch = %04d, cost = %.16e, optgap = %.4e\n', options.alg, epoch, f_val, optgap);
             end
         end        
     end
     
-    if optgap < tol_optgap
-        fprintf('Optimality gap tolerance reached: f_val = %.4e < f_opt = %.4e (%.4e)\n', f_val, f_opt, tol_optgap);
-    elseif epoch == max_epoch
-        fprintf('Max epoch reached: max_epoch = %g\n', max_epoch);
-    end 
+    if options.verbose > 0
+        if optgap < options.tol_optgap
+            fprintf('# ANLS (%s): Optimality gap tolerance reached: f_val = %.4e < f_opt = %.4e (%.4e)\n', options.alg, f_val, f_opt, options.tol_optgap);
+        elseif epoch == options.max_epoch
+            fprintf('# ANLS (%s): Max epoch reached (%g).\n', options.alg, options.max_epoch);
+        end 
+    end
     
     x.W = W;
     x.H = H;

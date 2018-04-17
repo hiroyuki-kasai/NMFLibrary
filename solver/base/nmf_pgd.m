@@ -1,4 +1,4 @@
-function [x, infos] = nmf_pgd(V, rank, options)
+function [x, infos] = nmf_pgd(V, rank, in_options)
 % Projected gradient descent for non-negative matrix factorization (NMF).
 %
 % The problem of interest is defined as
@@ -13,7 +13,7 @@ function [x, infos] = nmf_pgd(V, rank, options)
 % Inputs:
 %       V           : (m x n) non-negative matrix to factorize
 %       rank        : rank
-%       options 
+%       in_options 
 %           alg     : pgd: Projected gradient descent
 %
 %                   : direct_pgd: Projected gradient descent
@@ -37,88 +37,56 @@ function [x, infos] = nmf_pgd(V, rank, options)
 %
 %
 % Created by H.Kasai on Mar. 24, 2017
-% Modified by H.Kasai on Apr. 04, 2017
+% Modified by H.Kasai on Oct. 27, 2017
 
+
+    % set dimensions and samples
     m = size(V, 1);
     n = size(V, 2); 
     
-    if ~isfield(options, 'alg')
-        alg = 'pgd';
-    else
-        if ~strcmp(options.alg, 'pgd') && ~strcmp(options.alg, 'direct_pgd')
-            fprintf('Invalid algorithm: %s. Therfore, we use pgd (i.e., projected gradient descent).\n', options.alg);
-            alg = 'pgd';
-        else
-            alg = options.alg;
-        end
-    end     
-
-    if ~isfield(options, 'max_epoch')
-        max_epoch = 100;
-    else
-        max_epoch = options.max_epoch;
-    end 
+    % set local options 
+    local_options.alg   = 'pgd';
     
-    if ~isfield(options, 'f_opt')
-        f_opt = -Inf;
-    else
-        f_opt = options.f_opt;
-    end   
+    % merge options
+    options = mergeOptions(get_nmf_default_options(), local_options);   
+    options = mergeOptions(options, in_options);      
     
-    if ~isfield(options, 'tol_optgap')
-        tol_optgap = 1.0e-12;
-    else
-        tol_optgap = options.tol_optgap;
-    end       
 
-    if ~isfield(options, 'verbose')
-        verbose = false;
+    if ~strcmp(options.alg, 'pgd') && ~strcmp(options.alg, 'direct_pgd')
+        fprintf('Invalid algorithm: %s. Therfore, we use pgd (i.e., projected gradient descent).\n', options.alg);
+        options.alg = 'pgd';
     else
-        verbose = options.verbose;
+        options.alg = options.alg;
     end
 
+    if options.verbose > 0
+        fprintf('# PGD (%s): started ...\n', options.alg);           
+    end       
+ 
+    % initialize
+    epoch = 0;    
+    R_zero = zeros(m, n);
+    grad_calc_count = 0; 
+    
     if ~isfield(options, 'x_init')
         W = rand(m, rank);
         H = rand(rank, n);
     else
         W = options.x_init.W;
         H = options.x_init.H;
-    end 
-    
-    % initialize
-    epoch = 0;    
-    R = zeros(m, n);
-    grad_calc_count = 0; 
-    
-    % store initial info
-    clear infos;
-    infos.epoch = 0;
-    f_val = nmf_cost(V, W, H, R);
-    infos.cost = f_val;
-    optgap = f_val - f_opt;
-    infos.optgap = optgap;   
-    infos.time = 0;
-    infos.grad_calc_count = grad_calc_count;
-    if verbose > 0
-        fprintf('PGD (%s): Epoch = 000, cost = %.16e, optgap = %.4e\n', alg, f_val, optgap); 
-    end  
+    end    
     
     % select disp_freq 
-    if verbose > 0
-        disp_freq = floor(max_epoch/100);
-        if disp_freq < 1 || max_epoch < 200
-            disp_freq = 1;
-        end
-    end    
+    disp_freq = set_disp_frequency(options);     
 
-    if strcmp(alg, 'pgd')
+    if strcmp(options.alg, 'pgd')
         tol = 0.00001; % tol = [0.001; 0.0001; 0.00001];
         gradW = W*(H*H') - V*H'; 
         gradH = (W'*W)*H - W'*V;   
         initgrad = norm([gradW; gradH'],'fro');
         tolW = max(0.001,tol)*initgrad; 
         tolH = tolW;
-    elseif strcmp(alg, 'direct_pgd')
+    elseif strcmp(options.alg, 'direct_pgd')
         %tol = 0.00001; % tol = [0.001; 0.0001; 0.00001];
         alpha = 1;
         gradW = W*(H*H') - V*H'; 
@@ -127,29 +95,37 @@ function [x, infos] = nmf_pgd(V, rank, options)
         %fprintf('init grad norm %f\n', initgrad);
         H = nlssubprob(V,W,H,0.001,1000);    
         obj = 0.5*(norm(V-W*H,'fro')^2);            
-    end
+    end    
+    
+    % store initial info
+    clear infos;
+    [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, [], epoch, grad_calc_count, 0);
+    
+    if options.verbose > 1
+        fprintf('PGD (%s): Epoch = 0000, cost = %.16e, optgap = %.4e\n', options.alg, f_val, optgap); 
+    end  
     
     % set start time
     start_time = tic();
 
     % main loop
-    while (optgap > tol_optgap) && (epoch < max_epoch)           
+    while (optgap > options.tol_optgap) && (epoch < options.max_epoch)           
 
-        if strcmp(alg, 'pgd')
+        if strcmp(options.alg, 'pgd')
           [W,gradW,iterW] = nlssubprob(V',H',W',tolW,1000); 
           W = W'; 
           gradW = gradW';
           
-          if iterW==1,
+          if iterW==1
             tolW = 0.1 * tolW;
           end
 
           [H,gradH,iterH] = nlssubprob(V,W,H,tolH,1000);
-          if iterH==1,
+          if iterH==1
             tolH = 0.1 * tolH; 
           end     
 
-        elseif strcmp(alg, 'direct_pgd')
+        elseif strcmp(options.alg, 'direct_pgd')
 
           gradW = W*(H*H') - V*H';
           gradH = (W'*W)*H - W'*V;
@@ -161,15 +137,15 @@ function [x, infos] = nmf_pgd(V, rank, options)
           Hn = max(H - alpha*gradH,0);    
           newobj = 0.5*(norm(V-Wn*Hn,'fro')^2);
           if newobj-obj > 0.01*(sum(sum(gradW.*(Wn-W)))+ ...
-                                sum(sum(gradH.*(Hn-H)))),
+                                sum(sum(gradH.*(Hn-H))))
             % decrease alpha    
-            while 1,
+            while 1
               alpha = alpha/10;
               Wn = max(W - alpha*gradW,0);    
               Hn = max(H - alpha*gradH,0);    
               newobj = 0.5*(norm(V-Wn*Hn,'fro')^2);
               if newobj - obj <= 0.01*(sum(sum(gradW.*(Wn-W)))+ ...
-                                       sum(sum(gradH.*(Hn-H)))),
+                                       sum(sum(gradH.*(Hn-H))))
                 W = Wn; H = Hn;
                 obj = newobj;
                 break;
@@ -177,14 +153,14 @@ function [x, infos] = nmf_pgd(V, rank, options)
             end
           else 
             % increase alpha
-            while 1,
+            while 1
               Wp = Wn; Hp = Hn; objp = newobj;
               alpha = alpha*10;
               Wn = max(W - alpha*gradW,0);    
               Hn = max(H - alpha*gradH,0);    
               newobj = 0.5*(norm(V-Wn*Hn,'fro')^2);
               if (newobj - obj > 0.01*(sum(sum(gradW.*(Wn-W)))+ ...
-                                      sum(sum(gradH.*(Hn-H))))) | (Wn==Wp & Hn==Hp),
+                                      sum(sum(gradH.*(Hn-H))))) | (Wn==Wp & Hn==Hp)
                 W = Wp; 
                 H = Hp;
                 obj = objp; 
@@ -202,33 +178,27 @@ function [x, infos] = nmf_pgd(V, rank, options)
         % measure gradient calc count
         grad_calc_count = grad_calc_count + m*n;
 
-        % calculate cost and optgap 
-        f_val = nmf_cost(V, W, H, R);
-        optgap = f_val - f_opt;    
-        
         % update epoch
         epoch = epoch + 1;         
         
         % store info
-        infos.epoch = [infos.epoch epoch];
-        infos.cost = [infos.cost f_val];
-        infos.optgap = [infos.optgap optgap];     
-        infos.time = [infos.time elapsed_time];
-        infos.grad_calc_count = [infos.grad_calc_count grad_calc_count];
+        [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, infos, epoch, grad_calc_count, elapsed_time); 
         
         % display infos
-        if verbose > 0
+        if options.verbose > 1
             if ~mod(epoch, disp_freq)
-                fprintf('PGD (%s): Epoch = %03d, cost = %.16e, optgap = %.4e\n', alg, epoch, f_val, optgap);
+                fprintf('PGD (%s): Epoch = %03d, cost = %.16e, optgap = %.4e\n', options.alg, epoch, f_val, optgap);
             end
         end        
     end
     
-    if optgap < tol_optgap
-        fprintf('Optimality gap tolerance reached: f_val = %.4e < f_opt = %.4e (%.4e)\n', f_val, f_opt, tol_optgap);
-    elseif epoch == max_epoch
-        fprintf('Max epoch reached: max_epoch = %g\n', max_epoch);
-    end 
+    if options.verbose > 0
+        if optgap < options.tol_optgap
+            fprintf('# PGD (%s): Optimality gap tolerance reached: f_val = %.4e < f_opt = %.4e (%.4e)\n', options.alg, f_val, f_opt, options.tol_optgap);
+        elseif epoch == options.max_epoch
+            fprintf('# PGD (%s): Max epoch reached (%g).\n', options.alg, options.max_epoch);
+        end 
+    end
     
     x.W = W;
     x.H = H;

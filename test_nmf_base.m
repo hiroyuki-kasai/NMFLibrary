@@ -1,12 +1,12 @@
 % Test file for NMF base 
 %
-% Created by H.Kasai on March. 24, 2017
+% Created by H.Kasai on March 24, 2017
+% Modified by H.Kasai on Oct. 18, 2017
 
 clc;
 clear;
 close all;
 
-%rng(12345)
 
 anls_asgroup_flag = 1;
 nmf_mu_flag = 1;
@@ -20,16 +20,18 @@ nmf_pgd_flag = 1;
 nmf_direct_pgd_flag = 1;
 nenmf_flag = 0;
 
-%% generate/load data 
-% d=1: synthetic data in paper, 2: CBCL, 3: ORL, 4: UMISTface
-d = 2;
-% set the density of outlier
-rho = 0.0;
 
+%% load CBCL face datasets
 fprintf('Loading data ...');
-[N, F, K, Vo, V, Ro] = load_dataset(d, rho);
-fprintf('done\n');
+V = importdata('./data/CBCL_face.mat');
+F = size(V, 1);
+N = size(V, 2);
+%N = 2000;
+%V = V(:,1:N);
+rank = 25;
+Vo = V;
 dim = N * F;
+fprintf(' done\n');
 
 
 %% set options
@@ -38,10 +40,38 @@ verbose = 1;
 
 
 %% set initial data
-x_init.W = rand(F, K); 
-x_init.H = rand(K, N);
+x_init.W = rand(F, rank); 
+x_init.H = rand(rank, N);
 x_init.R = rand(F, N);
 
+
+%% calculate optimal solution
+calc_sol = 1;
+if calc_sol
+    clear options;
+    options.max_epoch = max_epoch;
+    options.x_init = x_init;
+    options.verbose = 0;  
+    options.max_epoch = 1000;
+    
+    if 1
+        fprintf('Calculating f_opt by HALS ...\n');
+        options.alg = 'hals';
+        [w_sol, infos_sol] = nmf_als(V, rank, options);
+        f_opt = nmf_cost(V, w_sol.W, w_sol.H, zeros(F, N));
+        
+    else
+        fprintf('Calculating f_opt by ANLS ...\n');
+        options.alg = 'anls_asgroup';
+        options.alg = 'anls_asgivens';
+        options.alg = 'anls_bpp';
+        [w_sol, infos_sol] = nmf_anls(V, rank, options);
+        f_opt = nmf_cost(V, w_sol.W, w_sol.H, zeros(F, N));
+    end
+    fprintf('Done.. f_opt: %.16e\n', f_opt);
+else
+    f_opt = -Inf;
+end
 
 
 %% execute algorithms
@@ -57,9 +87,10 @@ if nmf_mu_flag
     options.max_epoch = max_epoch;
     options.x_init = x_init;
     options.verbose = verbose; 
+    options.f_opt = f_opt;   
     options.alg = 'mu';
     
-    [w_nmf_mu, infos_nmf_mu] = nmf_mu(V, K, options);
+    [w_nmf_mu, infos_nmf_mu] = nmf_mu(V, rank, options);
     
     names{alg_idx} = 'NMF MU'; 
     sols{alg_idx} = w_nmf_mu;
@@ -73,9 +104,10 @@ if nmf_mod_mu_flag
     options.max_epoch = max_epoch;
     options.x_init = x_init;
     options.verbose = verbose; 
+    options.f_opt = f_opt;       
     options.alg = 'mod_mu';
     
-    [w_mod_nmf_mu, infos_mod_nmf_mu] = nmf_mu(V, K, options);
+    [w_mod_nmf_mu, infos_mod_nmf_mu] = nmf_mu(V, rank, options);
     
     names{alg_idx} = 'NMF Modified MU'; 
     sols{alg_idx} = w_mod_nmf_mu;
@@ -89,11 +121,12 @@ if nmf_acc_mu_flag
     options.max_epoch = max_epoch;
     options.x_init = x_init;
     options.verbose = verbose; 
+    options.f_opt = f_opt;       
     options.alg = 'acc_mu';
     options.alpha = 2;
     options.delta = 0.1;
     
-    [w_nmf_acc_mu, infos_nmf_acc_mu] = nmf_mu(V, K, options);
+    [w_nmf_acc_mu, infos_nmf_acc_mu] = nmf_mu(V, rank, options);
     
     names{alg_idx} = 'NMF ACC MU'; 
     sols{alg_idx} = w_nmf_acc_mu;
@@ -101,33 +134,16 @@ if nmf_acc_mu_flag
     costs{alg_idx} = nmf_cost(Vo, w_nmf_acc_mu.W, w_nmf_acc_mu.H, zeros(F, N)) * 2 / dim;
 end
 
-% if nmf_acc_mu_new_flag
-%     alg_idx = alg_idx + 1;  
-%     clear options;
-%     options.max_epoch = max_epoch;
-%     options.x_init = x_init;
-%     options.verbose = verbose; 
-%     options.alg = 'acc_mu_new';
-%     options.alpha = 2;
-%     options.delta = 0.1;
-%     
-%     [w_nmf_acc_mu_new, infos_nmf_acc_mu_new] = nmf(V, K, options);
-%     
-%     names{alg_idx} = 'NMF ACC MU New'; 
-%     sols{alg_idx} = w_nmf_acc_mu_new;
-%     infos{alg_idx} = infos_nmf_acc_mu_new;     
-%     costs{alg_idx} = nmf_cost(Vo, w_nmf_acc_mu_new.W, w_nmf_acc_mu_new.H, zeros(F, N)) * 2 / dim;
-% end
-
 if nmf_als_flag
     alg_idx = alg_idx + 1;  
     clear options;
     options.max_epoch = max_epoch;
     options.x_init = x_init;
-    options.verbose = verbose; 
+    options.verbose = verbose;
+    options.f_opt = f_opt;       
     options.alg = 'als';
     
-    [w_nmf_als, infos_nmf_als] = nmf_als(V, K, options);
+    [w_nmf_als, infos_nmf_als] = nmf_als(V, rank, options);
     
     names{alg_idx} = 'NMF ALS'; 
     sols{alg_idx} = w_nmf_als;
@@ -141,9 +157,10 @@ if nmf_hals_flag
     options.max_epoch = max_epoch;
     options.x_init = x_init;
     options.verbose = verbose; 
+    options.f_opt = f_opt;       
     options.alg = 'hals';
     
-    [w_nmf_hals, infos_nmf_hals] = nmf_als(V, K, options);
+    [w_nmf_hals, infos_nmf_hals] = nmf_als(V, rank, options);
     
     names{alg_idx} = 'NMF HALS'; 
     sols{alg_idx} = w_nmf_hals;
@@ -157,9 +174,10 @@ if nmf_acc_hals_flag
     options.max_epoch = max_epoch;
     options.x_init = x_init;
     options.verbose = verbose; 
+    options.f_opt = f_opt;       
     options.alg = 'acc_hals';
     
-    [w_nmf_acc_hals, infos_nmf_acc_hals] = nmf_als(V, K, options);
+    [w_nmf_acc_hals, infos_nmf_acc_hals] = nmf_als(V, rank, options);
     
     names{alg_idx} = 'NMF ACC HALS'; 
     sols{alg_idx} = w_nmf_acc_hals;
@@ -173,9 +191,10 @@ if nmf_pgd_flag
     options.max_epoch = max_epoch;
     options.x_init = x_init;
     options.verbose = verbose; 
+    options.f_opt = f_opt;       
     options.alg = 'pgd';
     
-    [w_nmf_pgd, infos_nmf_pgd] = nmf_pgd(V, K, options);
+    [w_nmf_pgd, infos_nmf_pgd] = nmf_pgd(V, rank, options);
     
     names{alg_idx} = 'NMF PGD'; 
     sols{alg_idx} = w_nmf_pgd;
@@ -189,9 +208,10 @@ if nmf_direct_pgd_flag
     options.max_epoch = max_epoch;
     options.x_init = x_init;
     options.verbose = verbose; 
+    options.f_opt = f_opt;       
     options.alg = 'direct_pgd';
     
-    [w_nmf_direct_pgd, infos_nmf_direct_pgd] = nmf_pgd(V, K, options);
+    [w_nmf_direct_pgd, infos_nmf_direct_pgd] = nmf_pgd(V, rank, options);
     
     names{alg_idx} = 'NMF Direct PGD'; 
     sols{alg_idx} = w_nmf_direct_pgd;
@@ -205,9 +225,10 @@ if nenmf_flag
     options.max_epoch = max_epoch;
     options.x_init = x_init;
     options.verbose = verbose; 
+    options.f_opt = f_opt;       
     options.alg = 'nenmf';
     
-    [w_nenmf.W, w_nenmf.H, iter, elapse, HIS] = NeNMF(V, K, 'max_iter', max_epoch, 'verbose', 2, 'w_init', x_init.W, 'h_init', x_init.H);
+    [w_nenmf.W, w_nenmf.H, iter, elapse, HIS] = NeNMF(V, rank, 'max_iter', max_epoch, 'verbose', 2, 'w_init', x_init.W, 'h_init', x_init.H);
     
     names{alg_idx} = 'NeNMF (Nesterov Acc.)'; 
     sols{alg_idx} = w_nenmf;
@@ -225,11 +246,12 @@ if anls_asgroup_flag
     options.max_epoch = max_epoch;
     options.x_init = x_init;
     options.verbose = verbose; 
+    options.f_opt = f_opt;       
     options.alg = 'anls_asgroup';
     options.alg = 'anls_asgivens';
     options.alg = 'anls_bpp';
     
-    [w_anls_asgroup, infos_anls_asgroup] = nmf_anls(V, K, options);
+    [w_anls_asgroup, infos_anls_asgroup] = nmf_anls(V, rank, options);
     
     names{alg_idx} = 'ANLS (Active Group)'; 
     sols{alg_idx} = w_anls_asgroup;
@@ -238,24 +260,10 @@ if anls_asgroup_flag
 end
 
 
-
-
-
-
-
 %% plot
 display_graph('epoch','cost', names, sols, infos);
 display_graph('time','cost', names, sols, infos);
-%display_graph('epoch','optimality_gap', names, sols, infos);
-
-
-alg_total = alg_idx;
-for alg_idx=1:alg_total
-    fprintf('%s: MSE:%e, time:%e [sec]\n', names{alg_idx}, costs{alg_idx}, infos{alg_idx}.time(end));
-    if d == 4
-        %figure;
-        %plot_dictionnary(sols{alg_idx}.W, [], [7 7]); 
-    end
-end
+display_graph('epoch','optimality_gap', names, sols, infos);
+display_graph('time','optimality_gap', names, sols, infos);
 
 
