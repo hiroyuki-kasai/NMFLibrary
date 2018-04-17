@@ -48,10 +48,17 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 
 - Online/stochstic NMF
 
-    - **SMU** (Stochastic multiplicative updates)
-    - **SVRMU** (Stochastic variance reduced multiplicative updates)
+    - **INMF** (Incremental NMF) and **ONMF** (Online NMF)
+        - S. S. Bucak and B. Gunsel, "[Incremental Subspace Learning via Non-negative Matrix Factorization](https://www.sciencedirect.com/science/article/pii/S0031320308003725)," Pattern Recognition, 2009.
+    - **SPG** (Stochastic projected gradient descent)
+    - **RONMF** (Robust online NMF)
+        - R. Zhao and Y. F. Tan, "[Online nonnegative matrix factorization with outliers](https://ieeexplore.ieee.org/document/7676413/)," IEEE ICASSP2016, 2016.
+    - **SAGA-MU-NMF** (SAGA multiplicative updates)
+        - R. Serizel, S. Essid and G.Richard, "[Mini-batch stochastic approaches for accelerated multiplicative updates in nonnegative matrix factorisation with beta-divergence](https://ieeexplore.ieee.org/document/7738818/),", IEEE 26th International Workshop on Machine Learning for Signal Processing (MLSP), 2016.
+    - **SMU** (Stochastic multiplicative updates) and **SVRMU** (Stochastic variance reduced multiplicative updates)
         - H. Kasai, "[Stochastic variance reduced multiplicative update for nonnegative matrix factorization](https://arxiv.org/abs/1710.10781)," IEEE ICASSP2018, 2018.
 
+- Robust NMF
 
 <br />
 
@@ -89,6 +96,8 @@ Folders and files
 |auxiliary/             - Some auxiliary tools for this project.
 |solver/                - Contains various optimization algorithms.
     |--- base/          - Basic NMF solvers.
+    |--- online/        - Online/stochstic NMF solvers.
+    |--- robust/        - Robust NMF solvers.
     |--- 3rd_party/     - Solvers provided by 3rd_party.
 </pre>
 
