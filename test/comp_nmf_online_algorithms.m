@@ -828,8 +828,8 @@ function comp_nmf_online_algorithms()
         options.fast_calc = 0;
         options.f_opt = f_opt;  
         options.repeat_inneriter = svrmu_inneriter;
-        options.accel = 0;
-        options.ls = 1;
+        options.accel = 1;
+        options.ls = 0;
         options.rep_mode = 'fix';
         %options.rep_mode = 'adaptive';
         options.w_repeat = 1;
@@ -842,7 +842,7 @@ function comp_nmf_online_algorithms()
 
         [w_rsvrmu_acc_nmf, infos_rsvrmu_acc_nmf] = svrmu_nmf(V, K, options);
 
-        names{alg_idx} = 'R-SVRMU-LS';   
+        names{alg_idx} = 'R-SVRMU-ACC';   
         sols{alg_idx} = w_rsvrmu_acc_nmf;
         infos{alg_idx} = infos_rsvrmu_acc_nmf;     
         costs{alg_idx} = nmf_cost(Vo, w_rsvrmu_acc_nmf.W, w_rsvrmu_acc_nmf.H, zeros(F, N)) * 2 / dim;
