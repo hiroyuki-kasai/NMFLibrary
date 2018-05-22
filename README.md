@@ -239,7 +239,7 @@ If you have any problems or questions, please contact the author: [Hiroyuki Kasa
 
 Release notes
 --------------
-* Version 1.1.0 (Apr. 04, 2017)
+* Version 1.1.0 (Apr. 17, 2018)
     - Online/stochastic solvers are added.
 * Version 1.0.0 (Apr. 04, 2017)
     - Initial version.
