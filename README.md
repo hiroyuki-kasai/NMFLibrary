@@ -191,7 +191,7 @@ display_graph('time','cost', {'MU', 'HALS'}, {w_nmf_mu, w_nmf_hals}, {infos_nmf_
 That's it!
 
 
-<img src="https://dl.dropboxusercontent.com/u/869853/github/NMFLibrary/images/cost.png" width="600">
+<img src="http://www.kasailab.com/public/github/NMFLibrary/images/cost.png" width="600">
 
 <br />
 
@@ -213,7 +213,7 @@ plot_dictionnary(w_nmf_mu.W, [], [7 7]);
 plot_dictionnary(w_nmf_hals.W, [], [7 7]); 
 ```
 
-<img src="https://dl.dropboxusercontent.com/u/869853/github/NMFLibrary/images/face_dictionary.png" width="600">
+<img src="http://www.kasailab.com/public/github/NMFLibrary/images/face_dictionary.png" width="600">
 
 
 <br />
