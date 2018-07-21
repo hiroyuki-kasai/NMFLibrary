@@ -46,12 +46,6 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
             - J. Kim, Y. He, and H. Park, "[Algorithms for nonnegative matrix and tensor factorizations: A unified view based on block coordinate descent framework](https://link.springer.com/article/10.1007/s10898-013-0035-4)," Journal of Global Optimization, 58(2), pp. 285-319, 2014.
             - J. Kim and H. Park, "[Fast nonnegative matrix factorization: An active-set-like method and comparisons](http://epubs.siam.org/doi/abs/10.1137/110821172)," SIAM Journal on Scientific Computing (SISC), 33(6), pp. 3261-3281, 2011.
 
-- Graph-based NMF
-
-    - **GNMF** (Graph Regularized NMF)
-        - D. Cai, X. He, X. Wu, and J. Han, "[Non-negative Matrix Factorization on Manifold](https://ieeexplore.ieee.org/document/4781101/)," Proc. 2008 Int. Conf. on Data Mining (ICDM), 2008. 
-        - D. Cai, X. He, J. Han and T. Huang, "[Graph Regularized Non-negative Matrix Factorization for Data Representation](https://ieeexplore.ieee.org/document/5674058/)," IEEE Transactions on Pattern Analysis and Machine Intelligence, Vol.33, No.8, pp.1548-1560, 2011. 
-
 - Online/stochstic NMF
 
     - **INMF** (Incremental NMF) and **ONMF** (Online NMF)
@@ -71,6 +65,14 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 - Robust NMF
 
 - Else
+
+    - **GNMF** (Graph Regularized NMF)
+        - D. Cai, X. He, X. Wu, and J. Han, "[Non-negative Matrix Factorization on Manifold](https://ieeexplore.ieee.org/document/4781101/)," Proc. 2008 Int. Conf. on Data Mining (ICDM), 2008. 
+        - D. Cai, X. He, J. Han and T. Huang, "[Graph Regularized Non-negative Matrix Factorization for Data Representation](https://ieeexplore.ieee.org/document/5674058/)," IEEE Transactions on Pattern Analysis and Machine Intelligence, Vol.33, No.8, pp.1548-1560, 2011. 
+
+    - **Semi-NMF** 
+        - C.H.Q. Ding, T. Li, M. I. Jordan, "[Convex and Semi-Nonnegative Matrix Factorizations](https://ieeexplore.ieee.org/document/4685898/)," IEEE Transactions on Pattern Analysis and Machine Intelligence, vol.32, no.1, 2010. 
+
     - **SDNMF** (NMF with Sinkhorn Distance)
         - W. Qian, B. Hong, D. Cai, X. He, and X. Li, "Non-negative Matrix Factorization with Sinkhorn Distance", IJCAI, pp.1960-1966, 2016.
     
@@ -94,6 +96,7 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 |ASGIVENS|`nmf_anls`|`anls_asgivens`||
 |BPP|`nmf_anls`|`anls_bpp`||
 |GNMF|`GNMF`|||
+|Semi-NMF|`semi_nmf`|||
 |SDNMF|`SDNMF`|||
 |SMU|`smu_nmf`|||
 |SVRMU|`svrmu_nmf`|||
@@ -259,7 +262,7 @@ If you have any problems or questions, please contact the author: [Hiroyuki Kasa
 Release notes
 --------------
 * Version 1.2.0 (Jul. 21, 2018)
-    - GNMF and SDNMF are added.
+    - GNMF, Semi-NMF and SDNMF are added.
 * Version 1.1.0 (Apr. 17, 2018)
     - Online/stochastic solvers are added.
 * Version 1.0.0 (Apr. 04, 2017)
