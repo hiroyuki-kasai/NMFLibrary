@@ -3,9 +3,9 @@ Matlab library for non-negative matrix factorization (NMF)
 
 Authors: [Hiroyuki Kasai](http://www.kasailab.com/)
 
-Last page update: April 17, 2018
+Last page update: July 21, 2018
 
-Latest library version: 1.1.0 (see Release notes for more info)
+Latest library version: 1.2.0 (see Release notes for more info)
 
 <br />
 
@@ -46,19 +46,34 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
             - J. Kim, Y. He, and H. Park, "[Algorithms for nonnegative matrix and tensor factorizations: A unified view based on block coordinate descent framework](https://link.springer.com/article/10.1007/s10898-013-0035-4)," Journal of Global Optimization, 58(2), pp. 285-319, 2014.
             - J. Kim and H. Park, "[Fast nonnegative matrix factorization: An active-set-like method and comparisons](http://epubs.siam.org/doi/abs/10.1137/110821172)," SIAM Journal on Scientific Computing (SISC), 33(6), pp. 3261-3281, 2011.
 
+- Graph-based NMF
+
+    - **GNMF** (Graph Regularized NMF)
+        - D. Cai, X. He, X. Wu, and J. Han, "[Non-negative Matrix Factorization on Manifold](https://ieeexplore.ieee.org/document/4781101/)," Proc. 2008 Int. Conf. on Data Mining (ICDM), 2008. 
+        - D. Cai, X. He, J. Han and T. Huang, "[Graph Regularized Non-negative Matrix Factorization for Data Representation](https://ieeexplore.ieee.org/document/5674058/)," IEEE Transactions on Pattern Analysis and Machine Intelligence, Vol.33, No.8, pp.1548-1560, 2011. 
+
 - Online/stochstic NMF
 
     - **INMF** (Incremental NMF) and **ONMF** (Online NMF)
         - S. S. Bucak and B. Gunsel, "[Incremental Subspace Learning via Non-negative Matrix Factorization](https://www.sciencedirect.com/science/article/pii/S0031320308003725)," Pattern Recognition, 2009.
+
     - **SPG** (Stochastic projected gradient descent)
+
     - **RONMF** (Robust online NMF)
         - R. Zhao and Y. F. Tan, "[Online nonnegative matrix factorization with outliers](https://ieeexplore.ieee.org/document/7676413/)," IEEE ICASSP2016, 2016.
+
     - **SAGA-MU-NMF** (SAGA multiplicative updates)
         - R. Serizel, S. Essid and G.Richard, "[Mini-batch stochastic approaches for accelerated multiplicative updates in nonnegative matrix factorisation with beta-divergence](https://ieeexplore.ieee.org/document/7738818/),", IEEE 26th International Workshop on Machine Learning for Signal Processing (MLSP), 2016.
+
     - **SMU** (Stochastic multiplicative updates) and **SVRMU** (Stochastic variance reduced multiplicative updates)
         - H. Kasai, "[Stochastic variance reduced multiplicative update for nonnegative matrix factorization](https://arxiv.org/abs/1710.10781)," IEEE ICASSP2018, 2018.
 
 - Robust NMF
+
+- Else
+    - **SDNMF** (NMF with Sinkhorn Distance)
+        - W. Qian, B. Hong, D. Cai, X. He, and X. Li, "Non-negative Matrix Factorization with Sinkhorn Distance", IJCAI, pp.1960-1966, 2016.
+    
 
 <br />
 
@@ -78,6 +93,8 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 |ASGROUP|`nmf_anls`|`anls_asgroup`||
 |ASGIVENS|`nmf_anls`|`anls_asgivens`||
 |BPP|`nmf_anls`|`anls_bpp`||
+|GNMF|`GNMF`|||
+|SDNMF|`SDNMF`|||
 |SMU|`smu_nmf`|||
 |SVRMU|`svrmu_nmf`|||
 
@@ -223,8 +240,10 @@ License
 - The NMFLibrary is **free**, **non-commercial** and **open** source.
 - The code provided iin NMFLibrary should only be used for **academic/research purposes**.
 - Third party files are included.
-    - For ANLS algorithms: `nnlsm_activeset.m`, `nnls1_asgivens.m`, `nnlsm_blockpivot.m`, and `normalEqComb.m`.
+    - For ANLS algorithms: `nnlsm_activeset.m`, `nnls1_asgivens.m`, `nnlsm_blockpivot.m`, and `normalEqComb.m` written by Jingu Kim.
     - For PGD algorithm: `nlssubprob.m`.
+    - For GNMF algorith: `GNMF.m`, `GNMF_Multi.m`, `constructW.m` and `litekmeans.m` writtnen by Deng Cai.
+    - For SDNMF algorith: `SDNMF.m`, and `SDNMF_Multi.m` writtnen by Wei Qian.
     - For acceleration sub-routines in [`nmf_mu.m`](https://github.com/hiroyuki-kasai/NMFLibrary/blob/master/solver/base/nmf_mu.m) and [`nmf_als.m`](https://github.com/hiroyuki-kasai/NMFLibrary/blob/master/solver/base/nmf_als.m) for MU and HALS from [Nicolas Gillis](https://sites.google.com/site/nicolasgillis/publications).
     - For dictionaly visualization: `plot_dictionnary.m`, `rescale.m`, and `getoptions.m`.
 
@@ -239,6 +258,8 @@ If you have any problems or questions, please contact the author: [Hiroyuki Kasa
 
 Release notes
 --------------
+* Version 1.2.0 (Jul. 21, 2018)
+    - GNMF and SDNMF are added.
 * Version 1.1.0 (Apr. 17, 2018)
     - Online/stochastic solvers are added.
 * Version 1.0.0 (Apr. 04, 2017)

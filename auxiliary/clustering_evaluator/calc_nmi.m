@@ -1,4 +1,4 @@
-function [ nmi_val ] = nmi( groundtruthAssignment, algorithmAssignment )
+function [ nmi_val ] = calc_nmi( groundtruthAssignment, algorithmAssignment )
 
     nmi_val = 0;
     
