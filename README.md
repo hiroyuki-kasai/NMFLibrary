@@ -3,9 +3,9 @@ Matlab library for non-negative matrix factorization (NMF)
 
 Authors: [Hiroyuki Kasai](http://www.kasailab.com/)
 
-Last page update: July 21, 2018
+Last page update: July 23, 2018
 
-Latest library version: 1.2.0 (see Release notes for more info)
+Latest library version: 1.3.0 (see Release notes for more info)
 
 <br />
 
@@ -64,6 +64,17 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 
 - Robust NMF
 
+- Sparse
+
+    - **sparseNMF** (Sparse NMF)
+
+    - **NMFsc** (NMF with sparseness constraints)
+        - Patrik O. Hoyer, "[Non-negative matrix factorization with sparseness constraints](http://www.jmlr.org/papers/volume5/hoyer04a/hoyer04a.pdf)," Journal of Machine Learning Research, vol.5, pp.1457?1469, 2004.
+
+    - **nsNMF** (Nonsmooth NMF)
+        - A. Pascual-Montano, J. M. Carazo, K. Kochi, D. Lehmann, and R. D. Pascual-Marqui, "[Nonsmooth Nonnegative Matrix Factorization (nsNMF)](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=1580485)," IEEE Transactions on Pattern Analysis and Machine Intelligence (PAMI), vol.28, no.3, pp.403-415, 2006. 
+   
+
 - Else
 
     - **GNMF** (Graph Regularized NMF)
@@ -74,7 +85,7 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
         - C.H.Q. Ding, T. Li, M. I. Jordan, "[Convex and Semi-Nonnegative Matrix Factorizations](https://ieeexplore.ieee.org/document/4685898/)," IEEE Transactions on Pattern Analysis and Machine Intelligence, vol.32, no.1, 2010. 
 
     - **SDNMF** (NMF with Sinkhorn Distance)
-        - W. Qian, B. Hong, D. Cai, X. He, and X. Li, "Non-negative Matrix Factorization with Sinkhorn Distance", IJCAI, pp.1960-1966, 2016.
+        - W. Qian, B. Hong, D. Cai, X. He, and X. Li, "[Non-negative matrix factorization with sinkhorn distance](https://pdfs.semanticscholar.org/42b2/ec6e4453dc033d37b9fcb53a1313c018fa23.pdf)", IJCAI, pp.1960-1966, 2016.
     
 
 <br />
@@ -95,7 +106,9 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 |ASGROUP|`nmf_anls`|`anls_asgroup`||
 |ASGIVENS|`nmf_anls`|`anls_asgivens`||
 |BPP|`nmf_anls`|`anls_bpp`||
-|GNMF|`GNMF`|||
+|sparseNMF|`sparse_nmf`|||
+|NMFsc|`nmf_sc`|||
+|nsNMF|`ns_nmf`|||
 |Semi-NMF|`semi_nmf`|||
 |SDNMF|`SDNMF`|||
 |SMU|`smu_nmf`|||
@@ -117,6 +130,7 @@ Folders and files
 |solver/                - Contains various optimization algorithms.
     |--- base/          - Basic NMF solvers.
     |--- online/        - Online/stochstic NMF solvers.
+    |--- sparse/        - Sparse NMF solvers.
     |--- robust/        - Robust NMF solvers.
     |--- 3rd_party/     - Solvers provided by 3rd_party.
 </pre>
@@ -261,6 +275,8 @@ If you have any problems or questions, please contact the author: [Hiroyuki Kasa
 
 Release notes
 --------------
+* Version 1.3.0 (Jul. 23, 2018)
+    - NMFsc, scNMF and csNMF are added.
 * Version 1.2.0 (Jul. 21, 2018)
     - GNMF, Semi-NMF and SDNMF are added.
 * Version 1.1.0 (Apr. 17, 2018)

@@ -121,6 +121,11 @@ function [x, infos] = nmf_mu(V, rank, in_options)
             W = W .* (V * H') ./ (W * (H * H'));
             W = W + (W<eps) .* eps;
             
+            
+            % KL case (To Do)
+            %H = H .* (W'*(V./(W*H + 1e-9)))./(sum(W)'*ones(1,samples)); 
+            %W = W .* ((V./(W*H + 1e-9))*H')./(ones(vdim,1)*sum(H'));
+            
         elseif strcmp(options.alg, 'mu_mod')
             % update H
             WtW = W' * W;
