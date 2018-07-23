@@ -69,7 +69,7 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
     - **sparseNMF** (Sparse NMF)
 
     - **NMFsc** (NMF with sparseness constraints)
-        - Patrik O. Hoyer, "[Non-negative matrix factorization with sparseness constraints](http://www.jmlr.org/papers/volume5/hoyer04a/hoyer04a.pdf)," Journal of Machine Learning Research, vol.5, pp.1457?1469, 2004.
+        - Patrik O. Hoyer, "[Non-negative matrix factorization with sparseness constraints](http://www.jmlr.org/papers/volume5/hoyer04a/hoyer04a.pdf)," Journal of Machine Learning Research (JMLR), vol.5, pp.1457-1469, 2004.
 
     - **nsNMF** (Nonsmooth NMF)
         - A. Pascual-Montano, J. M. Carazo, K. Kochi, D. Lehmann, and R. D. Pascual-Marqui, "[Nonsmooth Nonnegative Matrix Factorization (nsNMF)](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=1580485)," IEEE Transactions on Pattern Analysis and Machine Intelligence (PAMI), vol.28, no.3, pp.403-415, 2006. 
