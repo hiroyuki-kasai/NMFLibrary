@@ -1,10 +1,8 @@
-function test_seminmf()
+function test_various_nmf()
 %
 % demonstration file for NMFLibrary.
 %
 % This file illustrates how to use this library. 
-% This demonstrates semi-nmf algorithm and 
-% hierarchical alternative least squares (Hierarchical ALS) algorithm.
 %
 % This file is part of NMFLibrary.
 %
@@ -29,10 +27,37 @@ function test_seminmf()
     [x_init.W, x_init.H] = NNDSVD(abs(V), rank, 0);
     options.x_init = x_init;
     options.verbose = 2;
+    
+    
 
     %% perform factroization
+    % NMF-MU
+    [w_nmf_mu, infos_nmf_mu] = nmf_mu(V, rank, options);
+    
     % Semi-NMF
-    [w_seminmf_mu, infos_seminmf_mu] = semi_nmf(V, rank, options);
+    [w_seminmf, infos_seminmf] = semi_nmf(V, rank, options);
+    
+    % nsNMF
+    options.theta = 0; % decides the degree in [0,1] of nonsmoothing (use 0 for standard NMF)
+    options.cost = 'EUC'; %- what cost function to use; 'eucl' (default) or 'kl'
+    [w_nsnmf, infos_nsnmf] = ns_nmf(V, rank, options); 
+    
+    % SparseNMF
+    options.lambda = 1; % decides the degree in [0,1] of nonsmoothing (use 0 for standard NMF)
+    options.cost = 'EUC'; %- what cost function to use; 'eucl' (default) or 'kl'
+    [w_sparsenmf, infos_sparsenmf] = sparse_nmf(V, rank, options);  
+    
+    % SparseNMF
+    options.lambda = 1; % decides the degree in [0,1] of nonsmoothing (use 0 for standard NMF)
+    options.cost = 'EUC'; %- what cost function to use; 'eucl' (default) or 'kl'
+    [w_nmfsc, infos_nmfsc] = nmf_sc(V, rank, options);       
+    
+   
+    % Ne-NMF
+    %[W,H,it,ela,HIS]=NeNMF(V,reducedDim,'TYPE','L1R');
+    %[W,H,it,ela,HIS]=NeNMF(V,reducedDim,'TYPE','L2R');
+    %[W,H,it,ela,HIS]=NeNMF(V,reducedDim,'TYPE','MR','S_MTX',S);
+    %[w_nenmf, infos_nenmf] = NeNMF(V, rank);    
     
     % Hierarchical ALS
     options.alg = 'hals';
@@ -40,8 +65,8 @@ function test_seminmf()
     
     
     %% plot
-    display_graph('epoch','cost', {'Semi-NMF', 'HALS'}, {w_seminmf_mu, w_nmf_hals}, {infos_seminmf_mu, infos_nmf_hals});
-    display_graph('time','cost', {'Semi-NMF', 'HALS'}, {w_seminmf_mu, w_nmf_hals}, {infos_seminmf_mu, infos_nmf_hals});
+    display_graph('epoch','cost', {'NMF-MU', 'Semi-NMF', 'nsNMF', 'Sparse NMF', 'NMFsc', 'HALS'}, {w_nmf_mu, w_seminmf, w_nsnmf, w_sparsenmf, w_nmfsc, w_nmf_hals}, {infos_nmf_mu, infos_seminmf, infos_nsnmf, infos_sparsenmf, infos_nmfsc, infos_nmf_hals});
+    display_graph('time','cost', {'NMF-MU','Semi-NMF', 'nsNMF', 'Sparse NMF', 'NMFsc', 'HALS'}, {w_nmf_mu, w_seminmf, w_nsnmf, w_sparsenmf, w_nmfsc, w_nmf_hals}, {infos_nmf_mu, infos_seminmf, infos_nsnmf, infos_sparsenmf, infos_nmfsc, infos_nmf_hals});
     
 end
 

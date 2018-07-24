@@ -1,4 +1,4 @@
-function [infos, f_val, optgap] = store_nmf_infos(V, W, H, R, options, infos, epoch, grad_calc_count, elapsed_time)
+function [infos, f_val, optgap] = store_nmf_infos(V, W, H, R, options, infos, epoch, grad_calc_count, elapsed_time, metric, metric_param)
 % Function to store statistic information
 %
 % Inputs:
@@ -11,6 +11,8 @@ function [infos, f_val, optgap] = store_nmf_infos(V, W, H, R, options, infos, ep
 %       epoch           number of outer iteration
 %       grad_calc_count number of calclations of gradients
 %       elapsed_time    elapsed time from the begining
+%       metric          'EUC', 'KL', 'ALPHA-D', 'BETA-D'
+%       metric_param    alpha, beta
 % Output:
 %       infos           updated struct to store statistic information
 %       f_val           cost function value
@@ -20,6 +22,14 @@ function [infos, f_val, optgap] = store_nmf_infos(V, W, H, R, options, infos, ep
 %
 % Created by H.Kasai on Oct. 27, 2017
 
+    if nargin < 10
+        metric = 'EUC';
+        metric_param = [];
+    elseif nargin < 11
+        metric = 'KL';
+        metric_param = [];        
+    end
+
 
     if ~epoch
         
@@ -27,7 +37,7 @@ function [infos, f_val, optgap] = store_nmf_infos(V, W, H, R, options, infos, ep
         infos.epoch = epoch;        
         infos.time = 0;    
         infos.grad_calc_count = grad_calc_count;
-        f_val = nmf_cost(V, W, H, R);
+        f_val = nmf_cost(V, W, H, R, metric, metric_param);
         optgap = f_val - options.f_opt;
         infos.optgap = optgap;
         infos.cost = f_val;
@@ -44,7 +54,7 @@ function [infos, f_val, optgap] = store_nmf_infos(V, W, H, R, options, infos, ep
         infos.epoch = [infos.epoch epoch];        
         infos.time = [infos.time elapsed_time];
         infos.grad_calc_count = [infos.grad_calc_count grad_calc_count];
-        f_val = nmf_cost(V, W, H, R);
+        f_val = nmf_cost(V, W, H, R, metric, metric_param);
         optgap = f_val - options.f_opt;  
         infos.optgap = [infos.optgap optgap];
         infos.cost = [infos.cost f_val];

@@ -3,7 +3,7 @@ function [x, infos] = sparse_nmf(V, rank, in_options)
 %
 % The problem of interest is defined as
 %
-%           min KL(V - WH) + lambda * sum(H(:)),
+%           min D(V||W*H) + lambda * sum(H(:)),
 %           where 
 %           {V, W, H} > 0.
 %
@@ -66,9 +66,12 @@ function [x, infos] = sparse_nmf(V, rank, in_options)
    
     % store initial info
     clear infos;
-    [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, [], epoch, grad_calc_count, 0);
+    [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, [], epoch, grad_calc_count, 0, 'KL');
     % store additionally different cost
-    infos.cost_new = sum(sum((V.*log(V./(W*H))) - V + W*H)) + options.lambda*sum(sum(H));
+    reg_val = options.lambda*sum(sum(H));
+    f_val_total = f_val + reg_val;
+    infos.cost_reg = reg_val;
+    infos.cost_total = f_val_total;       
     
     if options.verbose > 1
         fprintf('sparseNMF: Epoch = 0000, cost = %.16e, optgap = %.4e\n', f_val, optgap); 
@@ -86,8 +89,7 @@ function [x, infos] = sparse_nmf(V, rank, in_options)
         VC(V==0 & W*H==0) = 1+1e-9;
         H = (H.*(W'*VC))/(1+options.lambda);
         
-        sum(sum(H))
-        
+      
         % update W by Lee and Seung's divergence step
         %W = W.*((V./(W*H))*H')./(ones(vdim,1)*sum(H'));
         VC = V./(W*H + 1e-9);
@@ -107,20 +109,30 @@ function [x, infos] = sparse_nmf(V, rank, in_options)
         epoch = epoch + 1;         
         
         % store info
-        [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, infos, epoch, grad_calc_count, elapsed_time);  
+        [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, infos, epoch, grad_calc_count, elapsed_time, 'KL');  
         % store additionally different cost
-        f_val_new = sum(sum((V.*log(V./(W*H))) - V + W*H)) + options.lambda*sum(sum(H));
-        infos.cost_new = [infos.cost_new f_val_new];
+        reg_val = options.lambda*sum(sum(H));
+        f_val_total = f_val + reg_val;
+        infos.cost_reg = [infos.cost_reg reg_val];
+        infos.cost_total = [infos.cost_total f_val_total];   
         
         
         % display infos
         if options.verbose > 1
             if ~mod(epoch, disp_freq)
-                fprintf('sparseNMF: Epoch = %04d, cost = %.16e, optgap = %.4e\n', epoch, f_val, optgap);
+                fprintf('sparseNMF: Epoch = %04d, cost = %.16e, cost-reg = %.16e, optgap = %.4e\n', epoch, f_val, reg_val, optgap);
             end
         end      
 
     end
+    
+    if options.verbose > 0
+        if optgap < options.tol_optgap
+            fprintf('# sparseNMF: Optimality gap tolerance reached: f_val = %.4e < f_opt = %.4e (%.4e)\n', f_val, f_opt, options.tol_optgap);
+        elseif epoch == options.max_epoch
+            fprintf('# sparseNMF: Max epoch reached (%g).\n', options.max_epoch);
+        end 
+    end    
 
     x.W = W;
     x.H = H;

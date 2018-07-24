@@ -24,15 +24,15 @@ function [x, infos] = semi_nmf(V, rank, in_options)
 %
 %
 % Reference:
-%   C.H.Q. Ding, T. Li, M. I. Jordan,
-%   "Convex and Semi-Nonnegative Matrix Factorizations,"
-% 	IEEE Transactions on Pattern Analysis and Machine Intelligence, vol.32, no.1, 2010. 
+%       C.H.Q. Ding, T. Li, M. I. Jordan,
+%       "Convex and semi-nonnegative matrix factorizations,"
+%       IEEE Transactions on Pattern Analysis and Machine Intelligence, vol.32, no.1, 2010. 
 %
 %
 % Modified by H.Kasai on July 21, 2018
 
     
-     % set dimensions and samples
+    % set dimensions and samples
     m = size(V, 1);
     n = size(V, 2); 
     

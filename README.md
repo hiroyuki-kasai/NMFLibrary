@@ -3,9 +3,9 @@ Matlab library for non-negative matrix factorization (NMF)
 
 Authors: [Hiroyuki Kasai](http://www.kasailab.com/)
 
-Last page update: July 23, 2018
+Last page update: July 24, 2018
 
-Latest library version: 1.3.0 (see Release notes for more info)
+Latest library version: 1.4.0 (see Release notes for more info)
 
 <br />
 
@@ -20,7 +20,8 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 - Base NMF
     - **MU** (multiplicative updates)
         - MU
-            - D. D. Lee and H. S. Seung, "[Algorithms for non-negative matrix factorization](https://papers.nips.cc/paper/1861-algorithms-for-non-negative-matrix-factorization.pdf)," NIPS 2000.
+            - D.D. Lee and H. S. Seung, "[Algorithms for non-negative matrix factorization](https://papers.nips.cc/paper/1861-algorithms-for-non-negative-matrix-factorization.pdf)," NIPS 2000. (for Euclidean distance and [Kullback-Leibler divergence](https://en.wikipedia.org/wiki/Kullback-Leibler_divergence) (KL))
+            - A.Cichocki, S.Amari, R.Zdunek, R.Kompass, G.Hori, and Z.He, "[Extended SMART algorithms for non-negative matrix factorization](https://link.springer.com/chapter/10.1007/11785231_58)," Artificial Intelligence and Soft Computing, 2006. (for alpha divergence and beta divergence)
         - Modified MU
             - C.-J. Lin, "[On the convergence of multiplicative update algorithms for nonnegative matrix factorization](http://ieeexplore.ieee.org/document/4359171/)," IEEE Trans. Neural Netw. vol.18, no.6, pp.1589-1596, 2007. 
         - Acceralated MU
@@ -38,7 +39,6 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
         - Acceralated Hierarchical ALS
             - N. Gillis and F. Glineur, "[Accelerated multiplicative updates and hierarchical ALS algorithms for nonnegative matrix factorization](https://arxiv.org/pdf/1107.5194.pdf)," Neural Computation, vol.24, no.4, pp. 1085-1105, 2012. 
 
-
     - **ANLS** (alternative non-negative least squares)
         - ASGROUP (ANLS with Active Set Method and Column Grouping)
         - ASGIVENS (ANLS with Active Set Method and Givens Updating)
@@ -46,34 +46,6 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
             - J. Kim, Y. He, and H. Park, "[Algorithms for nonnegative matrix and tensor factorizations: A unified view based on block coordinate descent framework](https://link.springer.com/article/10.1007/s10898-013-0035-4)," Journal of Global Optimization, 58(2), pp. 285-319, 2014.
             - J. Kim and H. Park, "[Fast nonnegative matrix factorization: An active-set-like method and comparisons](http://epubs.siam.org/doi/abs/10.1137/110821172)," SIAM Journal on Scientific Computing (SISC), 33(6), pp. 3261-3281, 2011.
 
-- Online/stochstic NMF
-
-    - **INMF** (Incremental NMF) and **ONMF** (Online NMF)
-        - S. S. Bucak and B. Gunsel, "[Incremental Subspace Learning via Non-negative Matrix Factorization](https://www.sciencedirect.com/science/article/pii/S0031320308003725)," Pattern Recognition, 2009.
-
-    - **SPG** (Stochastic projected gradient descent)
-
-    - **RONMF** (Robust online NMF)
-        - R. Zhao and Y. F. Tan, "[Online nonnegative matrix factorization with outliers](https://ieeexplore.ieee.org/document/7676413/)," IEEE ICASSP2016, 2016.
-
-    - **SAGA-MU-NMF** (SAGA multiplicative updates)
-        - R. Serizel, S. Essid and G.Richard, "[Mini-batch stochastic approaches for accelerated multiplicative updates in nonnegative matrix factorisation with beta-divergence](https://ieeexplore.ieee.org/document/7738818/),", IEEE 26th International Workshop on Machine Learning for Signal Processing (MLSP), 2016.
-
-    - **SMU** (Stochastic multiplicative updates) and **SVRMU** (Stochastic variance reduced multiplicative updates)
-        - H. Kasai, "[Stochastic variance reduced multiplicative update for nonnegative matrix factorization](https://arxiv.org/abs/1710.10781)," IEEE ICASSP2018, 2018.
-
-- Robust NMF
-
-- Sparse
-
-    - **sparseNMF** (Sparse NMF)
-
-    - **NMFsc** (NMF with sparseness constraints)
-        - Patrik O. Hoyer, "[Non-negative matrix factorization with sparseness constraints](http://www.jmlr.org/papers/volume5/hoyer04a/hoyer04a.pdf)," Journal of Machine Learning Research (JMLR), vol.5, pp.1457-1469, 2004.
-
-    - **nsNMF** (Nonsmooth NMF)
-        - A. Pascual-Montano, J. M. Carazo, K. Kochi, D. Lehmann, and R. D. Pascual-Marqui, "[Nonsmooth Nonnegative Matrix Factorization (nsNMF)](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=1580485)," IEEE Transactions on Pattern Analysis and Machine Intelligence (PAMI), vol.28, no.3, pp.403-415, 2006. 
-   
 
 - Else
 
@@ -87,6 +59,48 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
     - **SDNMF** (NMF with Sinkhorn Distance)
         - W. Qian, B. Hong, D. Cai, X. He, and X. Li, "[Non-negative matrix factorization with sinkhorn distance](https://pdfs.semanticscholar.org/42b2/ec6e4453dc033d37b9fcb53a1313c018fa23.pdf)", IJCAI, pp.1960-1966, 2016.
     
+- Robust NMF
+    - N. Guan, D. Tao, Z. Luo, and B. Yuan, "[Online nonnegative matrix factorization with robust stochastic approximation](https://ieeexplore.ieee.org/document/6203594/)," IEEE Trans. Newral Netw. Learn. Syst., 2012.
+
+- Sparse
+
+    - **sparseMU** (Sparse multiplicative upates (MU))
+        - J. Eggert and E. Korner, "[Sparse coding and NMF](https://ieeexplore.ieee.org/document/1381036/)", IEEE International Joint Conference on Neural Networks, 2004.
+        - M. Schmidt, J. Larsen, and F. Hsiao, "[Wind noise reduction using non-negative sparse coding](https://ieeexplore.ieee.org/document/4414345/)", IEEE Workshop on Machine Learning for Signal Processing (MLSP), 2007.
+
+    - **sparseNMF** (Sparse NMF)
+
+    - **NMFsc** (NMF with sparseness constraints)
+        - Patrik O. Hoyer, "[Non-negative matrix factorization with sparseness constraints](http://www.jmlr.org/papers/volume5/hoyer04a/hoyer04a.pdf)," Journal of Machine Learning Research (JMLR), vol.5, pp.1457-1469, 2004.
+
+    - **nsNMF** (Nonsmooth NMF)
+        - A. Pascual-Montano, J. M. Carazo, K. Kochi, D. Lehmann, and R. D. Pascual-Marqui, "[Nonsmooth Nonnegative Matrix Factorization (nsNMF)](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=1580485)," IEEE Transactions on Pattern Analysis and Machine Intelligence (PAMI), vol.28, no.3, pp.403-415, 2006. 
+   
+- Orthgotonal
+    - **orthMU** (Orthgotonal multiplicative upates (MU))
+        - S. Choi, "[Algorithms for orthogonal nonnegative matrix factorization](https://ieeexplore.ieee.org/document/4634046/)", IEEE International Joint Conference on Neural Networks, 2008.
+
+    - **OrthNMF**
+        - F.Pompilia, N.Gillis, P.-A.Absil, and F.Glineur, "[Two algorithms for orthogonal nonnegative matrix factorization with application to clustering](https://www.sciencedirect.com/science/article/pii/S0925231214004068)," Neurocomputing, vol.141, no.2, pp.15-25, 2014.
+
+
+- Online/stochstic NMF
+
+    - **INMF** (Incremental NMF) and **ONMF** (Online NMF)
+        - S. S. Bucak and B. Gunsel, "[Incremental Subspace Learning via Non-negative Matrix Factorization](https://www.sciencedirect.com/science/article/pii/S0031320308003725)," Pattern Recognition, 2009.
+
+    - **SPG** (Stochastic projected gradient descent)
+
+    - **RONMF** (Robust online NMF)
+        - R. Zhao and Y. F. Tan, "[Online nonnegative matrix factorization with outliers](https://ieeexplore.ieee.org/document/7676413/)," IEEE ICASSP2016, 2016.
+        - N. Guan, D. Tao, Z. Luo, and B. Yuan, "[Online nonnegative matrix factorization with robust stochastic approximation](https://ieeexplore.ieee.org/document/6203594/)," IEEE Trans. Newral Netw. Learn. Syst., 2012.
+
+    - **SAGA-MU-NMF** (SAGA multiplicative updates)
+        - R. Serizel, S. Essid and G.Richard, "[Mini-batch stochastic approaches for accelerated multiplicative updates in nonnegative matrix factorisation with beta-divergence](https://ieeexplore.ieee.org/document/7738818/),", IEEE 26th International Workshop on Machine Learning for Signal Processing (MLSP), 2016.
+
+    - **SMU** (Stochastic multiplicative updates) and **SVRMU** (Stochastic variance reduced multiplicative updates)
+        - H. Kasai, "[Stochastic variance reduced multiplicative update for nonnegative matrix factorization](https://arxiv.org/abs/1710.10781)," IEEE ICASSP2018, 2018.
+
 
 <br />
 
@@ -95,7 +109,10 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 
 |Algorithm name in example codes| function | `options.alg` | other `options` |
 |---|---|---|---|
-|MU|`nmf_mu`|`mu`||
+|MU-EUC|`nmf_mu`|`mu`|`metric='EUC'`|
+|MU-KL|`nmf_mu`|`mu`|`metric='KL'`|
+|MU-ALPHA|`nmf_mu`|`mu`|`metric='ALPHA-D'`|
+|MU-BETA|`nmf_mu`|`mu`|`metric='BETA-D'`|
 |Modified MU|`nmf_mu`|`mod_mu`||
 |Acceralated MU|`nmf_mu`|`acc_mu`||
 |PGD|`nmf_pgd`|`pgd`||
@@ -106,11 +123,21 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 |ASGROUP|`nmf_anls`|`anls_asgroup`||
 |ASGIVENS|`nmf_anls`|`anls_asgivens`||
 |BPP|`nmf_anls`|`anls_bpp`||
+|sparseMU-EUC|`nmf_sparse_mu`||`metric='EUC'`|
+|sparseMU-KL|`nmf_sparse_mu`||`metric='KL'`|
 |sparseNMF|`sparse_nmf`|||
 |NMFsc|`nmf_sc`|||
 |nsNMF|`ns_nmf`|||
 |Semi-NMF|`semi_nmf`|||
 |SDNMF|`SDNMF`|||
+|orthMU|`nmf_orth_mu`|||
+|OrthNMF||||
+|INMF|`inmf`|||
+|ONMF|`onmf`|||
+|Acceralated ONMF|`omf_acc`|||
+|SPG|`spg_nmf`|||
+|RONMF|`ronmf`|||
+|SAGA-MU-NMF|`asag_mu_nmf`|||
 |SMU|`smu_nmf`|||
 |SVRMU|`svrmu_nmf`|||
 
@@ -275,6 +302,9 @@ If you have any problems or questions, please contact the author: [Hiroyuki Kasa
 
 Release notes
 --------------
+* Version 1.4.0 (Jul. 24, 2018)
+    - sparseMU and orthMU are added.
+    - MU with Kullback-Leibler divergence (KL), Amari alpha divergence, and beta divergenceare added.
 * Version 1.3.0 (Jul. 23, 2018)
     - NMFsc, scNMF and csNMF are added.
 * Version 1.2.0 (Jul. 21, 2018)

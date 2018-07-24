@@ -1,9 +1,14 @@
 function [x, infos] = ns_nmf(V, rank, in_options)
-% Nonsmooth Nonnegative matrix factorization (nsNMF)
+% Nonsmooth nonnegative matrix factorization (nsNMF)
 %
 % The problem of interest is defined as
 %
-%           min || V - WSH ||_F^2,
+%           min || V - W*S*H ||_F^2,
+%
+%           or
+%
+%           min  D(V||W*S*H),
+%
 %           where 
 %           {V, W, S, H} > 0.
 %
@@ -27,7 +32,7 @@ function [x, infos] = ns_nmf(V, rank, in_options)
 %
 % Reference:
 %       A. Pascual-Montano, J. M. Carazo, K. Kochi, D. Lehmann, and R. D. Pascual-Marqui, 
-%       "Nonsmooth Nonnegative Matrix Factorization (nsNMF),"
+%       "Nonsmooth nonnegative matrix factorization (nsNMF),"
 %       IEEE Transactions on Pattern Analysis and Machine Intelligence (PAMI), vol.28, no.3, pp.403-415, 2006. 
 %
 %
@@ -40,8 +45,8 @@ function [x, infos] = ns_nmf(V, rank, in_options)
     n = size(V, 2);
 
     % set local options 
-    local_options.theta = 0; % decides the degree in [0,1] of nonsmoothing (use 0 for standard NMF)
-    local_options.cost  = 'EUC'; % 'EUC' (default) or 'KL'
+    local_options.theta     = 0; % decides the degree in [0,1] of nonsmoothing (use 0 for standard NMF)
+    local_options.metric    = 'EUC'; % 'EUC' (default) or 'KL'
     
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
@@ -87,10 +92,10 @@ function [x, infos] = ns_nmf(V, rank, in_options)
         
         % update H
         WS = W*S;
-        if strcmp(options.cost, 'EUC')
+        if strcmp(options.metric, 'EUC')
             H = H.*(WS'*V)./((WS'*WS)*H + 1e-9);
-        elseif strcmp(options.cost, 'KL')
-            H = H.*(WS'*(V./(WS*H + 1e-9)))./(sum(WS,1)'*ones(1,t));
+        elseif strcmp(options.metric, 'KL')
+            H = H.*(WS'*(V./(WS*H + 1e-9)))./(sum(WS,1)'*ones(1,n));
         end  
         
         % normalize rows in H
@@ -98,10 +103,10 @@ function [x, infos] = ns_nmf(V, rank, in_options)
         
         % update W
         SH = S*H;
-        if strcmp(options.cost, 'EUC')
+        if strcmp(options.metric, 'EUC')
             W = W.*(V*SH')./(W*(SH*SH') + 1e-9);
-        elseif strcmp(options.cost, 'KL')
-            W = W.*((V./(W*SH + 1e-9))*SH')./(ones(n,1)*sum(SH,2)');
+        elseif strcmp(options.metric, 'KL')
+            W = W.*((V./(W*SH + 1e-9))*SH')./(ones(m,1)*sum(SH,2)');
         end        
 
         % measure elapsed time
@@ -125,6 +130,14 @@ function [x, infos] = ns_nmf(V, rank, in_options)
         end      
 
     end
+    
+    if options.verbose > 0
+        if optgap < options.tol_optgap
+            fprintf('# nsNMF: Optimality gap tolerance reached: f_val = %.4e < f_opt = %.4e (%.4e)\n', f_val, f_opt, options.tol_optgap);
+        elseif epoch == options.max_epoch
+            fprintf('# nsNMF: Max epoch reached (%g).\n', options.max_epoch);
+        end 
+    end      
 
     x.W = W;
     x.H = H;

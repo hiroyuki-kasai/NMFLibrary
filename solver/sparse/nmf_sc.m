@@ -29,7 +29,7 @@ function [x, infos] = nmf_sc(V, rank, in_options)
 % Reference:
 %       Patrik O. Hoyer, 
 %       "Non-negative matrix factorization with sparseness constraints," 
-%       Journal of Machine Learning Research, vol.5, pp.1457?1469, 2004.
+%       Journal of Machine Learning Research, vol.5, pp.1457-1469, 2004.
 %
 %
 % Created by Patrik Hoyer, 2006 (and modified by Silja Polvi-Huttunen, University of Helsinki, Finland, 2014)
@@ -50,16 +50,6 @@ function [x, infos] = nmf_sc(V, rank, in_options)
     options = mergeOptions(options, in_options); 
     
     
-    %
-    if not(isempty(options.sW))
-        L1a = sqrt(n)-(sqrt(n)-1)*options.sW;
-    end
-    if not(isempty(options.sH))
-        L1s = sqrt(n)-(sqrt(n)-1)*options.sH;
-    end 
-    
-   
-    
     % initialize
     epoch = 0;    
     R_zero = zeros(m, n);
@@ -71,13 +61,16 @@ function [x, infos] = nmf_sc(V, rank, in_options)
         W = options.x_init.W;
         H = options.x_init.H;
     end 
+    H = H./(sqrt(sum(H.^2,2))*ones(1,n));
     
-    if ~isempty(options.sW) 
+    if ~isempty(options.sW)
+        L1a = sqrt(n)-(sqrt(n)-1)*options.sW;
         for i=1:rank
             W(:,i) = projfunc(W(:,i),L1a,1,1); 
         end
     end
     if ~isempty(options.sH) 
+        L1s = sqrt(n)-(sqrt(n)-1)*options.sH;
         for i=1:rank
             H(i,:) = (projfunc(H(i,:)',L1s,1,1))'; 
         end
@@ -93,9 +86,12 @@ function [x, infos] = nmf_sc(V, rank, in_options)
    
     % store initial info
     clear infos;
-    [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, [], epoch, grad_calc_count, 0);
+    [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, [], epoch, grad_calc_count, 0, 'KL');
     % store additionally different cost
-    infos.cost_new = sum(sum((V.*log(V./(W*H))) - V + W*H)) + options.lambda*sum(sum(H));
+    reg_val = options.lambda*sum(sum(H));
+    f_val_total = f_val + reg_val;
+    infos.cost_reg = reg_val;
+    infos.cost_total = f_val_total;       
     
     if options.verbose > 1
         fprintf('NMFsc: Epoch = 0000, cost = %.16e, optgap = %.4e\n', f_val, optgap); 
@@ -141,20 +137,30 @@ function [x, infos] = nmf_sc(V, rank, in_options)
         epoch = epoch + 1;         
         
         % store info
-        [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, infos, epoch, grad_calc_count, elapsed_time);  
+        [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, infos, epoch, grad_calc_count, elapsed_time, 'KL');  
         % store additionally different cost
-        f_val_new = sum(sum((V.*log(V./(W*H))) - V + W*H)) + options.lambda*sum(sum(H));
-        infos.cost_new = [infos.cost_new f_val_new];
+        reg_val = options.lambda*sum(sum(H));
+        f_val_total = f_val + reg_val;
+        infos.cost_reg = [infos.cost_reg reg_val];
+        infos.cost_total = [infos.cost_total f_val_total];         
         
         
         % display infos
         if options.verbose > 1
             if ~mod(epoch, disp_freq)
-                fprintf('NMFsc: Epoch = %04d, cost = %.16e, optgap = %.4e\n', epoch, f_val, optgap);
+                fprintf('NMFsc: Epoch = %04d, cost = %.16e, cost-reg = %.16e, optgap = %.4e\n', epoch, f_val, reg_val, optgap);
             end
         end      
 
     end
+    
+    if options.verbose > 0
+        if optgap < options.tol_optgap
+            fprintf('# NMFsc: Optimality gap tolerance reached: f_val = %.4e < f_opt = %.4e (%.4e)\n', f_val, f_opt, options.tol_optgap);
+        elseif epoch == options.max_epoch
+            fprintf('# NMFsc: Max epoch reached (%g).\n', options.max_epoch);
+        end 
+    end     
 
     x.W = W;
     x.H = H;
@@ -168,7 +174,7 @@ function [x, infos] = nmf_sc(V, rank, in_options)
             dX = (W*H-V)*H';
         end
 
-        begobj = euclerror(W*H,V);
+        begobj = nmf_cost(V, W, H, R_zero);
         % Make sure to decrease the objective:
         while 1
 
@@ -185,9 +191,9 @@ function [x, infos] = nmf_sc(V, rank, in_options)
             end
 
             if strcmp(name,'H')
-                newobj = euclerror(W*Xnew,V);
+                newobj = nmf_cost(V, W, Xnew, R_zero);
             else
-                newobj = euclerror(Xnew*H,V);
+                newobj = nmf_cost(V, Xnew, H, R_zero);
             end
             if newobj<begobj % objective decreased, we can continue
                 break

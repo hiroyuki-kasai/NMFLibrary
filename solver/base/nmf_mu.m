@@ -3,9 +3,9 @@ function [x, infos] = nmf_mu(V, rank, in_options)
 %
 % The problem of interest is defined as
 %
-%           min || V - WH ||_F^2,
+%           min f(V, W, H),
 %           where 
-%           {V, W, H} > 0.
+%           {V, W, H} >= 0.
 %
 % Given a non-negative matrix V, factorized non-negative matrices {W, H} are calculated.
 %
@@ -15,10 +15,37 @@ function [x, infos] = nmf_mu(V, rank, in_options)
 %       rank        : rank
 %       in_options 
 %           alg     : mu: Multiplicative upates (MU)
-%                       Reference:
+%                       Reference for Euclidean distance and Kullback?Leibler divergence (KL):
 %                           Daniel D. Lee and H. Sebastian Seung,
 %                           "Algorithms for non-negative matrix factorization,"
 %                           NIPS 2000. 
+%
+%                       Reference for Amari alpha divergence:
+%                           A.Cichocki, S.Amari, R.Zdunek, R.Kompass, G.Hori, and Z.He,
+%                           "Extended SMART algorithms for non-negative matrix factorization,"
+%                           Artificial Intelligence and Soft Computing, 2006.
+%
+%                           min D(V||R) = sum(V(:).^alpha .* R(:).^(1-d_alpha) - d_alpha*V(:) + (d_alpha-1)*R(:)) / (alpha*(d_alpha-1)), 
+%                           where R = W*H.
+%
+%                           - Pearson's distance (d_alpha=2)
+%                           - Hellinger's distance (d_alpha=0.5)
+%                           - Neyman's chi-square distance (d_alpha=-1)
+%
+%                       Reference for beta divergence:
+%                           A.Cichocki, S.Amari, R.Zdunek, R.Kompass, G.Hori, and Z.He,
+%                           "Extended SMART algorithms for non-negative matrix factorization,"
+%                           Artificial Intelligence and Soft Computing, 2006.
+%
+%                           min D(V||W*H)
+%
+%                                               | sum(V(:).^d_beta + (d_beta-1)*R(:).^d_beta - ...
+%                                               |     d_beta*V(:).*R(:).^(d_beta-1)) / ...
+%                                               |     (d_beta*(d_beta-1))                    (d_beta \in{0 1}
+%                          where D(V||R) =      |                                          
+%                                               | sum(V(:).*log(V(:)./R(:)) - V(:) + R(:)) (d_beta=1)
+%                                               |
+%                                               | sum(V(:)./R(:) - log(V(:)./R(:)) - 1)   (d_beta=0)
 %
 %                   : mu_mod: Modified multiplicative upates (MU)
 %                       Reference:
@@ -48,7 +75,9 @@ function [x, infos] = nmf_mu(V, rank, in_options)
 %
 %
 % Created by H.Kasai on Feb. 16, 2017
-% Modified by H.Kasai on Oct. 27, 2017
+% Modified by H.Kasai on Jul., 2018
+% Some parts are borrowed after modifications from the codes by Patrik Hoyer, 2006 
+% (and modified by Silja Polvi-Huttunen, University of Helsinki, Finland, 2014)
 
 
     % set dimensions and samples
@@ -56,9 +85,15 @@ function [x, infos] = nmf_mu(V, rank, in_options)
     n = size(V, 2);
 
     % set local options 
-    local_options.alg   = 'mu';
-    local_options.alpha = 2;
-    local_options.delta = 0.1;
+    local_options.alg       = 'mu';
+    local_options.norm_h    = 0;
+    local_options.norm_w    = 1;    
+    local_options.alpha     = 2;
+    local_options.delta     = 0.1;
+    local_options.metric    = 'EUC'; % 'EUC' (default) or 'KL'  
+    local_options.d_alpha   = -1; % for alpha divergence
+    local_options.d_beta    = 0; % for beta divergence 
+    local_options.myeps     = 1e-16;
     
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
@@ -86,8 +121,19 @@ function [x, infos] = nmf_mu(V, rank, in_options)
         H = options.x_init.H;
     end   
     
+    
+    if options.norm_w ~= 0
+        % normalize W
+        W = normalize_W(W, options.norm_w);
+    end
+
+    if options.norm_h ~= 0
+        % normalize H
+        H = normalize_H(H, options.norm_h);
+    end    
+    
     if strcmp(options.alg, 'mu_mod')
-        delta = eps;
+        delta = options.myeps;
     elseif strcmp(options.alg, 'mu_acc') 
         K = m*n;        
         rhoW = 1+(K+n*rank)/(m*(rank+1)); 
@@ -100,7 +146,13 @@ function [x, infos] = nmf_mu(V, rank, in_options)
    
     % store initial info
     clear infos;
-    [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, [], epoch, grad_calc_count, 0);
+    metric_param = [];
+    if strcmp(options.metric, 'ALPHA-D')
+        metric_param = options.d_alpha;
+    elseif strcmp(options.metric, 'BETA-D')
+        metric_param = options.d_beta;        
+    end
+    [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, [], epoch, grad_calc_count, 0, options.metric, metric_param);
     
     if options.verbose > 1
         fprintf('MU (%s): Epoch = 0000, cost = %.16e, optgap = %.4e\n', options.alg, f_val, optgap); 
@@ -113,32 +165,80 @@ function [x, infos] = nmf_mu(V, rank, in_options)
     while (optgap > options.tol_optgap) && (epoch < options.max_epoch)           
 
         if strcmp(options.alg, 'mu')
-            % update H
-            H = H .* (W' * V) ./ (W' * W * H);
-            H = H + (H<eps) .* eps;
-            
-            % update W
-            W = W .* (V * H') ./ (W * (H * H'));
-            W = W + (W<eps) .* eps;
-            
-            
-            % KL case (To Do)
-            %H = H .* (W'*(V./(W*H + 1e-9)))./(sum(W)'*ones(1,samples)); 
-            %W = W .* ((V./(W*H + 1e-9))*H')./(ones(vdim,1)*sum(H'));
+            if strcmp(options.metric, 'EUC')
+                
+                % update H
+                H = H .* (W' * V) ./ (W' * W * H);
+                H = H + (H<options.myeps) .* options.myeps;
+
+                % update W
+                W = W .* (V * H') ./ (W * (H * H'));
+                W = W + (W<options.myeps) .* options.myeps;
+                
+            elseif strcmp(options.metric, 'KL')
+                
+                % update W
+                W = W .* ((V./(W*H + options.myeps))*H')./(ones(m,1)*sum(H'));
+                if options.norm_w ~= 0
+                    W = normalize_W(W, options.norm_w);
+                end                
+                
+                % update H
+                H = H .* (W'*(V./(W*H + options.myeps)))./(sum(W)'*ones(1,n));
+                if options.norm_h ~= 0
+                    W = normalize_H(H, options.norm_h);
+                end                    
+
+            elseif strcmp(options.metric, 'ALPHA-D')
+                
+                % update W
+                W = W .* ( ((V+options.myeps) ./ (W*H+options.myeps)).^options.d_alpha * H').^(1/options.d_alpha);
+                if options.norm_w ~= 0
+                    W = normalize_W(W, options.norm_w);
+                end
+                W = max(W, options.myeps);
+
+                % update H
+                H = H .* ( (W'*((V+options.myeps)./(W*H+options.myeps)).^options.d_alpha) ).^(1/options.d_alpha);
+                if options.norm_h ~= 0
+                    H = normalize_H(H, options.norm_h);
+                end
+                H = max(H, options.myeps);
+                
+            elseif strcmp(options.metric, 'BETA-D')
+                
+                WH = W * H;
+                
+                % update W
+                W = W .* ( ((WH.^(options.d_beta-2) .* V)*H') ./ max(WH.^(options.d_beta-1)*H', options.myeps) );
+                             
+                if options.norm_w ~= 0
+                    W = normalize_W(W, options.norm_w);
+                end
+                
+                WH = W * H;
+
+                % update H
+                H = H .* ( (W'*(WH.^(options.d_beta-2) .* V)) ./ max(W'*WH.^(options.d_beta-1), options.myeps) );
+                if options.norm_h ~= 0
+                    H = normalize_H(H, options.norm_h);
+                end
+
+            end
             
         elseif strcmp(options.alg, 'mu_mod')
             % update H
             WtW = W' * W;
             WtV = W' * V;
             gradH = WtW * H - WtV;
-            Hb = max(H, (gradH < 0)* eps);
+            Hb = max(H, (gradH < 0)* options.myeps);
             H = H - Hb ./ (WtW * Hb + delta) .* gradH;
             
             % update W
             HHt = H * H';
             VHt = V * H';
             gradW = W * HHt - VHt;
-            Wb = max(W, (gradW < 0)* eps);
+            Wb = max(W, (gradW < 0)* options.myeps);
             W = W - Wb ./ (Wb * HHt + delta) .* gradW;
             
             S = sum(W,1);
@@ -190,7 +290,7 @@ function [x, infos] = nmf_mu(V, rank, in_options)
         epoch = epoch + 1;         
         
         % store info
-        [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, infos, epoch, grad_calc_count, elapsed_time);  
+        [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, infos, epoch, grad_calc_count, elapsed_time, options.metric, metric_param);  
         
         % display infos
         if options.verbose > 1
