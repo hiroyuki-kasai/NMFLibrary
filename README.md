@@ -75,6 +75,9 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 
     - **nsNMF** (Nonsmooth NMF)
         - A. Pascual-Montano, J. M. Carazo, K. Kochi, D. Lehmann, and R. D. Pascual-Marqui, "[Nonsmooth Nonnegative Matrix Factorization (nsNMF)](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=1580485)," IEEE Transactions on Pattern Analysis and Machine Intelligence (PAMI), vol.28, no.3, pp.403-415, 2006. 
+
+    - **fnsNMF** (Fast nonsmooth NMF)
+        - Z. Yang, Y. Zhang, W. Yan, Y. Xiang, and S. Xie, "[A fast non-smooth nonnegative matrix factorization for learning sparse representation](https://ieeexplore.ieee.org/document/7559804/)," IEEE Access, vol.4, pp.5161-5168, 2016.
    
 - Orthgotonal
     - **orthMU** (Orthgotonal multiplicative upates (MU))
@@ -127,7 +130,8 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 |sparseMU-KL|`nmf_sparse_mu`||`metric='KL'`|
 |sparseNMF|`sparse_nmf`|||
 |NMFsc|`nmf_sc`|||
-|nsNMF|`ns_nmf`|||
+|nsNMF|`ns_nmf`||`metric='EUC'`, `update_alg='apg'`|
+|fnsNMF|`ns_nmf`|||
 |Semi-NMF|`semi_nmf`|||
 |SDNMF|`SDNMF`|||
 |orthMU|`nmf_orth_mu`|||
@@ -159,6 +163,7 @@ Folders and files
     |--- online/        - Online/stochstic NMF solvers.
     |--- sparse/        - Sparse NMF solvers.
     |--- robust/        - Robust NMF solvers.
+    |--- orthogonal/    - Orthogonal NMF solvers.
     |--- 3rd_party/     - Solvers provided by 3rd_party.
 </pre>
 

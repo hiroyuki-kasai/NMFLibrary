@@ -21,6 +21,10 @@ function [infos, f_val, optgap] = store_nmf_infos(V, W, H, R, options, infos, ep
 % This file is part of NMFLibrary.
 %
 % Created by H.Kasai on Oct. 27, 2017
+% Created by H.Kasai on Jul. 26, 2018
+
+    f_val = Inf;
+    optgap = Inf;
 
     if nargin < 10
         metric = 'EUC';
@@ -37,15 +41,17 @@ function [infos, f_val, optgap] = store_nmf_infos(V, W, H, R, options, infos, ep
         infos.epoch = epoch;        
         infos.time = 0;    
         infos.grad_calc_count = grad_calc_count;
-        f_val = nmf_cost(V, W, H, R, metric, metric_param);
-        optgap = f_val - options.f_opt;
-        infos.optgap = optgap;
-        infos.cost = f_val;
+        if ~isempty(V) || ~isempty(W) || ~isempty(H) || ~isempty(R)
+            f_val = nmf_cost(V, W, H, R, metric, metric_param);
+            optgap = f_val - options.f_opt;
+            infos.optgap = optgap;
+            infos.cost = f_val;
+        end
     
         if options.store_sol
-            infos.W = W;   
-            infos.H = H;
-            infos.R = R;
+            if ~isempty(W) infos.W = [infos.W W];   end
+            if ~isempty(H) infos.H = [infos.H H];   end
+            if ~isempty(R) infos.R = [infos.R R];   end   
         end
         
     else
@@ -54,16 +60,18 @@ function [infos, f_val, optgap] = store_nmf_infos(V, W, H, R, options, infos, ep
         infos.epoch = [infos.epoch epoch];        
         infos.time = [infos.time elapsed_time];
         infos.grad_calc_count = [infos.grad_calc_count grad_calc_count];
-        f_val = nmf_cost(V, W, H, R, metric, metric_param);
-        optgap = f_val - options.f_opt;  
-        infos.optgap = [infos.optgap optgap];
-        infos.cost = [infos.cost f_val];
+        if ~isempty(V) || ~isempty(W) || ~isempty(H) || ~isempty(R)        
+            f_val = nmf_cost(V, W, H, R, metric, metric_param);
+            optgap = f_val - options.f_opt;  
+            infos.optgap = [infos.optgap optgap];
+            infos.cost = [infos.cost f_val];
+        end
 
          
         if options.store_sol
-            infos.W = [infos.W W];   
-            infos.H = [infos.H H];
-            infos.R = [infos.R R];           
+            if ~isempty(W) infos.W = [infos.W W];   end
+            if ~isempty(H) infos.H = [infos.H H];   end
+            if ~isempty(R) infos.R = [infos.R R];   end           
         end  
         
     end

@@ -52,7 +52,9 @@ function [ ] = display_graph(x_category, y_category, algorithm_list, w_list, inf
             elseif strcmp(y_category, 'gnorm')
                 y_plot_data = info_list{alg_idx}.gnorm;                
             elseif strcmp(y_category, 'K')
-                y_plot_data = info_list{alg_idx}.K;                     
+                y_plot_data = info_list{alg_idx}.K;   
+            elseif strcmp(y_category, 'orth')
+                y_plot_data = info_list{alg_idx}.orth;                  
             end
             
             semilogy(x_plot_data, y_plot_data, linetype{alg_num}, 'MarkerSize', markersize, 'Linewidth', linewidth); hold on;
@@ -86,7 +88,9 @@ function [ ] = display_graph(x_category, y_category, algorithm_list, w_list, inf
     elseif strcmp(y_category, 'gnorm')
         ylabel('Norm of gradient', 'FontSize', fontsize);   
     elseif strcmp(y_category, 'K')
-        ylabel('Batch size', 'FontSize', fontsize);          
+        ylabel('Batch size', 'FontSize', fontsize); 
+    elseif strcmp(y_category, 'orth')
+        ylabel('Orthogonality', 'FontSize', fontsize);            
     end
     legend(legend_str);
     set(gca, 'FontSize', fontsize);      

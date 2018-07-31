@@ -54,7 +54,10 @@ function [x, infos] = semi_nmf(V, rank, in_options)
     R_zero = zeros(m, n);
     
     if ~isfield(options, 'x_init')
-        [W, H] = NNDSVD(abs(V), rank, 0);
+        %[~, H] = NNDSVD(abs(V), rank, 0);
+        rng('default')
+        H = rand(rank, n); 
+        W = V * pinv(H);
     else
         W = options.x_init.W;
         H = options.x_init.H;

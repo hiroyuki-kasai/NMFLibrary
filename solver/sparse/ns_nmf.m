@@ -35,9 +35,14 @@ function [x, infos] = ns_nmf(V, rank, in_options)
 %       "Nonsmooth nonnegative matrix factorization (nsNMF),"
 %       IEEE Transactions on Pattern Analysis and Machine Intelligence (PAMI), vol.28, no.3, pp.403-415, 2006. 
 %
+%       Z. Yang, Y. Zhang, W. Yan, Y. Xiang, and S. Xie,
+%       "A fast non-smooth nonnegative matrix factorization for learning sparse representation,"
+%       IEEE Access, vol.4, pp.5161-5168, 2016.
+%
 %
 % Created by Silja Polvi-Huttunen, University of Helsinki, Finland, 2014
-% Modified by H.Kasai on Jul. 23, 2018
+% Created by modifiying the original code by H.Kasai on Jul. 23, 2018 
+% Modified by H.Kasai on Jul. 29, 2018 
 
 
     % set dimensions and samples
@@ -45,8 +50,10 @@ function [x, infos] = ns_nmf(V, rank, in_options)
     n = size(V, 2);
 
     % set local options 
-    local_options.theta     = 0; % decides the degree in [0,1] of nonsmoothing (use 0 for standard NMF)
-    local_options.metric    = 'EUC'; % 'EUC' (default) or 'KL'
+    local_options.theta         = 0.5; % decides the degree in [0,1] of nonsmoothing (use 0 for standard NMF)
+    local_options.metric        = 'EUC'; % 'EUC' (default) or 'KL'
+    local_options.update_alg    = 'mu';  % 'mu' or 'apg'
+    local_options.apg_maxiter   = 100;
     
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
@@ -88,26 +95,42 @@ function [x, infos] = ns_nmf(V, rank, in_options)
     % main loop
     while (optgap > options.tol_optgap) && (epoch < options.max_epoch) 
 
-        %do_updates();
+        if strcmp(options.update_alg, 'mu')
         
-        % update H
-        WS = W*S;
-        if strcmp(options.metric, 'EUC')
-            H = H.*(WS'*V)./((WS'*WS)*H + 1e-9);
-        elseif strcmp(options.metric, 'KL')
-            H = H.*(WS'*(V./(WS*H + 1e-9)))./(sum(WS,1)'*ones(1,n));
-        end  
-        
-        % normalize rows in H
-        [W,H] = rowsum_R_one(W,H); % normalize rows in H
-        
-        % update W
-        SH = S*H;
-        if strcmp(options.metric, 'EUC')
-            W = W.*(V*SH')./(W*(SH*SH') + 1e-9);
-        elseif strcmp(options.metric, 'KL')
-            W = W.*((V./(W*SH + 1e-9))*SH')./(ones(m,1)*sum(SH,2)');
-        end        
+            % update H
+            WS = W*S;
+            if strcmp(options.metric, 'EUC')
+                H = H.*(WS'*V)./((WS'*WS)*H + 1e-9);
+            elseif strcmp(options.metric, 'KL')
+                H = H.*(WS'*(V./(WS*H + 1e-9)))./(sum(WS,1)'*ones(1,n));
+            end  
+
+            % normalize rows in H
+            [W,H] = rowsum_R_one(W,H); % normalize rows in H
+
+            % update W
+            SH = S*H;
+            if strcmp(options.metric, 'EUC')
+                W = W.*(V*SH')./(W*(SH*SH') + 1e-9);
+            elseif strcmp(options.metric, 'KL')
+                W = W.*((V./(W*SH + 1e-9))*SH')./(ones(m,1)*sum(SH,2)');
+            end  
+            
+        else % support only 'EUC' metric.
+            
+            % update H
+            WS = W*S;
+            [H, ~, ~] = nesterov_mnls_general(V, WS, [], H, 1, options.apg_maxiter, 'basic'); 
+
+
+            % normalize rows in H
+            [W,H] = rowsum_R_one(W,H); % normalize rows in H
+
+            % update W
+            SH = S*H;
+            [W, ~, ~] = nesterov_mnls_general(V, [], SH', W, 1, options.apg_maxiter, 'basic');
+            
+        end
 
         % measure elapsed time
         elapsed_time = toc(start_time);        
@@ -141,4 +164,5 @@ function [x, infos] = ns_nmf(V, rank, in_options)
 
     x.W = W;
     x.H = H;
+    x.S = S;    
 end

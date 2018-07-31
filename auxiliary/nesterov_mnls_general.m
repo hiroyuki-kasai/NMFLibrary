@@ -1,35 +1,67 @@
-function [A, iter, alpha] = nesterov_mnls(X, B, A_star, alpha, max_iter, func_type)
+function [A, iter, alpha] = nesterov_mnls_general(X, C, B, A_star, alpha, max_iter, func_type)
 % Accelerated proximal gradient algorithm for nonnegative constraint
-%   min_A 1/2 | X - A*B' |^2_F,
+%   min_A f(A) := 1/2 | X - C*A*B' |^2_F,
 %   s.t. A >= 0.
+%
+%   f(A)' = -C'*(X - C*A*B')*B = C'*C*A*B'*B - C'*X*B
 %
 
     tol_1 = 1e-2;
     tol_2 = 1e-2;
 
     R = size(B,2);
-    Z = B' * B;
+    
+    if ~isempty(B) && isempty(C)
+        BTB = B' * B;
+        W = - X * B;
+    elseif isempty(B) && ~isempty(C)
+        CTC = C' * C;
+        W = - C'* X;
+    elseif ~isempty(B) && ~isempty(C)
+        BTB = B' * B;
+        CTC = C' * C;
+        W = - C'* X * B;
+    else
+        
+    end    
+
     
     if strcmp(func_type, 'smooth') || strcmp(func_type, 'stochastic') ||  strcmp(func_type, 'strong_alpha_beta') 
-        s = svd(Z);
+        
+        if ~isempty(B) && isempty(C)
+            s = svd(BTB);
+        elseif isempty(B) && ~isempty(C)
+            s = svd(CTC);
+        elseif ~isempty(B) && ~isempty(C)
+            % to do
+        else
+        end
+        
         L = max(s);
-        mu = min(s);
+        mu = min(s);        
+    
     else
-        L = norm(Z, 'fro');  
+        if ~isempty(B) && isempty(C)
+            L = norm(BTB);
+        elseif isempty(B) && ~isempty(C)
+            L = norm(CTC);
+        elseif ~isempty(B) && ~isempty(C)
+            L = norm(CTC)*norm(BTB);
+        else
+        end
+          
     end
     
-   
+
     if strcmp(func_type, 'smooth') || strcmp(func_type, 'stochastic')
-        W = - X * B;
         q = mu/L; 
     elseif strcmp(func_type, 'strong_alpha_beta') 
         lambda = g_lambda(L, mu);
-        Z = Z + lambda * eye(R);  
-        W = - X * B - lambda * A_star;
+        BTB = BTB + lambda * eye(R);  
+        W = W - lambda * A_star;
         L = L + lambda;
         q = (mu + lambda)/L;   
     else
-        W = - X * B;        
     end
     
     
@@ -39,7 +71,16 @@ function [A, iter, alpha] = nesterov_mnls(X, B, A_star, alpha, max_iter, func_ty
     %alpha = 1;
     iter = 0;
     while iter < max_iter
-        grad = W + Y * Z;
+        
+        % calculate gradient
+        if ~isempty(B) && isempty(C)
+            grad = Y * BTB + W;
+        elseif isempty(B) && ~isempty(C)
+            grad = CTC * Y + W;
+        elseif ~isempty(B) && ~isempty(C)
+            grad = CTC * Y * BTB + W;
+        else
+        end        
 
         % terminate the loop
         cond_1 = max(max( abs(grad .* Y)));
