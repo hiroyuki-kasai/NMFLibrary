@@ -114,8 +114,8 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 ## Algorithm configurations
 
 
-||Name in example codes| function | `options.alg` | other `options` |
-||---|---|---|---|
+|Category|Name in example codes| function | `options.alg` | other `options` |
+|---|---|---|---|---|
 |Base|MU-EUC|`nmf_mu`|`mu`|`metric='EUC'`|
 ||MU-KL|`nmf_mu`|`mu`|`metric='KL'`|
 ||MU-ALPHA|`nmf_mu`|`mu`|`metric='ALPHA-D'`|
