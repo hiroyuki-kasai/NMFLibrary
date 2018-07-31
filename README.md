@@ -78,6 +78,9 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 
     - **fnsNMF** (Fast nonsmooth NMF)
         - Z. Yang, Y. Zhang, W. Yan, Y. Xiang, and S. Xie, "[A fast non-smooth nonnegative matrix factorization for learning sparse representation](https://ieeexplore.ieee.org/document/7559804/)," IEEE Access, vol.4, pp.5161-5168, 2016.
+
+    - **NMF-HALS-SO**
+        - M. Shiga, K. Tatsumi, S. Muto, K. Tsuda, Y. Yamamoto, T. Mori, and T. Tanji, "Sparse Modeling of EELS and EDX Spectral Imaging Data by Nonnegative Matrix Factorization", Ultramicroscopy, Vol.170, p.43-59, 2016.
    
 - Orthgotonal
     - **orthMU** (Orthgotonal multiplicative upates (MU))
