@@ -4,7 +4,8 @@
 %
 % This file is part of NMFLibrary.
 %
-% Created by H.Kasai on July 24, 2017
+% Created by H.Kasai on July 24, 2018
+% Modified by H.Kasai on July 30, 2018
 
 clc;
 clear;
