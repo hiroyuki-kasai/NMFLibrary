@@ -60,6 +60,7 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
         - W. Qian, B. Hong, D. Cai, X. He, and X. Li, "[Non-negative matrix factorization with sinkhorn distance](https://pdfs.semanticscholar.org/42b2/ec6e4453dc033d37b9fcb53a1313c018fa23.pdf)", IJCAI, pp.1960-1966, 2016.
     
 - Robust NMF
+
     - N. Guan, D. Tao, Z. Luo, and B. Yuan, "[Online nonnegative matrix factorization with robust stochastic approximation](https://ieeexplore.ieee.org/document/6203594/)," IEEE Trans. Newral Netw. Learn. Syst., 2012.
 
 - Sparse
@@ -79,10 +80,11 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
     - **fnsNMF** (Fast nonsmooth NMF)
         - Z. Yang, Y. Zhang, W. Yan, Y. Xiang, and S. Xie, "[A fast non-smooth nonnegative matrix factorization for learning sparse representation](https://ieeexplore.ieee.org/document/7559804/)," IEEE Access, vol.4, pp.5161-5168, 2016.
 
-    - **NMF-HALS-SO**
-        - M. Shiga, K. Tatsumi, S. Muto, K. Tsuda, Y. Yamamoto, T. Mori, and T. Tanji, "Sparse Modeling of EELS and EDX Spectral Imaging Data by Nonnegative Matrix Factorization", Ultramicroscopy, Vol.170, p.43-59, 2016.
+    - **NMF-HALS-SO** (Hierarchical ALS with soft orthogonal constraint)
+        - M. Shiga, K. Tatsumi, S. Muto, K. Tsuda, Y. Yamamoto, T. Mori, and T. Tanji, "[Sparse modeling of EELS and EDX spectral imaging data by nonnegative matrix factorization](https://www.sciencedirect.com/science/article/pii/S0304399116301267)", Ultramicroscopy, Vol.170, p.43-59, 2016.
    
 - Orthgotonal
+
     - **orthMU** (Orthgotonal multiplicative upates (MU))
         - S. Choi, "[Algorithms for orthogonal nonnegative matrix factorization](https://ieeexplore.ieee.org/document/4634046/)", IEEE International Joint Conference on Neural Networks, 2008.
 

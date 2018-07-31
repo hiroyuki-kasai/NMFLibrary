@@ -1,5 +1,5 @@
 function [x, infos] = nmf_sparse_mu_v(V, rank, in_options)
-% Sparse Multiplicative upates (MU) for non-negative matrix factorization with orthogonalization (Orth-NMF).
+% Sparse Multiplicative upates (MU) for non-negative matrix factorization (Orth-NMF-V).
 %
 % The problem of interest is defined as
 %

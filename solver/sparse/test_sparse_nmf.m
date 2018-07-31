@@ -10,8 +10,8 @@ clc;
 clear;
 close all;
 
-%% generate synthetic data of (mxn) matrix       
-m = 150;
+%% generate synthetic data of (mxn) matrix
+m= 150;
 n = 150;
 V = rand(m,n);
 
@@ -35,17 +35,10 @@ sparse_coeff = 0.5;
 [w_nmf_mu, infos_nmf_mu] = nmf_mu(V, rank, options);
 
 
-%     [W,H,errs,vout] = nmf_euc_sparse_es(V, rank, 'verb', 3, 'niter', options.max_epoch, ...
-%          'W0', x_init.W, 'H0', x_init.H, 'alpha', sparse_coeff);     
-
 % Sparse-MU (EUC)
 options.lambda = sparse_coeff;
 options.myeps = 1e-20;
 [w_sparse_mu, infos_sparse_mu] = nmf_sparse_mu(V, rank, options);
-
-
-%     [W,H,errs,vout] = nmf_kl_sparse_es(V, rank, 'verb', 3, 'niter', options.max_epoch, ...
-%          'W0', x_init.W, 'H0', x_init.H, 'alpha', sparse_coeff); 
 
 % Sparse-MU (KL)
 options.lambda = sparse_coeff;
@@ -53,17 +46,11 @@ options.myeps = 1e-20;
 options.metric = 'KL';
 [w_sparse_mu_kl, infos_sparse_mu_kl] = nmf_sparse_mu(V, rank, options); 
 
-
-%     [W,H,errs,vout] = nmf_kl_sparse_v(V, rank, 'verb', 3, 'niter', options.max_epoch, ...
-%          'W0', x_init.W, 'H0', x_init.H, 'alpha', sparse_coeff);     
-
-
 % Sparse-MU-V (KL)
 options.lambda = sparse_coeff;
 options.myeps = 1e-20;
 options.metric = 'KL';
 [w_sparse_mu_kl_v, infos_sparse_mu_kl_v] = nmf_sparse_mu_v(V, rank, options);     
-
 
 
 % nsNMF
