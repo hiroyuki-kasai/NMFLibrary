@@ -46,8 +46,7 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
             - J. Kim, Y. He, and H. Park, "[Algorithms for nonnegative matrix and tensor factorizations: A unified view based on block coordinate descent framework](https://link.springer.com/article/10.1007/s10898-013-0035-4)," Journal of Global Optimization, 58(2), pp. 285-319, 2014.
             - J. Kim and H. Park, "[Fast nonnegative matrix factorization: An active-set-like method and comparisons](http://epubs.siam.org/doi/abs/10.1137/110821172)," SIAM Journal on Scientific Computing (SISC), 33(6), pp. 3261-3281, 2011.
 
-
-- Else
+- Variant
 
     - **GNMF** (Graph Regularized NMF)
         - D. Cai, X. He, X. Wu, and J. Han, "[Non-negative Matrix Factorization on Manifold](https://ieeexplore.ieee.org/document/4781101/)," Proc. 2008 Int. Conf. on Data Mining (ICDM), 2008. 
@@ -115,41 +114,42 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 ## Algorithm configurations
 
 
-|Algorithm name in example codes| function | `options.alg` | other `options` |
-|---|---|---|---|
-|MU-EUC|`nmf_mu`|`mu`|`metric='EUC'`|
-|MU-KL|`nmf_mu`|`mu`|`metric='KL'`|
-|MU-ALPHA|`nmf_mu`|`mu`|`metric='ALPHA-D'`|
-|MU-BETA|`nmf_mu`|`mu`|`metric='BETA-D'`|
-|Modified MU|`nmf_mu`|`mod_mu`||
-|Acceralated MU|`nmf_mu`|`acc_mu`||
-|PGD|`nmf_pgd`|`pgd`||
-|Direct PGD|`nmf_pgd`|`direct_pgd`||
-|ALS|`nmf_als`|`als`||
-|Hierarchical ALS|`nmf_als`|`hals_mu`||
-|Acceralated hierarchical ALS|`nmf_als`|`acc_hals_mu`||
-|ASGROUP|`nmf_anls`|`anls_asgroup`||
-|ASGIVENS|`nmf_anls`|`anls_asgivens`||
-|BPP|`nmf_anls`|`anls_bpp`||
-|sparseMU-EUC|`nmf_sparse_mu`||`metric='EUC'`|
-|sparseMU-KL|`nmf_sparse_mu`||`metric='KL'`|
-|sparseNMF|`sparse_nmf`|||
-|NMFsc|`nmf_sc`|||
-|nsNMF|`ns_nmf`|||
-|fnsNMF|`ns_nmf`||`metric='EUC'`, `update_alg='apg'`|
-|Semi-NMF|`semi_nmf`|||
-|SDNMF|`SDNMF`|||
-|orthMU|`nmf_orth_mu`|||
-|OrthNMF||||
-|NMF-HALS-SO||||
-|INMF|`inmf`|||
-|ONMF|`onmf`|||
-|Acceralated ONMF|`omf_acc`|||
-|SPG|`spg_nmf`|||
-|RONMF|`ronmf`|||
-|SAGA-MU-NMF|`asag_mu_nmf`|||
-|SMU|`smu_nmf`|||
-|SVRMU|`svrmu_nmf`|||
+||Name in example codes| function | `options.alg` | other `options` |
+||---|---|---|---|
+|Base|MU-EUC|`nmf_mu`|`mu`|`metric='EUC'`|
+||MU-KL|`nmf_mu`|`mu`|`metric='KL'`|
+||MU-ALPHA|`nmf_mu`|`mu`|`metric='ALPHA-D'`|
+||MU-BETA|`nmf_mu`|`mu`|`metric='BETA-D'`|
+||Modified MU|`nmf_mu`|`mod_mu`||
+||Acceralated MU|`nmf_mu`|`acc_mu`||
+||PGD|`nmf_pgd`|`pgd`||
+||Direct PGD|`nmf_pgd`|`direct_pgd`||
+||ALS|`nmf_als`|`als`||
+||Hierarchical ALS|`nmf_als`|`hals_mu`||
+||Acceralated hierarchical ALS|`nmf_als`|`acc_hals_mu`||
+||ASGROUP|`nmf_anls`|`anls_asgroup`||
+||ASGIVENS|`nmf_anls`|`anls_asgivens`||
+||BPP|`nmf_anls`|`anls_bpp`||
+|Variant|Semi-NMF|`semi_nmf`|||
+||GNMF|`GNMF`|||
+||SDNMF|`SDNMF`|||
+|Sparse|sparseMU-EUC|`nmf_sparse_mu`||`metric='EUC'`|
+||sparseMU-KL|`nmf_sparse_mu`||`metric='KL'`|
+||sparseNMF|`sparse_nmf`|||
+||NMFsc|`nmf_sc`|||
+||nsNMF|`ns_nmf`|||
+||fnsNMF|`ns_nmf`||`metric='EUC'`, `update_alg='apg'`|
+|Orthogonal|orthMU|`nmf_orth_mu`|||
+||OrthNMF||||
+||NMF-HALS-SO||||
+|Online|INMF|`inmf`|||
+||ONMF|`onmf`|||
+||Acceralated ONMF|`omf_acc`|||
+||SPG|`spg_nmf`|||
+||RONMF|`ronmf`|||
+||SAGA-MU-NMF|`asag_mu_nmf`|||
+||SMU|`smu_nmf`|||
+||SVRMU|`svrmu_nmf`|||
 
 
 <br />
