@@ -3,9 +3,9 @@ Matlab library for non-negative matrix factorization (NMF)
 
 Authors: [Hiroyuki Kasai](http://www.kasailab.com/)
 
-Last page update: July 24, 2018
+Last page update: July 30, 2018
 
-Latest library version: 1.4.0 (see Release notes for more info)
+Latest library version: 1.5.0 (see Release notes for more info)
 
 <br />
 
@@ -130,12 +130,13 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 |sparseMU-KL|`nmf_sparse_mu`||`metric='KL'`|
 |sparseNMF|`sparse_nmf`|||
 |NMFsc|`nmf_sc`|||
-|nsNMF|`ns_nmf`||`metric='EUC'`, `update_alg='apg'`|
-|fnsNMF|`ns_nmf`|||
+|nsNMF|`ns_nmf`|||
+|fnsNMF|`ns_nmf`||`metric='EUC'`, `update_alg='apg'`|
 |Semi-NMF|`semi_nmf`|||
 |SDNMF|`SDNMF`|||
 |orthMU|`nmf_orth_mu`|||
 |OrthNMF||||
+|NMF-HALS-SO||||
 |INMF|`inmf`|||
 |ONMF|`onmf`|||
 |Acceralated ONMF|`omf_acc`|||
@@ -307,6 +308,8 @@ If you have any problems or questions, please contact the author: [Hiroyuki Kasa
 
 Release notes
 --------------
+* Version 1.5.0 (Jul. 30, 2018)
+    - fnsNMF and NMF-HALS-SO are added.
 * Version 1.4.0 (Jul. 24, 2018)
     - sparseMU and orthMU are added.
     - MU with Kullback-Leibler divergence (KL), Amari alpha divergence, and beta divergenceare added.
