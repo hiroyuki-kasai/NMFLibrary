@@ -76,6 +76,8 @@ function [x, infos] = nmf_mu(V, rank, in_options)
 %
 % Created by H.Kasai on Feb. 16, 2017
 % Modified by H.Kasai on Jul., 2018
+% Modified by H.Kasai on April 20, 2019 (Bug fixed)
+%
 % Some parts are borrowed after modifications from the codes by Patrik Hoyer, 2006 
 % (and modified by Silja Polvi-Huttunen, University of Helsinki, Finland, 2014)
 
@@ -186,7 +188,7 @@ function [x, infos] = nmf_mu(V, rank, in_options)
                 % update H
                 H = H .* (W'*(V./(W*H + options.myeps)))./(sum(W)'*ones(1,n));
                 if options.norm_h ~= 0
-                    W = normalize_H(H, options.norm_h);
+                    H = normalize_H(H, options.norm_h);
                 end                    
 
             elseif strcmp(options.metric, 'ALPHA-D')
