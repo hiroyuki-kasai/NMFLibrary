@@ -313,7 +313,7 @@ If you have any problems or questions, please contact the author: [Hiroyuki Kasa
 
 Release notes
 --------------
-* Version 1.5.1 (Apr. 22, 2019)
+* Version 1.5.1 (Apr. 22, 2019) 
     - Some solvers are modified to fix bugs.
 * Version 1.5.0 (Jul. 30, 2018)
     - fnsNMF and NMF-HALS-SO are added.

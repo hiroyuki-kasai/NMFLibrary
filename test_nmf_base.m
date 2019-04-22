@@ -265,5 +265,3 @@ display_graph('epoch','cost', names, sols, infos);
 display_graph('time','cost', names, sols, infos);
 display_graph('epoch','optimality_gap', names, sols, infos);
 display_graph('time','optimality_gap', names, sols, infos);
-
-
