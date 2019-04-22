@@ -38,6 +38,7 @@ function [x, infos] = nmf_pgd(V, rank, in_options)
 %
 % Created by H.Kasai on Mar. 24, 2017
 % Modified by H.Kasai on Oct. 27, 2017
+% Modified by H.Kasai on Apr. 22, 2019 (Bug fixed)
 
 
     % set dimensions and samples
@@ -46,6 +47,8 @@ function [x, infos] = nmf_pgd(V, rank, in_options)
     
     % set local options 
     local_options.alg   = 'pgd';
+    local_options.alpha = 1;
+    local_options.tol_grad_ratio = 0.00001;
     
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
@@ -79,22 +82,22 @@ function [x, infos] = nmf_pgd(V, rank, in_options)
     % select disp_freq 
     disp_freq = set_disp_frequency(options);     
 
+    tol_grad_ratio = options.tol_grad_ratio;
     if strcmp(options.alg, 'pgd')
-        tol = 0.00001; % tol = [0.001; 0.0001; 0.00001];
+        tol_grad_ratio = 0.00001; % tol = [0.001; 0.0001; 0.00001];
         gradW = W*(H*H') - V*H'; 
         gradH = (W'*W)*H - W'*V;   
-        initgrad = norm([gradW; gradH'],'fro');
-        tolW = max(0.001,tol)*initgrad; 
+        init_grad = norm([gradW; gradH'],'fro');
+        tolW = max(0.001,tol_grad_ratio)*init_grad; 
         tolH = tolW;
     elseif strcmp(options.alg, 'direct_pgd')
-        %tol = 0.00001; % tol = [0.001; 0.0001; 0.00001];
-        alpha = 1;
+        tol_grad_ratio = 0.00001; % tol = [0.001; 0.0001; 0.00001];
         gradW = W*(H*H') - V*H'; 
         gradH = (W'*W)*H - W'*V;           
-        %initgrad = norm([gradW; gradH'],'fro');    
-        %fprintf('init grad norm %f\n', initgrad);
+        init_grad = norm([gradW; gradH'],'fro');    
         H = nlssubprob(V,W,H,0.001,1000);    
-        obj = 0.5*(norm(V-W*H,'fro')^2);            
+        obj = 0.5*(norm(V-W*H,'fro')^2);
+        alpha = options.alpha;
     end    
     
     % store initial info
@@ -107,69 +110,86 @@ function [x, infos] = nmf_pgd(V, rank, in_options)
     
     % set start time
     start_time = tic();
+    
+    end_flag = 0;
 
     % main loop
-    while (optgap > options.tol_optgap) && (epoch < options.max_epoch)           
+    while (optgap > options.tol_optgap) && (epoch < options.max_epoch) && ~end_flag        
 
         if strcmp(options.alg, 'pgd')
-          [W,gradW,iterW] = nlssubprob(V',H',W',tolW,1000); 
-          W = W'; 
-          gradW = gradW';
-          
-          if iterW==1
-            tolW = 0.1 * tolW;
-          end
+            
+            % stopping condition
+            projnorm = norm([gradW(gradW<0 | W>0); gradH(gradH<0 | H>0)]);
+            if projnorm < tol_grad_ratio*init_grad
+                end_flag = 1;
+            end
+  
+            [W, gradW, iterW] = nlssubprob(V', H', W', tolW, 1000); 
+            W = W'; 
+            gradW = gradW';
 
-          [H,gradH,iterH] = nlssubprob(V,W,H,tolH,1000);
-          if iterH==1
-            tolH = 0.1 * tolH; 
-          end     
+            if iterW == 1
+                tolW = 0.1 * tolW;
+            end
+
+            [H, gradH, iterH] = nlssubprob(V, W, H, tolH, 1000);
+            if iterH == 1
+                tolH = 0.1 * tolH; 
+            end     
 
         elseif strcmp(options.alg, 'direct_pgd')
 
-          gradW = W*(H*H') - V*H';
-          gradH = (W'*W)*H - W'*V;
+            gradW = W*(H*H') - V*H';
+            gradH = (W'*W)*H - W'*V;
 
-          projnorm = norm([gradW(gradW<0 | W>0); 
-          gradH(gradH<0 | H>0)]);  
+            projnorm = norm([gradW(gradW<0 | W>0); gradH(gradH<0 | H>0)]);  
+            if projnorm < tol_grad_ratio*init_grad
+                fprintf('final grad norm %f\n', projnorm);
+            else
+                Wn = max(W - alpha*gradW,0);    
+                Hn = max(H - alpha*gradH,0);    
+                newobj = 0.5*(norm(V-Wn*Hn,'fro')^2);
 
-          Wn = max(W - alpha*gradW,0);    
-          Hn = max(H - alpha*gradH,0);    
-          newobj = 0.5*(norm(V-Wn*Hn,'fro')^2);
-          if newobj-obj > 0.01*(sum(sum(gradW.*(Wn-W)))+ ...
-                                sum(sum(gradH.*(Hn-H))))
-            % decrease alpha    
-            while 1
-              alpha = alpha/10;
-              Wn = max(W - alpha*gradW,0);    
-              Hn = max(H - alpha*gradH,0);    
-              newobj = 0.5*(norm(V-Wn*Hn,'fro')^2);
-              if newobj - obj <= 0.01*(sum(sum(gradW.*(Wn-W)))+ ...
-                                       sum(sum(gradH.*(Hn-H))))
-                W = Wn; H = Hn;
-                obj = newobj;
-                break;
-              end
+                if newobj-obj > 0.01*(sum(sum(gradW.*(Wn-W)))+ sum(sum(gradH.*(Hn-H))))
+                    % decrease stepsize    
+                    while 1
+                        alpha = alpha/10;
+                        Wn = max(W - alpha*gradW,0);    
+                        Hn = max(H - alpha*gradH,0);    
+                        newobj = 0.5*(norm(V-Wn*Hn,'fro')^2);
+
+                        if newobj - obj <= 0.01*(sum(sum(gradW.*(Wn-W)))+ sum(sum(gradH.*(Hn-H))))
+                            W = Wn; H = Hn;
+                            obj = newobj;
+                        break;
+
+                        end
+                    end
+                else 
+                    % increase stepsize
+                    while 1
+                        Wp = Wn; 
+                        Hp = Hn; 
+                        objp = newobj;
+                        alpha = alpha*10;
+                        Wn = max(W - alpha*gradW,0);    
+                        Hn = max(H - alpha*gradH,0);    
+                        newobj = 0.5*(norm(V-Wn*Hn,'fro')^2);
+
+                        %if (newobj - obj > 0.01*(sum(sum(gradW.*(Wn-W)))+ ...
+                        %    sum(sum(gradH.*(Hn-H))))) | (Wn==Wp & Hn==Hp)
+                        if (newobj - obj > 0.01*(sum(sum(gradW.*(Wn-W)))+ sum(sum(gradH.*(Hn-H))))) ...
+                                || (isequal(Wn, Wp) && isequal(Hn, Hp))               
+                            W = Wp; 
+                            H = Hp;
+                            obj = objp; 
+                            alpha = alpha/10;
+                            break;
+                        end
+                    end
+                end 
             end
-          else 
-            % increase alpha
-            while 1
-              Wp = Wn; Hp = Hn; objp = newobj;
-              alpha = alpha*10;
-              Wn = max(W - alpha*gradW,0);    
-              Hn = max(H - alpha*gradH,0);    
-              newobj = 0.5*(norm(V-Wn*Hn,'fro')^2);
-              if (newobj - obj > 0.01*(sum(sum(gradW.*(Wn-W)))+ ...
-                                      sum(sum(gradH.*(Hn-H))))) | (Wn==Wp & Hn==Hp)
-                W = Wp; 
-                H = Hp;
-                obj = objp; 
-                alpha = alpha/10;
-                break;
-              end
-            end
-          end            
-          
+
         end
         
         % measure elapsed time

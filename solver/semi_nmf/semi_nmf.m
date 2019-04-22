@@ -29,7 +29,8 @@ function [x, infos] = semi_nmf(V, rank, in_options)
 %       IEEE Transactions on Pattern Analysis and Machine Intelligence, vol.32, no.1, 2010. 
 %
 %
-% Modified by H.Kasai on July 21, 2018
+% Modified by H.Kasai on Jul. 21, 2018
+% Modified by H.Kasai on Apr. 22, 2019 (Bug fixed)
 
     
     % set dimensions and samples
@@ -37,10 +38,8 @@ function [x, infos] = semi_nmf(V, rank, in_options)
     n = size(V, 2); 
     
     % set local options 
-    local_options.bUpdateH  = 1;
     local_options.max_iter  = 100;
     local_options.tolfun    = 1e-5;
-    local_options.bUpdateW  = 1;
     local_options.verbose   = 1;    
     
     % merge options
@@ -81,21 +80,24 @@ function [x, infos] = semi_nmf(V, rank, in_options)
     % main loop
     for i = 1:options.max_iter
 
-        if options.bUpdateW
-            W = V * pinv(H);
-        end
-
-        A = W' * V;
-        Ap = (abs(A)+A)./2;
-        An = (abs(A)-A)./2;
-
-        B = W' * W;
-        Bp = (abs(B)+B)./2;
-        Bn = (abs(B)-B)./2;
-
-        if options.bUpdateH
-            H = H .* sqrt((Ap + Bn * H) ./ (An + Bp * H + eps));
-        end
+        % update W
+        HHT = H * H';
+        %HHT(isnan(HHT)) = 0;
+        %HHT(~isfinite(HHT)) = 0;
+        W = V * H' * pinv(HHT);  % Eq.(10)
+        
+        % update H
+        VtW = V' * W;
+        VtW_p = (abs(VtW)+VtW) ./ 2;  % Eq.(12)
+        VtW_n = (abs(VtW)-VtW) ./ 2;  % Eq.(12)
+        
+        HtWtW = H' * (W' * W);
+        HtWtW_p = (abs(HtWtW)+HtWtW) ./ 2;  % Eq.(12)
+        HtWtW_n = (abs(HtWtW)-HtWtW) ./ 2;  % Eq.(12)  
+        
+        Ht = H' .* sqrt((VtW_p+HtWtW_n) ./ (VtW_n+HtWtW_p+eps)); % Eq.(11)
+        H = Ht';
+        
         
         % measure elapsed time
         elapsed_time = toc(start_time);        
@@ -127,3 +129,4 @@ function [x, infos] = semi_nmf(V, rank, in_options)
 
     x.W = W;
     x.H = H;
+end

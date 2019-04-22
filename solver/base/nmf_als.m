@@ -34,7 +34,7 @@ function [x, infos] = nmf_als(V, rank, in_options)
 %                           Then, it is modifided by H.Kasai.
 %
 %
-% Output:
+% Outputs:
 %       x           : non-negative matrix solution, i.e., x.W: (m x rank), x.H: (rank x n)
 %       infos       : log information
 %           epoch   : iteration nuber
@@ -46,6 +46,7 @@ function [x, infos] = nmf_als(V, rank, in_options)
 %
 % Created by H.Kasai on Mar. 24, 2017
 % Modified by H.Kasai on Oct. 27, 2017
+% Modified by H.Kasai on Apr. 22, 2019 (Bug fixed)
 
 
     % set dimensions and samples
@@ -122,14 +123,14 @@ function [x, infos] = nmf_als(V, rank, in_options)
             W = V * H' / (H*H');        % W = V * H' * inv(H*H');
             W = (W>0) .* W;
             % normalize columns to unit 
-            W = W ./ (repmat(sum(W),m,1)+eps); 
+            W = W ./ (repmat(sum(W), m, 1)+eps); 
 
         elseif strcmp(options.alg, 'hals')
             % update H
             VtW = V'*W;
             WtW = W'*W;            
             for k=1:rank
-                tmp = (VtW(:,k)'-(WtW(:,k)'*H)+(WtW(k,k)*H(k,:)))./WtW(k,k);
+                tmp = (VtW(:,k)' - (WtW(:,k)' * H) + (WtW(k,k) * H(k,:))) / WtW(k,k);
                 tmp(tmp<=eps) = eps;
                 H(k,:) = tmp;
             end 
@@ -138,7 +139,7 @@ function [x, infos] = nmf_als(V, rank, in_options)
             VHt = V*H';
             HHt = H*H';
             for k=1:rank
-                tmp = (VHt(:,k)-(W * HHt(:,k))+(W(:,k)*HHt(k,k))) ./ HHt(k,k);
+                tmp = (VHt(:,k) - (W * HHt(:,k)) + (W(:,k) * HHt(k,k))) / HHt(k,k);
                 tmp(tmp<=eps) = eps;
                 W(:,k) = tmp;
             end
@@ -207,10 +208,12 @@ end
 % i.e., optimizing min_{V >= 0} ||M-UV||_F^2 
 % with an exact block-coordinate descent scheme
 function V = HALSupdt(V,UtU,UtM,eit1,alpha,delta)
-    [r,n] = size(V); 
+    [r, n] = size(V); 
     eit2 = cputime; % Use actual computational time instead of estimates rhoU
     cnt = 1; % Enter the loop at least once
-    eps = 1; eps0 = 1; eit3 = 0;
+    eps = 1; 
+    eps0 = 1; 
+    eit3 = 0;
     while cnt == 1 || (cputime-eit2 < (eit1+eit3)*alpha && eps >= (delta)^2*eps0)
         nodelta = 0; if cnt == 1, eit3 = cputime; end
             for k = 1 : r

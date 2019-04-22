@@ -3,9 +3,9 @@ Matlab library for non-negative matrix factorization (NMF)
 
 Authors: [Hiroyuki Kasai](http://www.kasailab.com/)
 
-Last page update: July 30, 2018
+Last page update: Aprl 22, 2019
 
-Latest library version: 1.5.0 (see Release notes for more info)
+Latest library version: 1.5.1 (see Release notes for more info)
 
 <br />
 
@@ -313,6 +313,8 @@ If you have any problems or questions, please contact the author: [Hiroyuki Kasa
 
 Release notes
 --------------
+* Version 1.5.1 (Apr. 22, 2019)
+    - Some solvers are modified to fix bugs.
 * Version 1.5.0 (Jul. 30, 2018)
     - fnsNMF and NMF-HALS-SO are added.
 * Version 1.4.0 (Jul. 24, 2018)
