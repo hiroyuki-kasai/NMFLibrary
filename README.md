@@ -3,9 +3,9 @@ Matlab library for non-negative matrix factorization (NMF)
 
 Authors: [Hiroyuki Kasai](http://www.kasailab.com/)
 
-Last page update: Aprl 22, 2019
+Last page update: May 16, 2019
 
-Latest library version: 1.5.1 (see Release notes for more info)
+Latest library version: 1.6 (see Release notes for more info)
 
 <br />
 
@@ -84,6 +84,9 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
    
 - Orthgotonal
 
+    - **DTPP** (Orthgotonal multiplicative upates (MU))
+        - C.Ding, T.Li, W.Peng, and H.Park, "Orthogonal nonnegative matrix t-factorizations for clustering", 12th ACM SIGKDD international conference on Knowledge discovery and data mining (KDD), 2006.
+
     - **orthMU** (Orthgotonal multiplicative upates (MU))
         - S. Choi, "[Algorithms for orthogonal nonnegative matrix factorization](https://ieeexplore.ieee.org/document/4634046/)", IEEE International Joint Conference on Neural Networks, 2008.
 
@@ -139,7 +142,8 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 ||NMFsc|`nmf_sc`|||
 ||nsNMF|`ns_nmf`|||
 ||fnsNMF|`ns_nmf`||`metric='EUC'`, `update_alg='apg'`|
-|Orthogonal|orthMU|`nmf_orth_mu`|||
+|Orthogonal|DTPP|`nmf_dtpp`|||
+||orthMU|`nmf_orth_mu`|||
 ||OrthNMF||||
 ||NMF-HALS-SO||||
 |Online|INMF|`inmf`|||
@@ -313,6 +317,8 @@ If you have any problems or questions, please contact the author: [Hiroyuki Kasa
 
 Release notes
 --------------
+* Version 1.6.0 (May 16, 2019) 
+    - DTPP is added.
 * Version 1.5.1 (Apr. 22, 2019) 
     - Some solvers are modified to fix bugs.
 * Version 1.5.0 (Jul. 30, 2018)
