@@ -1,5 +1,5 @@
 function [x, infos] = pnmf_vb(V, rank, in_options)
-% Probablistic non-negative matrix factorization (NMF) with Variational Bayesian (VB).
+% Probabilistic non-negative matrix factorization (NMF) with Variational Bayesian (VB).
 %
 % The problem of interest is defined as
 %
@@ -63,7 +63,7 @@ function [x, infos] = pnmf_vb(V, rank, in_options)
     options = mergeOptions(options, in_options);    
 
     if options.verbose > 0
-        fprintf('# Probablistic NMF with VB started ...\n');           
+        fprintf('# Probabilistic NMF with VB started ...\n');           
     end  
     
     % initialize

@@ -1,11 +1,11 @@
 # NMFLibrary
 Matlab library for non-negative matrix factorization (NMF)
 
-Authors: [Hiroyuki Kasai](http://www.kasailab.com/)
+Authors: [Hiroyuki Kasai](http://www.kasailab.com/kasai/index.html)
 
 Last page update: May 21, 2019
 
-Latest library version: 1.7 (see Release notes for more info)
+Latest library version: 1.7.0 (see Release notes for more info)
 
 <br />
 
@@ -116,7 +116,7 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
     - **SMU** (Stochastic multiplicative updates) and **SVRMU** (Stochastic variance reduced multiplicative updates)
         - H. Kasai, "[Stochastic variance reduced multiplicative update for nonnegative matrix factorization](https://arxiv.org/abs/1710.10781)," IEEE ICASSP2018, 2018.
 
-- Probablistic NMF
+- Probabilistic NMF
 
     - **PNMF-GIBBS** (Gibbs sampler for non-negative matrix factorisation, with ARD.)
         - M.N. Schmidt, O. Winther, L.K. Hansen, "[Bayesian non-negative matrix factorization](https://link.springer.com/chapter/10.1007/978-3-642-00599-2_68)," International Conference on Independent Component Analysis and Signal Separation, Springer Lecture Notes in Computer Science, Vol. 5441, 2009.
@@ -170,7 +170,7 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 ||SAGA-MU-NMF|`asag_mu_nmf`|||
 ||SMU|`smu_nmf`|||
 ||SVRMU|`svrmu_nmf`|||
-|Probablistic|PNMF-VB|`pnmf_vb`|||
+|Probabilistic|PNMF-VB|`pnmf_vb`|||
 ||PNMF-GIBBS|`pnmf_gibbs`|||
 
 
