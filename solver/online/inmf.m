@@ -16,14 +16,20 @@ function [x, infos] = inmf(V, rank, in_options)
 %    
 %
 % Created by H.Kasai on Feb. 12, 2017
-% Modified by H.Kasai on Oct. 27, 2017
+%
+% Change log: 
+%
+%   Oct. 27, 2017 (Hiroyuki Kasai): Fixed algorithm. 
+%
+%   May. 20, 2019 (Hiroyuki Kasai): Added initialization module.
+%
 
 
     % set dimensions and samples
-    m = size(V, 1);
-    n = size(V, 2);
+    [m, n] = size(V);
 
-    % set local options (no)
+    % set local options
+    local_options = [];
     local_options.max_inneriter     = 1;
     local_options.online            = 0;
     local_options.tolcostdegrease   = 1e-8;
@@ -33,19 +39,21 @@ function [x, infos] = inmf(V, rank, in_options)
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
     options = mergeOptions(options, in_options); 
+    
+    if options.verbose > 0
+        fprintf('# INMF: started ...\n');           
+    end
+    
+    % initialize factors
+    init_options = options;
+    [init_factors, ~] = generate_init_factors(V, rank, init_options);    
+    W = init_factors.W;
+    H = init_factors.H; 
+    R_zero = init_factors.R;     
 
     % initialize
     epoch = 0;
-    R_zero = zeros(m, n);    
     grad_calc_count = 0;
-    
-    if ~isfield(options, 'x_init')
-        W = rand(m, rank);
-        H = rand(rank, n);
-    else
-        W = options.x_init.W;
-        H = options.x_init.H;
-    end       
     
     if options.online
         ht = H(:, end); %why
@@ -58,10 +66,6 @@ function [x, infos] = inmf(V, rank, in_options)
     
     % select disp_freq 
     disp_freq = set_disp_frequency(options);       
-    
-    if options.verbose > 0
-        fprintf('# INMF: started ...\n');           
-    end      
     
     % store initial info
     clear infos;

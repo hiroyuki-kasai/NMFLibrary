@@ -43,47 +43,53 @@ function [x, infos] = ns_nmf(V, rank, in_options)
 % Created by Silja Polvi-Huttunen, University of Helsinki, Finland, 2014
 % Created by modifiying the original code by H.Kasai on Jul. 23, 2018 
 % Modified by H.Kasai on Jul. 29, 2018 
+%
+% Change log: 
+%
+%   May. 20, 2019 (Hiroyuki Kasai): Added initialization module.
+%
 
 
     % set dimensions and samples
-    m = size(V, 1);
-    n = size(V, 2);
+    [m, n] = size(V);
 
     % set local options 
     local_options.theta         = 0.5; % decides the degree in [0,1] of nonsmoothing (use 0 for standard NMF)
     local_options.metric        = 'EUC'; % 'EUC' (default) or 'KL'
     local_options.update_alg    = 'mu';  % 'mu' or 'apg'
     local_options.apg_maxiter   = 100;
+    local_options.myeps         = 1e-16;
+    local_options.norm_w        = 1;
     
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
     options = mergeOptions(options, in_options);  
     
+    if options.verbose > 0
+        fprintf('# nsNMF: started ...\n');           
+    end     
+    
+    % initialize factors
+    init_options = options;
+    [init_factors, ~] = generate_init_factors(V, rank, init_options);    
+    W = init_factors.W;
+    H = init_factors.H;     
+    R = init_factors.R;
 
     I = eye(rank);
     S = (1-options.theta)*I + (options.theta/rank)*ones(rank);
     
     % initialize
     epoch = 0;    
-    R_zero = zeros(m, n);
     grad_calc_count = 0; 
     
-    if ~isfield(options, 'x_init')
-        [W, H] = NNDSVD(abs(V), rank, 0);
-    else
-        W = options.x_init.W;
-        H = options.x_init.H;
-    end    
-      
-
     % select disp_freq 
     disp_freq = set_disp_frequency(options);      
     
-   
     % store initial info
     clear infos;
     WS = W*S;    
-    [infos, f_val, optgap] = store_nmf_infos(V, WS, H, R_zero, options, [], epoch, grad_calc_count, 0);
+    [infos, f_val, optgap] = store_nmf_infos(V, WS, H, R, options, [], epoch, grad_calc_count, 0);
     
     if options.verbose > 1
         fprintf('nsNMF: Epoch = 0000, cost = %.16e, optgap = %.4e\n', f_val, optgap); 
@@ -118,18 +124,39 @@ function [x, infos] = ns_nmf(V, rank, in_options)
             
         else % support only 'EUC' metric.
             
-            % update H
-            WS = W*S;
-            [H, ~, ~] = nesterov_mnls_general(V, WS, [], H, 1, options.apg_maxiter, 'basic'); 
+            if 0
+                % update H
+                WS = W*S;
+                [H, ~, ~] = nesterov_mnls_general(V, WS, [], H, 1, options.apg_maxiter, 'basic'); 
 
 
-            % normalize rows in H
-            [W,H] = rowsum_R_one(W,H); % normalize rows in H
+                % normalize rows in H
+                [W,H] = rowsum_R_one(W,H); % normalize rows in H
 
-            % update W
-            SH = S*H;
-            [W, ~, ~] = nesterov_mnls_general(V, [], SH', W, 1, options.apg_maxiter, 'basic');
-            
+                % update W
+                SH = S*H;
+                [W, ~, ~] = nesterov_mnls_general(V, [], SH', W, 1, options.apg_maxiter, 'basic');
+                
+            else
+                
+                % update W
+                SH = S*H;
+                [W, ~, ~] = nesterov_mnls_general(V, [], SH', W, 1, options.apg_maxiter, 'basic');
+                %W_prev = W;
+                W = W + (W<options.myeps) .* options.myeps;
+                
+                % normalize W
+                if options.norm_w
+                    %W11 = bsxfun(@rdivide,W,sqrt(sum(W.^2,1)));
+                    [W, ~] = data_normalization(W, [], 'std');
+                end
+                
+                % update H
+                WS = W*S;
+                [H, ~, ~] = nesterov_mnls_general(V, WS, [], H, 1, options.apg_maxiter, 'basic'); 
+                
+            end
+
         end
 
         % measure elapsed time
@@ -143,7 +170,7 @@ function [x, infos] = ns_nmf(V, rank, in_options)
         
         % store info
         WS = W*S;
-        [infos, f_val, optgap] = store_nmf_infos(V, WS, H, R_zero, options, infos, epoch, grad_calc_count, elapsed_time);  
+        [infos, f_val, optgap] = store_nmf_infos(V, WS, H, R, options, infos, epoch, grad_calc_count, elapsed_time);  
         
         % display infos
         if options.verbose > 1

@@ -34,49 +34,49 @@ function [x, infos] = nmf_hals_so(V, rank, in_options)
 %
 % Originally created by Motoki Shiga, Gifu University, Japan.
 % Modified by H.Kasai on Jul. 25, 2018
+%
+% Change log: 
+%
+%   May. 20, 2019 (Hiroyuki Kasai): Added initialization module.
+%
 
 
     % set dimensions and samples
-    m = size(V, 1);
-    n = size(V, 2);
-
+    [m, n] = size(V);
+ 
     % set local options
+    local_options = [];
     local_options.norm_w    = 0;
     local_options.wo        = 0.1;  % weight of orthogonal constraints for W
     local_options.myeps     = 1e-16; % 2.2204e-16
     
-    
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
-    options = mergeOptions(options, in_options);   
+    options = mergeOptions(options, in_options);  
+    
+    if options.verbose > 0
+        fprintf('# HALS-SO: started ...\n');           
+    end     
+    
+    % initialize factors
+    init_options = options;
+    [init_factors, ~] = generate_init_factors(V, rank, init_options);    
+    W = init_factors.W;
+    H = init_factors.H;
+    R = init_factors.R;
     
     % initialize
     epoch = 0;    
-    R_zero = zeros(m, n);
     grad_calc_count = 0; 
-    
-    if ~isfield(options, 'x_init')
-        W = rand(m, rank);
-        H = rand(rank, n);
-    else
-        W = options.x_init.W;
-        H = options.x_init.H;
-    end  
-    
-    if options.norm_w ~= 0
-        % normalize W
-        W = normalize_W(W, options.norm_w);
-    end
     
     wj = sum(W, 2);
 
     % select disp_freq 
     disp_freq = set_disp_frequency(options);      
-    
    
     % store initial info
     clear infos;
-    [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, [], epoch, grad_calc_count, 0);
+    [infos, f_val, optgap] = store_nmf_infos(V, W, H, R, options, [], epoch, grad_calc_count, 0);
     orth_val = norm(W'*W - eye(rank),'fro');
     [infos.orth] = orth_val;
 
@@ -122,10 +122,9 @@ function [x, infos] = nmf_hals_so(V, rank, in_options)
         epoch = epoch + 1;         
         
         % store info
-        [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, infos, epoch, grad_calc_count, elapsed_time);  
+        [infos, f_val, optgap] = store_nmf_infos(V, W, H, R, options, infos, epoch, grad_calc_count, elapsed_time);  
         orth_val = norm(W'*W - eye(rank),'fro');
         [infos.orth] = [infos.orth orth_val];
-        
         
         % display infos
         if options.verbose > 1

@@ -4,15 +4,14 @@
 %
 % This file is part of NMFLibrary.
 %
-% Created by H.Kasai on July 24, 2018
-% Modified by H.Kasai on July 30, 2018
+% Created by H.Kasai on July 24, 2017
 
 clc;
 clear;
 close all;
 
-%% generate synthetic data of (mxn) matrix
-m= 150;
+%% generate synthetic data of (mxn) matrix       
+m = 150;
 n = 150;
 V = rand(m,n);
 
@@ -26,7 +25,7 @@ options = [];
 [x_init.W, x_init.H] = NNDSVD(abs(V), rank, 0);
 options.x_init = x_init;
 options.verbose = 2;
-options.max_epoch = 1000;
+options.max_epoch = 100;
 sparse_coeff = 0.5;
 
 
@@ -36,16 +35,28 @@ sparse_coeff = 0.5;
 [w_nmf_mu, infos_nmf_mu] = nmf_mu(V, rank, options);
 
 
+%     [W,H,errs,vout] = nmf_euc_sparse_es(V, rank, 'verb', 3, 'niter', options.max_epoch, ...
+%          'W0', x_init.W, 'H0', x_init.H, 'alpha', sparse_coeff);     
+
 % Sparse-MU (EUC)
 options.lambda = sparse_coeff;
 options.myeps = 1e-20;
 [w_sparse_mu, infos_sparse_mu] = nmf_sparse_mu(V, rank, options);
+
+
+%     [W,H,errs,vout] = nmf_kl_sparse_es(V, rank, 'verb', 3, 'niter', options.max_epoch, ...
+%          'W0', x_init.W, 'H0', x_init.H, 'alpha', sparse_coeff); 
 
 % Sparse-MU (KL)
 options.lambda = sparse_coeff;
 options.myeps = 1e-20;
 options.metric = 'KL';
 [w_sparse_mu_kl, infos_sparse_mu_kl] = nmf_sparse_mu(V, rank, options); 
+
+
+%     [W,H,errs,vout] = nmf_kl_sparse_v(V, rank, 'verb', 3, 'niter', options.max_epoch, ...
+%          'W0', x_init.W, 'H0', x_init.H, 'alpha', sparse_coeff);     
+
 
 % Sparse-MU-V (KL)
 options.lambda = sparse_coeff;
@@ -54,8 +65,9 @@ options.metric = 'KL';
 [w_sparse_mu_kl_v, infos_sparse_mu_kl_v] = nmf_sparse_mu_v(V, rank, options);     
 
 
+
 % nsNMF
-options.theta = 0.6; % decides the degree in [0,1] of nonsmoothing (use 0 for standard NMF)
+options.theta = 1; % decides the degree in [0,1] of nonsmoothing (use 0 for standard NMF)
 options.cost = 'EUC'; %- what cost function to use; 'eucl' (default) or 'kl'
 [w_nsnmf, infos_nsnmf] = ns_nmf(V, rank, options); 
 

@@ -34,34 +34,33 @@ function [x, infos] = semi_nmf(V, rank, in_options)
 
     
     % set dimensions and samples
-    m = size(V, 1);
-    n = size(V, 2); 
-    
-    % set local options 
+    [m, n] = size(V);
+ 
+    % set local options
+    local_options = [];
     local_options.max_iter  = 100;
     local_options.tolfun    = 1e-5;
-    local_options.verbose   = 1;    
+    local_options.verbose   = 1; 
+    local_options.init_alg  = 'semi_random';
     
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
     options = mergeOptions(options, in_options); 
     
+    if options.verbose > 0
+        fprintf('# Semi-NMF: started ...\n');           
+    end  
+    
+    % initialize factors
+    init_options = options;
+    [init_factors, ~] = generate_init_factors(V, rank, init_options);    
+    W = init_factors.W;
+    H = init_factors.H;      
     
     % initialize
     epoch = 0;    
     grad_calc_count = 0; 
     R_zero = zeros(m, n);
-    
-    if ~isfield(options, 'x_init')
-        %[~, H] = NNDSVD(abs(V), rank, 0);
-        rng('default')
-        H = rand(rank, n); 
-        W = V * pinv(H);
-    else
-        W = options.x_init.W;
-        H = options.x_init.H;
-    end    
-    
     
     % select disp_freq 
     disp_freq = set_disp_frequency(options);        
@@ -78,7 +77,7 @@ function [x, infos] = semi_nmf(V, rank, in_options)
     start_time = tic();    
 
     % main loop
-    for i = 1:options.max_iter
+    while (optgap > options.tol_optgap) && (epoch < options.max_epoch)             
 
         % update W
         HHT = H * H';

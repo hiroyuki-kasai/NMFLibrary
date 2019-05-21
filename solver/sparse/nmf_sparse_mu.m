@@ -46,11 +46,15 @@ function [x, infos] = nmf_sparse_mu(V, rank, in_options)
 %
 % Originally created by G.Grindlay (grindlay@ee.columbia.edu) on Jan. 14, 2010
 % Modified by H.Kasai on Jul. 23, 2018
+%
+% Change log: 
+%
+%   May. 20, 2019 (Hiroyuki Kasai): Added initialization module.
+%
 
 
     % set dimensions and samples
-    m = size(V, 1);
-    n = size(V, 2);
+    [m, n] = size(V);
 
     % set local options
     local_options.norm_h    = 0;
@@ -61,22 +65,22 @@ function [x, infos] = nmf_sparse_mu(V, rank, in_options)
     
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
-    options = mergeOptions(options, in_options);   
-      
+    options = mergeOptions(options, in_options); 
+    
+    if options.verbose > 0
+        fprintf('# Sparse-MU: started ...\n');           
+    end     
+    
+    % initialize factors
+    init_options = options;
+    [init_factors, ~] = generate_init_factors(V, rank, init_options);    
+    W = init_factors.W;
+    H = init_factors.H;
+    R = init_factors.R;
     
     % initialize
     epoch = 0;    
-    R_zero = zeros(m, n);
     grad_calc_count = 0; 
-    
-    if ~isfield(options, 'x_init')
-        W = rand(m, rank);
-        H = rand(rank, n);
-    else
-        W = options.x_init.W;
-        H = options.x_init.H;
-    end  
-    
     
     % preallocate matrix of ones
     if strcmp(options.metric, 'EUC')
@@ -86,19 +90,8 @@ function [x, infos] = nmf_sparse_mu(V, rank, in_options)
         Omn = ones(m, n);
     end
     
-
-    % normalize W
-    W = normalize_W(W, options.norm_w);
-
-    if options.norm_h ~= 0
-        % normalize H
-        H = normalize_H(H, options.norm_h);
-    end    
-    
-    
     % select disp_freq 
     disp_freq = set_disp_frequency(options);      
-    
    
     % store initial info
     clear infos;
@@ -108,7 +101,7 @@ function [x, infos] = nmf_sparse_mu(V, rank, in_options)
     elseif strcmp(options.metric, 'BETA-D')
         metric_param = options.beta;        
     end
-    [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, [], epoch, grad_calc_count, 0, options.metric, metric_param);
+    [infos, f_val, optgap] = store_nmf_infos(V, W, H, R, options, [], epoch, grad_calc_count, 0, options.metric, metric_param);
     % store additionally different cost
     reg_val = options.lambda*sum(sum(H));
     f_val_total = f_val + reg_val;
@@ -147,13 +140,13 @@ function [x, infos] = nmf_sparse_mu(V, rank, in_options)
             end
         elseif strcmp(options.metric, 'KL')
         
-            R = V./(W*H);
+            C = V./(W*H);
             if options.norm_w == 1
-                W = W .* ( (R*H' + (Omm*(Omn*H' .* W))) ./ ...
-                           max(Omn*H' + (Omm*(R*H' .* W)), options.myeps) );
+                W = W .* ( (C*H' + (Omm*(Omn*H' .* W))) ./ ...
+                           max(Omn*H' + (Omm*(C*H' .* W)), options.myeps) );
             elseif options.norm_w == 2
-                W = W .* ( (R*H' + W .* (Omm*(Omn*H' .* W))) ./ ...
-                           max(Omn*H' + W .* (Omm*(R*H' .* W)), options.myeps) );
+                W = W .* ( (C*H' + W .* (Omm*(Omn*H' .* W))) ./ ...
+                           max(Omn*H' + W .* (Omm*(C*H' .* W)), options.myeps) );
             end
         end
         W = normalize_W(W, options.norm_w);
@@ -169,7 +162,7 @@ function [x, infos] = nmf_sparse_mu(V, rank, in_options)
         epoch = epoch + 1;         
         
         % store info
-        [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, infos, epoch, grad_calc_count, elapsed_time, options.metric, metric_param);  
+        [infos, f_val, optgap] = store_nmf_infos(V, W, H, R, options, infos, epoch, grad_calc_count, elapsed_time, options.metric, metric_param);  
         % store additionally different cost
         reg_val = options.lambda*sum(sum(H));
         f_val_total = f_val + reg_val;

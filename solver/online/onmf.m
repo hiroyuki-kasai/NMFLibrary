@@ -16,43 +16,46 @@ function [x, infos] = onmf(V, rank, in_options)
 %    
 %
 % Created by H.Kasai and H.Sakai on Feb. 12, 2017
-% Modified by H.Kasai on Oct. 27, 2017
+%
+% Change log: 
+%
+%   Oct. 27, 2017 (Hiroyuki Kasai): Fixed algorithm. 
+%
+%   May. 20, 2019 (Hiroyuki Kasai): Added initialization module.
+%
 
 
     % set dimensions and samples
-    m = size(V, 1);
-    n = size(V, 2);
-
-    % set local options (no)
+    [m, n] = size(V);
+ 
+    % set local options
     local_options = [];
     
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
-    options = mergeOptions(options, in_options);   
+    options = mergeOptions(options, in_options);
     
     if options.verbose > 0
         fprintf('# ONMF: started ...\n');           
     end   
     
+    % initialize factors
+    init_options = options;
+    [init_factors, ~] = generate_init_factors(V, rank, init_options);    
+    Wt = init_factors.W;
+    H = init_factors.H; 
+    R = init_factors.R; 
+    
     % initialize
     epoch = 0;
-    R_zero = zeros(m, n);
     grad_calc_count = 0;
-    
-    if ~isfield(options, 'x_init')
-        Wt  = rand(m, rank);
-        H   = rand(rank, n);
-    else
-        Wt  = options.x_init.W;
-        H   = options.x_init.H;
-    end
     
     % select disp_freq 
     disp_freq = set_disp_frequency(options);    
     
     % store initial info
     clear infos;
-    [infos, f_val, optgap] = store_nmf_infos(V, Wt, H, R_zero, options, [], epoch, grad_calc_count, 0);
+    [infos, f_val, optgap] = store_nmf_infos(V, Wt, H, R, options, [], epoch, grad_calc_count, 0);
     
     if options.verbose > 1
         fprintf('ONMF: Epoch = 0000, cost = %.16e, optgap = %.4e\n', f_val, optgap); 
@@ -73,7 +76,7 @@ function [x, infos] = onmf(V, rank, in_options)
         for t = 1 : options.batch_size : n - 1
 
             % Retrieve vt and ht
-            vt = V(:, t:t+options.batch_size -1);
+            vt = V(:, t:t+options.batch_size-1);
             ht = H(:, t:t+options.batch_size-1);
 
             % uddate ht
@@ -101,7 +104,7 @@ function [x, infos] = onmf(V, rank, in_options)
         epoch = epoch + 1;        
         
         % store info
-        [infos, f_val, optgap] = store_nmf_infos(V, Wt, H, R_zero, options, infos, epoch, grad_calc_count, elapsed_time);          
+        [infos, f_val, optgap] = store_nmf_infos(V, Wt, H, R, options, infos, epoch, grad_calc_count, elapsed_time);          
         
         % display infos
         if options.verbose > 1

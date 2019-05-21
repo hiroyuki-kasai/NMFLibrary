@@ -18,41 +18,39 @@ function [x, infos] = asag_mu_nmf(V, rank, in_options)
 %
 %    
 % Created by H.Kasai on March. 22, 2017
-% Modified by H.Kasai on Oct. 27, 2017
+%
+% Change log: 
+%
+%   Oct. 27, 2017 (Hiroyuki Kasai): Fixed algorithm. 
+%
+%   May. 20, 2019 (Hiroyuki Kasai): Added initialization module.
+%
 
 
     % set dimensions and samples
-    m = size(V, 1);
-    n = size(V, 2);
-
-    % set local options (no)
+    [m, n] = size(V);
+ 
+    % set local options
     local_options = [];
+    local_options.lambda = 1;
     
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
     options = mergeOptions(options, in_options); 
-
-
- 
     
-    if ~isfield(options, 'lambda')
-        lambda = 1;
-    else
-        lambda = options.lambda;
-    end    
+    if options.verbose > 0
+        fprintf('# ASAG-MU-NM: started ...\n');           
+    end   
     
-    if ~isfield(options, 'x_init')
-        Wt = rand(m, rank);
-        H = rand(rank, n);
-    else
-        Wt = options.x_init.W;
-        H = options.x_init.H;
-    end     
-
+    % initialize factors
+    init_options = options;
+    [init_factors, ~] = generate_init_factors(V, rank, init_options);    
+    Wt = init_factors.W;
+    H = init_factors.H; 
+    R = init_factors.R;     
 
     % initialize
     epoch = 0;    
-    R_zero = zeros(m, n);
     grad_calc_count = 0;
     
     % permute samples
@@ -72,13 +70,9 @@ function [x, infos] = asag_mu_nmf(V, rank, in_options)
     % select disp_freq 
     disp_freq = set_disp_frequency(options);     
     
-    if options.verbose > 0
-        fprintf('# ASAG-MU-NMF: started ...\n');           
-    end        
-    
     % store initial info
     clear infos;
-    [infos, f_val, optgap] = store_nmf_infos(V, Wt, H, R_zero, options, [], epoch, grad_calc_count, 0);
+    [infos, f_val, optgap] = store_nmf_infos(V, Wt, H, R, options, [], epoch, grad_calc_count, 0);
     
     if options.verbose > 1
         fprintf('ASAG-MU-NMF: Epoch = 0000, cost = %.16e, optgap = %.4e\n', f_val, optgap); 
@@ -105,8 +99,8 @@ function [x, infos] = asag_mu_nmf(V, rank, in_options)
             ht = ht + (ht<eps) .* eps; 
 
             % update Delta_minus and Delta_plus
-            Delta_minus = (1-lambda) * Delta_minus + lambda * vt * ht';
-            Delta_plus = (1-lambda) * Delta_plus + lambda * Wt * (ht * ht');
+            Delta_minus = (1-options.lambda) * Delta_minus + options.lambda * vt * ht';
+            Delta_plus = (1-options.lambda) * Delta_plus + options.lambda * Wt * (ht * ht');
 
             % update W
             Wt = Wt .* (Delta_minus ./Delta_plus);            
@@ -125,7 +119,7 @@ function [x, infos] = asag_mu_nmf(V, rank, in_options)
         epoch = epoch + 1;          
         
         % store info
-        [infos, f_val, optgap] = store_nmf_infos(V, Wt, H, R_zero, options, infos, epoch, grad_calc_count, elapsed_time);  
+        [infos, f_val, optgap] = store_nmf_infos(V, Wt, H, R, options, infos, epoch, grad_calc_count, elapsed_time);  
         
         % display infos
         if options.verbose > 1

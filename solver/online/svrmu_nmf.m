@@ -10,15 +10,21 @@ function [x, infos] = svrmu_nmf(V, rank, in_options)
 %       infos       information
 %
 %    
-% Created by H.Kasai on March 22, 2017
-% Modified by H.Kasai on March 15, 2018
+% Created by H.Kasai on Mar. 22, 2017
+%
+% Change log: 
+%
+%   Mar. 15, 2018 (Hiroyuki Kasai): Fixed algorithm. 
+%
+%   May. 20, 2019 (Hiroyuki Kasai): Added initialization module.
+%
 
 
     % set dimensions and samples
-    m = size(V, 1);
-    n = size(V, 2);
-
+    [m, n] = size(V);
+ 
     % set local options
+    local_options = [];
     local_options.repeat_inneriter  = 1;
     local_options.W_sub_mode        = 'STD';    
     local_options.H_sub_mode        = 'STD';
@@ -31,13 +37,20 @@ function [x, infos] = svrmu_nmf(V, rank, in_options)
     local_options.robust            = false;
     local_options.lambda            = 1;
     local_options.tol_optgap        = 1e-2;
-
+    local_options.x_init_robust     = false;
     
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
     options = mergeOptions(options, in_options); 
+    
+    % initialize factors
+    init_options = options;
+    [init_factors, ~] = generate_init_factors(V, rank, init_options);    
+    Wt = init_factors.W;
+    H = init_factors.H;  
+    R = init_factors.R;    
 
-
+    % determine sub_mode
     if options.accel
         options.H_sub_mode = 'ACC';
     else
@@ -54,6 +67,17 @@ function [x, infos] = svrmu_nmf(V, rank, in_options)
         fprintf('Unfortunately, Precon variant does not work well.\n');
     else
         options.W_sub_mode = 'STD';
+    end
+    
+    if options.robust
+        mode = 'R-SVRMU-NMF';
+    else
+        mode = 'SVRMU-NMF';        
+        R = zeros(m, n);
+    end 
+    
+    if options.verbose > 0
+        fprintf('# %s (%s,%s): started ...\n', mode, options.W_sub_mode, options.H_sub_mode);           
     end     
     
     if strcmp(options.rep_mode, 'adaptive')
@@ -67,17 +91,6 @@ function [x, infos] = svrmu_nmf(V, rank, in_options)
     l = zeros(m, options.batch_size) + options.lambda;      
     grad_calc_count = 0;
         
-    
-    if ~isfield(options, 'x_init')
-        Wt  = rand(m, rank);
-        H   = rand(rank, n);
-        R   = rand(m, n);          
-    else
-        Wt  = options.x_init.W;
-        H   = options.x_init.H;
-        R   = options.x_init.R;           
-    end 
-    
     % permute samples
     if options.permute_on
         perm_idx = randperm(n);
@@ -87,19 +100,8 @@ function [x, infos] = svrmu_nmf(V, rank, in_options)
     V = V(:,perm_idx);
     H = H(:,perm_idx);       
 
-    if options.robust
-        mode = 'R-SVRMU-NMF';
-    else
-        mode = 'SVRMU-NMF';        
-        R = zeros(m, n);
-    end 
-    
     % select disp_freq 
     disp_freq = set_disp_frequency(options);         
-    
-    if options.verbose > 0
-        fprintf('# %s (%s,%s): started ...\n', mode, options.W_sub_mode, options.H_sub_mode);           
-    end    
     
     % store initial info
     clear infos;

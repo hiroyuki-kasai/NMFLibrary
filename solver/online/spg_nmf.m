@@ -10,14 +10,21 @@ function [x, infos] = spg_nmf(V, rank, in_options)
 %       infos       information
 %
 %    
-% Created by H.Kasai on March. 28, 2017
-% Modified by H.Kasai on March. 14, 2018
+% Created by H.Kasai on Mar. 28, 2017
+%
+% Change log: 
+%
+%   Mar. 14, 2018 (Hiroyuki Kasai): Fixed algorithm. 
+%
+%   May. 20, 2019 (Hiroyuki Kasai): Added initialization module.
+%
+
 
     % set dimensions and samples
-    m = size(V, 1);
-    n = size(V, 2); 
+    [m, n] = size(V);
  
     % set local options
+    local_options = [];
     local_options.W_sub_mode          = 'STD';
     local_options.H_sub_mode          = 'LS';
     local_options.accel               = false;
@@ -29,9 +36,16 @@ function [x, infos] = spg_nmf(V, rank, in_options)
 
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
-    options = mergeOptions(options, in_options); 
-
+    options = mergeOptions(options, in_options);
     
+    % initialize factors
+    init_options = options;
+    [init_factors, ~] = generate_init_factors(V, rank, init_options);    
+    Wt = init_factors.W;
+    H = init_factors.H;  
+    R = init_factors.R;    
+
+    % determine sub_mode
     if options.accel
         options.H_sub_mode = 'ACC';
     else
@@ -43,21 +57,11 @@ function [x, infos] = spg_nmf(V, rank, in_options)
         options.h_repeat = 1;
     end
     
-%     if options.precon
-%         options.W_sub_mode = 'Precon';
-%     else
-%         options.W_sub_mode = 'STD';  
-%     end    
     
-    
-    if ~isfield(options, 'x_init')
-        Wt = rand(m, rank);
-        H = rand(rank, n);
-    else
-        Wt = options.x_init.W;
-        H = options.x_init.H;
-    end    
-    
+    if options.verbose > 0
+        fprintf('# %s (%s): started ...\n', 'SPG-NMF', options.H_sub_mode);           
+    end     
+ 
     % permute samples
     if options.permute_on
         perm_idx = randperm(n);
@@ -69,7 +73,6 @@ function [x, infos] = spg_nmf(V, rank, in_options)
 
     % initialize
     epoch = 0;    
-    R = zeros(m, n);
     grad_calc_count = 0;
     
     if strcmp(options.rep_mode, 'adaptive')
@@ -80,10 +83,6 @@ function [x, infos] = spg_nmf(V, rank, in_options)
     
     % select disp_freq 
     disp_freq = set_disp_frequency(options);         
-    
-    if options.verbose > 0
-        fprintf('# %s (%s): started ...\n', 'SPG-NMF', options.H_sub_mode);           
-    end    
     
     % store initial info
     clear infos;

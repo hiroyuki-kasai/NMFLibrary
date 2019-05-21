@@ -13,9 +13,9 @@ function [] = display_sparsity_graph(algorithm_list, x_list)
         
         m = size(W, 1);
         n = size(H, 2);    
-
+        
         % How sparse are the basis vectors?
-        cursW = (sqrt(m)-(sum(abs(W))./sqrt(sum(W.^2)))) / (sqrt(m)-1);
+        cursW = (sqrt(m)-(sum(abs(W))./(sqrt(sum(W.^2))+eps))) / ((sqrt(m)-1)+eps);
         subplot(algorithm_num,2,2*(i-1)+1);
         bar(cursW);  
         xlabel_str = sprintf('W (%s)', alg_name);
@@ -25,7 +25,7 @@ function [] = display_sparsity_graph(algorithm_list, x_list)
 
 
         % How sparse are the coefficients
-        cursH = (sqrt(n)-(sum(abs(H'))./sqrt(sum(H'.^2)))) / (sqrt(n)-1);
+        cursH = (sqrt(n)-(sum(abs(H'))./(sqrt(sum(H'.^2))+eps))) / ((sqrt(n)-1)+eps);
         subplot(algorithm_num,2,2*i);   
         bar(cursH); 
         xlabel_str = sprintf('H (%s)', alg_name);        

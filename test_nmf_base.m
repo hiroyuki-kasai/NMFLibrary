@@ -2,6 +2,7 @@
 %
 % Created by H.Kasai on March 24, 2017
 % Modified by H.Kasai on Oct. 18, 2017
+% Modified by H.Kasai on May 21, 2019
 
 clc;
 clear;
@@ -12,7 +13,6 @@ anls_asgroup_flag = 1;
 nmf_mu_flag = 1;
 nmf_mod_mu_flag = 1;
 nmf_acc_mu_flag = 1;
-%nmf_acc_mu_new_flag = 1;
 nmf_als_flag = 1;
 nmf_hals_flag = 1;
 nmf_acc_hals_flag = 1;
@@ -105,7 +105,7 @@ if nmf_mod_mu_flag
     options.x_init = x_init;
     options.verbose = verbose; 
     options.f_opt = f_opt;       
-    options.alg = 'mod_mu';
+    options.alg = 'mu_mod';
     
     [w_mod_nmf_mu, infos_mod_nmf_mu] = nmf_mu(V, rank, options);
     
@@ -122,7 +122,7 @@ if nmf_acc_mu_flag
     options.x_init = x_init;
     options.verbose = verbose; 
     options.f_opt = f_opt;       
-    options.alg = 'acc_mu';
+    options.alg = 'mu_acc';
     options.alpha = 2;
     options.delta = 0.1;
     

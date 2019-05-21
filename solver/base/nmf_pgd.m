@@ -37,15 +37,22 @@ function [x, infos] = nmf_pgd(V, rank, in_options)
 %
 %
 % Created by H.Kasai on Mar. 24, 2017
-% Modified by H.Kasai on Oct. 27, 2017
-% Modified by H.Kasai on Apr. 22, 2019 (Bug fixed)
+%
+% Change log: 
+%
+%   Oct. 27, 2017 (Hiroyuki Kasai): Fixed algorithm. 
+%
+%   Apr. 22, 2019 (Hiroyuki Kasai): Fixed bugs.
+%
+%   May. 20, 2019 (Hiroyuki Kasai): Added initialization module.
+%
 
 
     % set dimensions and samples
-    m = size(V, 1);
-    n = size(V, 2); 
-    
-    % set local options 
+    [m, n] = size(V);
+ 
+    % set local options
+    local_options = []; 
     local_options.alg   = 'pgd';
     local_options.alpha = 1;
     local_options.tol_grad_ratio = 0.00001;
@@ -64,20 +71,18 @@ function [x, infos] = nmf_pgd(V, rank, in_options)
 
     if options.verbose > 0
         fprintf('# PGD (%s): started ...\n', options.alg);           
-    end       
- 
+    end      
+    
+    % initialize factors
+    init_options = options;
+    [init_factors, ~] = generate_init_factors(V, rank, init_options);    
+    W = init_factors.W;
+    H = init_factors.H;      
+        
     % initialize
     epoch = 0;    
     R_zero = zeros(m, n);
     grad_calc_count = 0; 
-    
-    if ~isfield(options, 'x_init')
-        W = rand(m, rank);
-        H = rand(rank, n);
-    else
-        W = options.x_init.W;
-        H = options.x_init.H;
-    end    
     
     % select disp_freq 
     disp_freq = set_disp_frequency(options);     

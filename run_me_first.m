@@ -19,6 +19,12 @@ addpath(genpath(pwd));
 cd ..;
 
 
-
+[version, release_date] = nmflibrary_version();
+fprintf('##########################################################\n');
+fprintf('###                                                    ###\n');
+fprintf('###                Welcome to NMFLibrary               ###\n');
+fprintf('###       (version:%s, released:%s)        ###\n', version, release_date);
+fprintf('###                                                    ###\n');
+fprintf('##########################################################\n');
 
 

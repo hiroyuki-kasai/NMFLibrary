@@ -45,15 +45,22 @@ function [x, infos] = nmf_als(V, rank, in_options)
 %
 %
 % Created by H.Kasai on Mar. 24, 2017
-% Modified by H.Kasai on Oct. 27, 2017
-% Modified by H.Kasai on Apr. 22, 2019 (Bug fixed)
+%
+% Change log: 
+%
+%   Oct. 27, 2017 (Hiroyuki Kasai): Fixed algorithm. 
+%
+%   Apr. 22, 2019 (Hiroyuki Kasai): Fixed bugs.
+%
+%   May. 20, 2019 (Hiroyuki Kasai): Added initialization module.
+%
 
 
     % set dimensions and samples
-    m = size(V, 1);
-    n = size(V, 2); 
-    
-    % set local options 
+    [m, n] = size(V);
+ 
+    % set local options
+    local_options = [];
     local_options.alg   = 'hals';
     local_options.alpha = 2;
     local_options.delta = 0.1;
@@ -73,19 +80,17 @@ function [x, infos] = nmf_als(V, rank, in_options)
         fprintf('# ALS (%s): started ...\n', options.alg);           
     end  
     
+    % initialize factors
+    init_options = options;
+    [init_factors, ~] = generate_init_factors(V, rank, init_options);    
+    W = init_factors.W;
+    H = init_factors.H;  
+    R = init_factors.R;
+    
     % initialize
     epoch = 0;    
     grad_calc_count = 0; 
-    R_zero = zeros(m, n);
-    
-    if ~isfield(options, 'x_init')
-        W = rand(m, rank);
-        H = rand(rank, n);
-    else
-        W = options.x_init.W;
-        H = options.x_init.H;
-    end  
-    
+
     if strcmp(options.alg, 'acc_hals')
         eit1 = cputime; 
         VHt = V*H'; 
@@ -101,7 +106,7 @@ function [x, infos] = nmf_als(V, rank, in_options)
      
     % store initial info
     clear infos;
-    [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, [], epoch, grad_calc_count, 0);
+    [infos, f_val, optgap] = store_nmf_infos(V, W, H, R, options, [], epoch, grad_calc_count, 0);
     
     if options.verbose > 1
         fprintf('ALS (%s): Epoch = 0000, cost = %.16e, optgap = %.4e\n', options.alg, f_val, optgap); 
@@ -109,6 +114,7 @@ function [x, infos] = nmf_als(V, rank, in_options)
     
     % set start time
     start_time = tic();
+    prev_time = start_time;
 
     % main loop
     while (optgap > options.tol_optgap) && (epoch < options.max_epoch)           
@@ -176,19 +182,21 @@ function [x, infos] = nmf_als(V, rank, in_options)
         epoch = epoch + 1;         
         
         % store info
-        [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, infos, epoch, grad_calc_count, elapsed_time);       
+        [infos, f_val, optgap] = store_nmf_infos(V, W, H, R, options, infos, epoch, grad_calc_count, elapsed_time);       
         
         % display infos
         if options.verbose > 1
             if ~mod(epoch, disp_freq)
-                fprintf('ALS (%s): Epoch = %04d, cost = %.16e, optgap = %.4e\n', options.alg, epoch, f_val, optgap);
+                fprintf('ALS (%s): Epoch = %04d, cost = %.16e, optgap = %.4e, time = %e\n', options.alg, epoch, f_val, optgap, elapsed_time - prev_time);
             end
-        end        
+        end  
+      
+        prev_time = elapsed_time;          
     end
     
     if options.verbose > 0
         if optgap < options.tol_optgap
-            fprintf('# ALS (%s): Optimality gap tolerance reached: f_val = %.4e < f_opt = %.4e (%.4e)\n', options.alg, f_val, f_opt, options.tol_optgap);
+            fprintf('# ALS (%s): Optimality gap tolerance reached: f_val = %.4e < f_opt = %.4e (%.4e)\n', options.alg, f_val, options.f_opt, options.tol_optgap);
         elseif epoch == options.max_epoch
             fprintf('# ALS (%s): Max epoch reached (%g).\n', options.alg, options.max_epoch);
         end 

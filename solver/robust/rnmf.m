@@ -1,4 +1,4 @@
-function [x, infos] = rnmf(V, rank, options)
+function [x, infos] = rnmf(V, rank, in_options)
 % Robust non-negative matrix factorization (NMF) with outliers (RNMF) algorithm.
 %
 % Inputs:
@@ -16,78 +16,58 @@ function [x, infos] = rnmf(V, rank, options)
 %    
 %
 % Created by H.Sakai and H.Kasai on Feb. 12, 2017
+%
+% Change log: 
+%
+%   May. 21, 2019 (Hiroyuki Kasai): Added initialization module.
+%
 
-    m = size(V, 1);
-    n = size(V, 2); 
 
-    if ~isfield(options, 'lambda')
-        lambda = 1;
-    else
-        lambda = options.lambda;
-    end 
+    % set dimensions and samples
+    [m, n] = size(V);
+ 
+    % set local options
+    local_options = [];    
+    local_options.lambda        = 1;
+    local_options.x_init_robust = true;
     
-    if ~isfield(options, 'max_epoch')
-        max_epoch = 100;
-    else
-        max_epoch = options.max_epoch;
-    end 
-
-    if ~isfield(options, 'verbose')
-        verbose = false;
-    else
-        verbose = options.verbose;
-    end
+    % merge options
+    options = mergeOptions(get_nmf_default_options(), local_options);   
+    options = mergeOptions(options, in_options);
     
-    if ~isfield(options, 'f_opt')
-        f_opt = -Inf;
-    else
-        f_opt = options.f_opt;
-    end    
+    if options.verbose > 0
+        fprintf('# R-NMF: started ...\n');           
+    end   
     
-    if ~isfield(options, 'x_init')
-        W = rand(m, rank);
-        H = rand(rank, n);
-        R = rand(m, n);
-    else
-        W = options.x_init.W;
-        H = options.x_init.H;
-        R = options.x_init.R;
-    end     
+    % initialize factors
+    init_options = options;
+    [init_factors, ~] = generate_init_factors(V, rank, init_options);    
+    W = init_factors.W;
+    H = init_factors.H; 
+    R = init_factors.R; 
 
-     
     % initialize
-    L = zeros(m, n) + lambda; 
+    epoch = 0; 
+    L = zeros(m, n) + options.lambda; 
     grad_calc_count = 0;
     
-    if verbose > 0
-        fprintf('# R-NMF: started ...\n');           
-    end      
-    
+    % select disp_freq 
+    disp_freq = set_disp_frequency(options);        
+     
     % store initial info
     clear infos;
-    infos.epoch = 0;
-    f_val = nmf_cost(V, W, H, R);
-    infos.cost = f_val;
-    if verbose > 1
-        fprintf('R-NMF: Epoch = 0000, cost = %.16e\n', f_val); 
-    end
-    infos.time = 0;
-    infos.grad_calc_count = grad_calc_count;
-    infos.optgap = f_val - f_opt;
+    [infos, f_val, optgap] = store_nmf_infos(V, W, H, R, options, [], epoch, grad_calc_count, 0);
     
-    % select disp_freq 
-    if verbose > 0
-        disp_freq = floor(max_epoch/100);
-        if disp_freq < 1 || max_epoch < 200
-            disp_freq = 1;
-        end
+    if options.verbose > 1
+        fprintf('R-NMF: Epoch = 0000, cost = %.16e, optgap = %.4e\n', f_val, optgap); 
     end     
          
     % set start time
     start_time = tic();
+    prev_time = start_time;
 
     % main loop
-    for epoch = 1 : max_epoch 
+    while (optgap > options.tol_optgap) && (epoch < options.max_epoch) 
         
         % update H/R/W
         H = H .* (W.' * V) ./ (W.' * (W * H + R));
@@ -96,32 +76,31 @@ function [x, infos] = rnmf(V, rank, options)
         
         grad_calc_count = grad_calc_count + m*n;
 
-        % measure cost
-        f_val = nmf_cost(V, W, H, R);
         % measure elapsed time
-        elapsed_time = toc(start_time);
-        % measure optimality gap
-        optgap = f_val - f_opt;
+        elapsed_time = toc(start_time);        
+
+        % update epoch
+        epoch = epoch + 1;        
         
         % store info
-        infos.epoch = [infos.epoch epoch];
-        infos.cost = [infos.cost f_val];
-        infos.time = [infos.time elapsed_time];
-        infos.grad_calc_count = [infos.grad_calc_count grad_calc_count];
-        infos.optgap = [infos.optgap optgap];
+        [infos, f_val, optgap] = store_nmf_infos(V, W, H, R, options, infos, epoch, grad_calc_count, elapsed_time);          
         
         % display infos
-        if verbose > 1
-            if ~mod(epoch, disp_freq)            
-                fprintf('R-NMF: Epoch = %04d, cost = %.16e, optgap = %.4e\n', epoch, f_val, optgap);
+        if options.verbose > 1
+            if ~mod(epoch, disp_freq)
+                fprintf('R-NMF: Epoch = %04d, cost = %.16e, optgap = %.4e, time = %e\n', epoch, f_val, optgap, elapsed_time - prev_time);
             end
-        end        
+        end  
+       
+        prev_time = elapsed_time;
     end
     
-    if verbose > 0
-        if epoch == max_epoch
-            fprintf('# R-NMF: Max epoch reached (%g).\n', max_epoch);
-        end          
+    if options.verbose > 0
+        if optgap < options.tol_optgap
+            fprintf('# R-NMF: Optimality gap tolerance reached: f_val = %.4e < f_opt = %.4e (%.4e)\n', f_val, options.f_opt, options.tol_optgap);
+        elseif epoch == options.max_epoch
+            fprintf('# R-NMF: Max epoch reached (%g).\n', options.max_epoch);
+        end 
     end
     
     x.W = W;

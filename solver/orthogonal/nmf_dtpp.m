@@ -36,15 +36,20 @@ function [x, infos] = nmf_dtpp(V, rank, in_options)
 %   
 %
 % Created by H.Kasai on May 16, 2019
+%
+% Change log: 
+%
+%   May. 20, 2019 (Hiroyuki Kasai): Added initialization module.
+%
 
 
     % set dimensions and samples
-    m = size(V, 1);
-    n = size(V, 2);
-
+    [m, n] = size(V);
+ 
     % set local options
+    local_options = [];
     local_options.orth_h    = 1;
-    local_options.norm_h    = 1;
+    local_options.norm_h    = 2;
     local_options.orth_w    = 0;
     local_options.norm_w    = 0;
     local_options.myeps     = 1e-16;
@@ -56,46 +61,35 @@ function [x, infos] = nmf_dtpp(V, rank, in_options)
     % check
 %     if ~(options.norm_w && options.orth_w) && ~(options.norm_h && options.orth_h)
 %         warning('nmf_euc_orth: orthogonality constraints should be used with normalization on the same mode!');
-%     end    
-    
-    
-    % initialize
-    epoch = 0;    
-    R_zero = zeros(m, n);
-    grad_calc_count = 0; 
-    
-    if ~isfield(options, 'x_init')
-        W = rand(m, rank);
-        H = rand(rank, n);
-    else
-        W = options.x_init.W;
-        H = options.x_init.H;
-    end  
-    
-    if options.norm_w ~= 0
-        % normalize W
-        W = normalize_W(W, options.norm_w);
-    end
+%     end  
 
-    if options.norm_h ~= 0
-        % normalize H
-        H = normalize_H(H, options.norm_h);
-    end 
+    if options.verbose > 0
+        fprintf('# DTPP: started ...\n');           
+    end     
+    
+    % initialize factors
+    init_options = options;
+    [init_factors, ~] = generate_init_factors(V, rank, init_options);    
+    W = init_factors.W;
+    H = init_factors.H;
+    R = init_factors.R;
     
     if options.orth_w && options.orth_h
         S = pinv(W)*V*pinv(H); % Bi-orthogonal 3-factor NMF
     else
         S = eye(rank, rank);
-    end    
-
+    end      
     
+    % initialize
+    epoch = 0;    
+    grad_calc_count = 0; 
+
     % select disp_freq 
     disp_freq = set_disp_frequency(options);      
     
-   
     % store initial info
     clear infos;
-    [infos, f_val, optgap] = store_nmf_infos(V, W*S, H, R_zero, options, [], epoch, grad_calc_count, 0);
+    [infos, f_val, optgap] = store_nmf_infos(V, W*S, H, R, options, [], epoch, grad_calc_count, 0);
     if options.orth_h || options.orth_w
         if options.orth_h && ~options.orth_w
             orth_val = norm(H*H' - eye(rank), 'fro');
@@ -155,7 +149,7 @@ function [x, infos] = nmf_dtpp(V, rank, in_options)
         epoch = epoch + 1;         
         
         % store info
-        [infos, f_val, optgap] = store_nmf_infos(V, W*S, H, R_zero, options, infos, epoch, grad_calc_count, elapsed_time);  
+        [infos, f_val, optgap] = store_nmf_infos(V, W*S, H, R, options, infos, epoch, grad_calc_count, elapsed_time);  
         if options.orth_h || options.orth_w
             if options.orth_h && ~options.orth_w
                 orth_val = norm(H*H' - eye(rank), 'fro');

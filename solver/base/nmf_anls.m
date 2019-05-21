@@ -42,13 +42,20 @@ function [x, infos] = nmf_anls(V, rank, in_options)
 %
 % Created by H.Kasai on Apr. 04, 2017
 % Modified by H.Kasai on Oct. 27, 2017
+%
+% Change log: 
+%
+%   Oct. 27, 2017 (Hiroyuki Kasai): Fixed algorithm. 
+%
+%   May. 20, 2019 (Hiroyuki Kasai): Added initialization module.
+%
 
 
     % set dimensions and samples
-    m = size(V, 1);
-    n = size(V, 2); 
-    
-    % set local options 
+    [m, n] = size(V);
+ 
+    % set local options
+    local_options = [];
     local_options.options.alg   = 'anls_asgroup';
 
     % merge options
@@ -64,26 +71,24 @@ function [x, infos] = nmf_anls(V, rank, in_options)
     
     if options.verbose > 0
         fprintf('# ANLS (%s): started ...\n', options.alg);           
-    end      
+    end  
+    
+    % initialize factors
+    init_options = options;
+    [init_factors, ~] = generate_init_factors(V, rank, init_options);    
+    W = init_factors.W;
+    H = init_factors.H;      
     
     % initialize
     epoch = 0;    
     R_zero = zeros(m, n);
     grad_calc_count = 0;
     
-    if ~isfield(options, 'x_init')
-        W = rand(m, rank);
-        H = rand(rank, n);
-    else
-        W = options.x_init.W;
-        H = options.x_init.H;
-    end     
-    
     % store initial info
     clear infos;
     [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, [], epoch, grad_calc_count, 0);
     
-    if options.verbose > 0
+    if options.verbose > 1
         fprintf('ANLS (%s): Epoch = 0000, cost = %.16e, optgap = %.4e\n', options.alg, f_val, optgap); 
     end  
     

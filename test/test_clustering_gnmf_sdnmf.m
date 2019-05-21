@@ -84,7 +84,7 @@ label = litekmeans(V', nClass, 'Replicates', 20);
 mi = MutualInfo(gnd, label);
 purity = calc_purity(gnd, label);
 nmi = calc_nmi(gnd, label);
-fprintf('### GNMF:\tNMI:%5.4f, Purity:%5.4f, MutualInfo:%5.4f\n', nmi, purity, mi);  ;  
+fprintf('### GNMF:\tNMI:%5.4f, Purity:%5.4f, MutualInfo:%5.4f\n', nmi, purity, mi);   
 
 
 

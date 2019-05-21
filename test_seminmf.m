@@ -1,4 +1,4 @@
-function test_various_nmf()
+function test_seminmf()
 %
 % demonstration file for NMFLibrary.
 %

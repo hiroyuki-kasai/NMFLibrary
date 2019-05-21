@@ -34,34 +34,40 @@ function [x, infos] = nmf_sc(V, rank, in_options)
 %
 % Created by Patrik Hoyer, 2006 (and modified by Silja Polvi-Huttunen, University of Helsinki, Finland, 2014)
 % Modified by H.Kasai on Jul. 23, 2018
+%
+% Change log: 
+%
+%   May. 20, 2019 (Hiroyuki Kasai): Added initialization module.
+%
 
 
     % set dimensions and samples
-    m = size(V, 1);
-    n = size(V, 2);
+    [m, n] = size(V);
 
     % set local options 
     local_options.sW = [];
     local_options.sH = 0.8;
+    local_options.init_alg  = 'NNDSVD';
 
-    
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
     options = mergeOptions(options, in_options); 
     
+    if options.verbose > 0
+        fprintf('# NMFsc: started ...\n');           
+    end     
+    
+    % initialize factors
+    init_options = options;
+    [init_factors, ~] = generate_init_factors(V, rank, init_options);    
+    W = init_factors.W;
+    H = init_factors.H;
+    H = H./(sqrt(sum(H.^2,2))*ones(1,n));
+    R = init_factors.R;
     
     % initialize
     epoch = 0;    
-    R_zero = zeros(m, n);
     grad_calc_count = 0; 
-    
-    if ~isfield(options, 'x_init')
-        [W, H] = NNDSVD(abs(V), rank, 0);
-    else
-        W = options.x_init.W;
-        H = options.x_init.H;
-    end 
-    H = H./(sqrt(sum(H.^2,2))*ones(1,n));
     
     if ~isempty(options.sW)
         L1a = sqrt(n)-(sqrt(n)-1)*options.sW;
@@ -86,7 +92,7 @@ function [x, infos] = nmf_sc(V, rank, in_options)
    
     % store initial info
     clear infos;
-    [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, [], epoch, grad_calc_count, 0, 'KL');
+    [infos, f_val, optgap] = store_nmf_infos(V, W, H, R, options, [], epoch, grad_calc_count, 0, 'KL');
     % store additionally different cost
     reg_val = options.lambda*sum(sum(H));
     f_val_total = f_val + reg_val;
@@ -137,7 +143,7 @@ function [x, infos] = nmf_sc(V, rank, in_options)
         epoch = epoch + 1;         
         
         % store info
-        [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, infos, epoch, grad_calc_count, elapsed_time, 'KL');  
+        [infos, f_val, optgap] = store_nmf_infos(V, W, H, R, options, infos, epoch, grad_calc_count, elapsed_time, 'KL');  
         % store additionally different cost
         reg_val = options.lambda*sum(sum(H));
         f_val_total = f_val + reg_val;
@@ -174,7 +180,7 @@ function [x, infos] = nmf_sc(V, rank, in_options)
             dX = (W*H-V)*H';
         end
 
-        begobj = nmf_cost(V, W, H, R_zero);
+        begobj = nmf_cost(V, W, H, R);
         % Make sure to decrease the objective:
         while 1
 
@@ -191,9 +197,9 @@ function [x, infos] = nmf_sc(V, rank, in_options)
             end
 
             if strcmp(name,'H')
-                newobj = nmf_cost(V, W, Xnew, R_zero);
+                newobj = nmf_cost(V, W, Xnew, R);
             else
-                newobj = nmf_cost(V, Xnew, H, R_zero);
+                newobj = nmf_cost(V, Xnew, H, R);
             end
             if newobj<begobj % objective decreased, we can continue
                 break

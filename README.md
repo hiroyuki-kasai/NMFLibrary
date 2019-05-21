@@ -3,9 +3,9 @@ Matlab library for non-negative matrix factorization (NMF)
 
 Authors: [Hiroyuki Kasai](http://www.kasailab.com/)
 
-Last page update: May 16, 2019
+Last page update: May 21, 2019
 
-Latest library version: 1.6 (see Release notes for more info)
+Latest library version: 1.7 (see Release notes for more info)
 
 <br />
 
@@ -55,8 +55,13 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
     - **Semi-NMF** 
         - C.H.Q. Ding, T. Li, M. I. Jordan, "[Convex and Semi-Nonnegative Matrix Factorizations](https://ieeexplore.ieee.org/document/4685898/)," IEEE Transactions on Pattern Analysis and Machine Intelligence, vol.32, no.1, 2010. 
 
+    - **NeNMF** (NMF with Sinkhorn Distance)
+        - N. Guan, D. Tao, Z. Luo, and B. Yuan, "[NeNMF: An Optimal Gradient Method for Non-negative Matrix Factorization](https://ieeexplore.ieee.org/document/6166359)", IEEE Transactions on Signal Processing, Vol. 60, No. 6, pp. 2882-2898, Jun. 2012.
+
     - **SDNMF** (NMF with Sinkhorn Distance)
         - W. Qian, B. Hong, D. Cai, X. He, and X. Li, "[Non-negative matrix factorization with sinkhorn distance](https://pdfs.semanticscholar.org/42b2/ec6e4453dc033d37b9fcb53a1313c018fa23.pdf)", IJCAI, pp.1960-1966, 2016.
+
+
     
 - Robust NMF
 
@@ -91,7 +96,7 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
         - S. Choi, "[Algorithms for orthogonal nonnegative matrix factorization](https://ieeexplore.ieee.org/document/4634046/)", IEEE International Joint Conference on Neural Networks, 2008.
 
     - **OrthNMF**
-        - F.Pompilia, N.Gillis, P.-A.Absil, and F.Glineur, "[Two algorithms for orthogonal nonnegative matrix factorization with application to clustering](https://www.sciencedirect.com/science/article/pii/S0925231214004068)," Neurocomputing, vol.141, no.2, pp.15-25, 2014.
+        - F. Pompilia, N. Gillis, P.-A. Absil, and F. Glineur, "[Two algorithms for orthogonal nonnegative matrix factorization with application to clustering](https://www.sciencedirect.com/science/article/pii/S0925231214004068)," Neurocomputing, vol.141, no.2, pp.15-25, 2014.
 
 
 - Online/stochstic NMF
@@ -110,6 +115,16 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 
     - **SMU** (Stochastic multiplicative updates) and **SVRMU** (Stochastic variance reduced multiplicative updates)
         - H. Kasai, "[Stochastic variance reduced multiplicative update for nonnegative matrix factorization](https://arxiv.org/abs/1710.10781)," IEEE ICASSP2018, 2018.
+
+- Probablistic NMF
+
+    - **PNMF-GIBBS** (Gibbs sampler for non-negative matrix factorisation, with ARD.)
+        - M.N. Schmidt, O. Winther, L.K. Hansen, "[Bayesian non-negative matrix factorization](https://link.springer.com/chapter/10.1007/978-3-642-00599-2_68)," International Conference on Independent Component Analysis and Signal Separation, Springer Lecture Notes in Computer Science, Vol. 5441, 2009.
+
+        - T. Brouwer, P. Lio, "[Bayesian Hybrid Matrix Factorisation for Data Integration](http://proceedings.mlr.press/v54/brouwer17a/brouwer17a.pdf)," 20th International Conference on Artificial Intelligence and Statistics (AISTATS), 2017.
+        
+    - **PNMF-VB** (Variational Bayesian inference for non-negative matrix factorisation, with ARD)
+        - T. Brouwer, J. Frellsen. P. Lio, "[Comparative Study of Inference Methods for Bayesian Nonnegative Matrix Factorisation](https://link.springer.com/chapter/10.1007/978-3-319-71249-9_31)," ECML PKDD 2017, 2017.
 
 
 <br />
@@ -134,6 +149,7 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 ||ASGIVENS|`nmf_anls`|`anls_asgivens`||
 ||BPP|`nmf_anls`|`anls_bpp`||
 |Variant|Semi-NMF|`semi_nmf`|||
+||NeNMF|`nenmf`|||
 ||GNMF|`GNMF`|||
 ||SDNMF|`SDNMF`|||
 |Sparse|sparseMU-EUC|`nmf_sparse_mu`||`metric='EUC'`|
@@ -154,6 +170,8 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 ||SAGA-MU-NMF|`asag_mu_nmf`|||
 ||SMU|`smu_nmf`|||
 ||SVRMU|`svrmu_nmf`|||
+|Probablistic|PNMF-VB|`pnmf_vb`|||
+||PNMF-GIBBS|`pnmf_gibbs`|||
 
 
 <br />
@@ -317,6 +335,9 @@ If you have any problems or questions, please contact the author: [Hiroyuki Kasa
 
 Release notes
 --------------
+* Version 1.7.0 (May 21, 2019) 
+    - PNMF-VB and NeNMF are added.
+    - Fixed some bugs. 
 * Version 1.6.0 (May 16, 2019) 
     - DTPP is added.
 * Version 1.5.1 (Apr. 22, 2019) 

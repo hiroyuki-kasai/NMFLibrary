@@ -75,18 +75,25 @@ function [x, infos] = nmf_mu(V, rank, in_options)
 %
 %
 % Created by H.Kasai on Feb. 16, 2017
-% Modified by H.Kasai on Jul., 2018
-% Modified by H.Kasai on April 20, 2019 (Bug fixed)
 %
 % Some parts are borrowed after modifications from the codes by Patrik Hoyer, 2006 
 % (and modified by Silja Polvi-Huttunen, University of Helsinki, Finland, 2014)
+%
+% Change log: 
+%
+%   Jul. 20, 2018 (Hiroyuki Kasai): Fixed algorithm. 
+%
+%   Apr. 20, 2019 (Hiroyuki Kasai): Fixed bugs.
+%
+%   May. 20, 2019 (Hiroyuki Kasai): Added initialization module.
+%
 
 
     % set dimensions and samples
-    m = size(V, 1);
-    n = size(V, 2);
-
-    % set local options 
+    [m, n] = size(V);
+ 
+    % set local options
+    local_options = [];
     local_options.alg       = 'mu';
     local_options.norm_h    = 0;
     local_options.norm_w    = 1;    
@@ -108,31 +115,18 @@ function [x, infos] = nmf_mu(V, rank, in_options)
     
     if options.verbose > 0
         fprintf('# MU (%s): started ...\n', options.alg);           
-    end      
+    end  
+    
+    % initialize factors
+    init_options = options;
+    [init_factors, ~] = generate_init_factors(V, rank, init_options);    
+    W = init_factors.W;
+    H = init_factors.H;      
     
     % initialize
     epoch = 0;    
     R_zero = zeros(m, n);
     grad_calc_count = 0; 
-    
-    if ~isfield(options, 'x_init')
-        W = rand(m, rank);
-        H = rand(rank, n);
-    else
-        W = options.x_init.W;
-        H = options.x_init.H;
-    end   
-    
-    
-    if options.norm_w ~= 0
-        % normalize W
-        W = normalize_W(W, options.norm_w);
-    end
-
-    if options.norm_h ~= 0
-        % normalize H
-        H = normalize_H(H, options.norm_h);
-    end    
     
     if strcmp(options.alg, 'mu_mod')
         delta = options.myeps;
@@ -145,7 +139,6 @@ function [x, infos] = nmf_mu(V, rank, in_options)
     % select disp_freq 
     disp_freq = set_disp_frequency(options);      
     
-   
     % store initial info
     clear infos;
     metric_param = [];
@@ -304,7 +297,7 @@ function [x, infos] = nmf_mu(V, rank, in_options)
     
     if options.verbose > 0
         if optgap < options.tol_optgap
-            fprintf('# MU (%s): Optimality gap tolerance reached: f_val = %.4e < f_opt = %.4e (%.4e)\n', options.alg, f_val, f_opt, options.tol_optgap);
+            fprintf('# MU (%s): Optimality gap tolerance reached: f_val = %.4e < f_opt = %.4e (%.4e)\n', options.alg, f_val, options.f_opt, options.tol_optgap);
         elseif epoch == options.max_epoch
             fprintf('# MU (%s): Max epoch reached (%g).\n', options.alg, options.max_epoch);
         end 

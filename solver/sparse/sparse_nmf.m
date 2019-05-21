@@ -33,11 +33,15 @@ function [x, infos] = sparse_nmf(V, rank, in_options)
 %
 % Created by Patrik Hoyer, 2006 (and modified by Silja Polvi-Huttunen, University of Helsinki, Finland, 2014)
 % Modified by H.Kasai on Jul. 23, 2018
+%
+% Change log: 
+%
+%   May. 20, 2019 (Hiroyuki Kasai): Added initialization module.
+%
 
 
     % set dimensions and samples
-    m = size(V, 1);
-    n = size(V, 2);
+    [m, n] = size(V);
 
     % set local options 
     local_options.lambda = 0;   % regularizer for sparsity
@@ -47,26 +51,27 @@ function [x, infos] = sparse_nmf(V, rank, in_options)
     options = mergeOptions(get_nmf_default_options(), local_options);   
     options = mergeOptions(options, in_options);  
     
+    if options.verbose > 0
+        fprintf('# sparseNMF: started ...\n');           
+    end     
+    
+    % initialize factors
+    init_options = options;
+    [init_factors, ~] = generate_init_factors(V, rank, init_options);    
+    W = init_factors.W;
+    H = init_factors.H;      
+    
     % initialize
     epoch = 0;    
-    R_zero = zeros(m, n);
+    R = zeros(m, n);
     grad_calc_count = 0; 
     
-    if ~isfield(options, 'x_init')
-        [W, H] = NNDSVD(abs(V), rank, 0);
-    else
-        W = options.x_init.W;
-        H = options.x_init.H;
-    end    
-      
-
     % select disp_freq 
     disp_freq = set_disp_frequency(options);      
     
-   
     % store initial info
     clear infos;
-    [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, [], epoch, grad_calc_count, 0, 'KL');
+    [infos, f_val, optgap] = store_nmf_infos(V, W, H, R, options, [], epoch, grad_calc_count, 0, 'KL');
     % store additionally different cost
     reg_val = options.lambda*sum(sum(H));
     f_val_total = f_val + reg_val;
@@ -109,7 +114,7 @@ function [x, infos] = sparse_nmf(V, rank, in_options)
         epoch = epoch + 1;         
         
         % store info
-        [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, infos, epoch, grad_calc_count, elapsed_time, 'KL');  
+        [infos, f_val, optgap] = store_nmf_infos(V, W, H, R, options, infos, epoch, grad_calc_count, elapsed_time, 'KL');  
         % store additionally different cost
         reg_val = options.lambda*sum(sum(H));
         f_val_total = f_val + reg_val;

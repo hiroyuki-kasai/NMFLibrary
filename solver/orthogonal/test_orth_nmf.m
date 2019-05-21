@@ -38,7 +38,7 @@ options.max_epoch = 1000;
 
 % Orth-MU for H
 options.orth_h    = 1;
-options.norm_h    = 1;
+options.norm_h    = 2;
 options.orth_w    = 0;
 options.norm_w    = 0;    
 [w_orth_h_nmf_mu, infos_orth_h_nmf_mu] = nmf_orth_mu(V, rank, options);
@@ -47,7 +47,7 @@ options.norm_w    = 0;
 options.orth_h    = 0;
 options.norm_h    = 0;
 options.orth_w    = 1;
-options.norm_w    = 1; 
+options.norm_w    = 2; 
 [w_orth_w_nmf_mu, infos_orth_w_nmf_mu] = nmf_orth_mu(V, rank, options);
 
 
