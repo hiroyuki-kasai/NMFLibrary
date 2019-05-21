@@ -192,6 +192,8 @@ Folders and files
     |--- sparse/        - Sparse NMF solvers.
     |--- robust/        - Robust NMF solvers.
     |--- orthogonal/    - Orthogonal NMF solvers.
+    |--- nenmf/         - Nesterov's accelerated NMF solver.
+    |--- probabilistic/ - Probabilistic NMF solvers.
     |--- 3rd_party/     - Solvers provided by 3rd_party.
 </pre>
 
