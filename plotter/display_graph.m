@@ -54,7 +54,15 @@ function [ ] = display_graph(x_category, y_category, algorithm_list, w_list, inf
             elseif strcmp(y_category, 'K')
                 y_plot_data = info_list{alg_idx}.K;   
             elseif strcmp(y_category, 'orth')
-                y_plot_data = info_list{alg_idx}.orth;                  
+                y_plot_data = info_list{alg_idx}.orth; 
+            elseif strcmp(y_category, 'symmetry')
+                y_plot_data = [info_list{alg_idx}.symmetry];                  
+            elseif strcmp(y_category, 'clustering_acc')
+                y_plot_data = [info_list{alg_idx}.clustering_acc.acc];  
+            elseif strcmp(y_category, 'clustering_nmi')
+                y_plot_data = [info_list{alg_idx}.clustering_acc.nmi];  
+            elseif strcmp(y_category, 'clustering_purity')
+                y_plot_data = [info_list{alg_idx}.clustering_acc.purity];                  
             end
             
             semilogy(x_plot_data, y_plot_data, linetype{alg_num}, 'MarkerSize', markersize, 'Linewidth', linewidth); hold on;
@@ -90,7 +98,15 @@ function [ ] = display_graph(x_category, y_category, algorithm_list, w_list, inf
     elseif strcmp(y_category, 'K')
         ylabel('Batch size', 'FontSize', fontsize); 
     elseif strcmp(y_category, 'orth')
-        ylabel('Orthogonality', 'FontSize', fontsize);            
+        ylabel('Orthogonality', 'FontSize', fontsize); 
+    elseif strcmp(y_category, 'symmetry')
+        ylabel('norm(W-Wt)', 'FontSize', fontsize);          
+    elseif strcmp(y_category, 'clustering_acc')
+        ylabel('ACC', 'FontSize', fontsize);  
+    elseif strcmp(y_category, 'clustering_nmi')
+        ylabel('NMI', 'FontSize', fontsize);  
+    elseif strcmp(y_category, 'clustering_purity')
+        ylabel('Purity', 'FontSize', fontsize);          
     end
     legend(legend_str);
     set(gca, 'FontSize', fontsize);      

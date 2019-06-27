@@ -21,7 +21,12 @@ function [infos, f_val, optgap] = store_nmf_infos(V, W, H, R, options, infos, ep
 % This file is part of NMFLibrary.
 %
 % Created by H.Kasai on Oct. 27, 2017
-% Created by H.Kasai on Jul. 26, 2018
+%
+%   Jul. 26, 2018 (Hiroyuki Kasai): Fixed algorithm. 
+%
+%   Jun. 25, 2019 (Hiroyuki Kasai): Added clustering accuracy measurement 
+%                                   and symmetry evaluation.
+%
 
     f_val = Inf;
     optgap = Inf;
@@ -49,9 +54,17 @@ function [infos, f_val, optgap] = store_nmf_infos(V, W, H, R, options, infos, ep
         end
     
         if options.store_sol
-            if ~isempty(W) infos.W = [infos.W W];   end
-            if ~isempty(H) infos.H = [infos.H H];   end
-            if ~isempty(R) infos.R = [infos.R R];   end   
+            if ~isempty(W) infos.W = W;   end
+            if ~isempty(H) infos.H = H;   end
+            if ~isempty(R) infos.R = R;   end   
+        end
+        
+        if options.calc_symmetry
+            infos.symmetry = norm(W-H','fro')^2;
+        end
+        
+        if options.calc_clustering_acc && ~isempty(options.clustering_gnd) && options.clustering_classnum > 0
+            infos.clustering_acc = eval_clustering_accuracy(H, options.clustering_gnd, options.clustering_classnum, options.clustering_eval_num);        
         end
         
     else
@@ -74,6 +87,13 @@ function [infos, f_val, optgap] = store_nmf_infos(V, W, H, R, options, infos, ep
             if ~isempty(R) infos.R = [infos.R R];   end           
         end  
         
+        if options.calc_symmetry
+            infos.symmetry = [infos.symmetry norm(W-H','fro')^2];
+        end        
+        
+        if options.calc_clustering_acc && ~isempty(options.clustering_gnd) && options.clustering_classnum > 0   
+            infos.clustering_acc = [infos.clustering_acc eval_clustering_accuracy(H, options.clustering_gnd, options.clustering_classnum, options.clustering_eval_num)];
+        end        
     end
 
 end

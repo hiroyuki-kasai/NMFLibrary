@@ -57,7 +57,25 @@ function [init_factors, init_factors_opts] = generate_init_factors(V, rank, opti
                 W = V / H; % V * inv(H)
 
                 init_factors.W = W;
-                init_factors.H = H;  
+                init_factors.H = H; 
+                
+            case 'symm'
+                
+                W = ones(m, rank);
+
+                init_factors.W = W;
+                init_factors.H = W';  
+                
+            case 'symm_mean'
+                
+                % make sure that entries of H fall into the interval [0, 2*sqrt(m/k)],
+                % where 'm' is the average of all entries of V.
+                % See https://github.com/dakuang/symnmf
+                
+                W = 2 * full(sqrt(mean(mean(V)) / rank)) * rand(m, rank);
+
+                init_factors.W = W;
+                init_factors.H = W';  
                 
             case 'NNDSVD'
                 

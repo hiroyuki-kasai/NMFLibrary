@@ -5,7 +5,7 @@ Authors: [Hiroyuki Kasai](http://www.kasailab.com/kasai/index.html)
 
 Last page update: May 21, 2019
 
-Latest library version: 1.7.0 (see Release notes for more info)
+Latest library version: 1.8.0 (see Release notes for more info)
 
 <br />
 
@@ -90,7 +90,7 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 - Orthgotonal
 
     - **DTPP** (Orthgotonal multiplicative upates (MU))
-        - C.Ding, T.Li, W.Peng, and H.Park, "Orthogonal nonnegative matrix t-factorizations for clustering", 12th ACM SIGKDD international conference on Knowledge discovery and data mining (KDD), 2006.
+        - C. Ding, T. Li, W. Peng, and H. Park, "Orthogonal nonnegative matrix t-factorizations for clustering", 12th ACM SIGKDD international conference on Knowledge discovery and data mining (KDD), 2006.
 
     - **orthMU** (Orthgotonal multiplicative upates (MU))
         - S. Choi, "[Algorithms for orthogonal nonnegative matrix factorization](https://ieeexplore.ieee.org/document/4634046/)", IEEE International Joint Conference on Neural Networks, 2008.
@@ -98,6 +98,19 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
     - **OrthNMF**
         - F. Pompilia, N. Gillis, P.-A. Absil, and F. Glineur, "[Two algorithms for orthogonal nonnegative matrix factorization with application to clustering](https://www.sciencedirect.com/science/article/pii/S0925231214004068)," Neurocomputing, vol.141, no.2, pp.15-25, 2014.
 
+- Symmetric
+
+    - **SymmANLS** (Symmetric ANLS)
+        - D. Kuang, C. Ding, H. Park, "Symmetric Nonnegative Matrix Factorization for Graph Clustering," The 12th SIAM International Conference on Data Mining (SDM'12), pp.106-117, 2012.
+
+        - D. Kuang, S. Yun, H. Park, "SymNMF Nonnegative low-rank approximation of a similarity matrix for graph clustering," Journal of Global Optimization, vol.62, no.3, pp.545-574, 2015.
+
+        - Z. Zhu, X. Li, K. Liu, Q. Li, "Dropping Symmetry for Fast Symmetric Nonnegative Matrix Factorization," NIPS, 2018.
+
+    - **SymmHALS** (Symmetric HALS)
+        - Z. Zhu, X. Li, K. Liu, Q. Li, "Dropping Symmetry for Fast Symmetric Nonnegative Matrix Factorization," NIPS, 2018.
+
+    - **SymmNewton** (Symmetric Newton)
 
 - Online/stochstic NMF
 
@@ -162,6 +175,9 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 ||orthMU|`nmf_orth_mu`|||
 ||OrthNMF||||
 ||NMF-HALS-SO||||
+|Symmetric|SymmANLS|`symm_anls`|||
+||SymmHALS|`symm_halsacc`|||
+||SymmNewton|`symm_newton`|||
 |Online|INMF|`inmf`|||
 ||ONMF|`onmf`|||
 ||Acceralated ONMF|`omf_acc`|||
@@ -192,6 +208,7 @@ Folders and files
     |--- sparse/        - Sparse NMF solvers.
     |--- robust/        - Robust NMF solvers.
     |--- orthogonal/    - Orthogonal NMF solvers.
+    |--- symm/          - Symmetric NMF solvers.
     |--- nenmf/         - Nesterov's accelerated NMF solver.
     |--- probabilistic/ - Probabilistic NMF solvers.
     |--- 3rd_party/     - Solvers provided by 3rd_party.
@@ -321,8 +338,9 @@ License
 - Third party files are included.
     - For ANLS algorithms: `nnlsm_activeset.m`, `nnls1_asgivens.m`, `nnlsm_blockpivot.m`, and `normalEqComb.m` written by Jingu Kim.
     - For PGD algorithm: `nlssubprob.m`.
-    - For GNMF algorith: `GNMF.m`, `GNMF_Multi.m`, `constructW.m` and `litekmeans.m` writtnen by Deng Cai.
-    - For SDNMF algorith: `SDNMF.m`, and `SDNMF_Multi.m` writtnen by Wei Qian.
+    - For GNMF algorithm: `GNMF.m`, `GNMF_Multi.m`, `constructW.m` and `litekmeans.m` writtnen by Deng Cai.
+    - For SDNMF algorithm: `SDNMF.m`, and `SDNMF_Multi.m` writtnen by Wei Qian.
+    - For symmetric algorithms writtnen by D.Kang et al. and Z. Zhu et al.
     - For acceleration sub-routines in [`nmf_mu.m`](https://github.com/hiroyuki-kasai/NMFLibrary/blob/master/solver/base/nmf_mu.m) and [`nmf_als.m`](https://github.com/hiroyuki-kasai/NMFLibrary/blob/master/solver/base/nmf_als.m) for MU and HALS from [Nicolas Gillis](https://sites.google.com/site/nicolasgillis/publications).
     - For dictionaly visualization: `plot_dictionnary.m`, `rescale.m`, and `getoptions.m`.
 
@@ -337,6 +355,9 @@ If you have any problems or questions, please contact the author: [Hiroyuki Kasa
 
 Release notes
 --------------
+* Version 1.7.0 (June 27, 2019) 
+    - Symmetic solvers are added.
+    - Clustering quality measurements are integrated into store_nmf_infos.m. 
 * Version 1.7.0 (May 21, 2019) 
     - PNMF-VB and NeNMF are added.
     - Fixed some bugs. 

@@ -1,5 +1,5 @@
 function [version, release_date] = nmflibrary_version()
-    version         = '1.7.0';
-    release_date    = '22-May-2019';
+    version         = '1.8.0';
+    release_date    = '30-June-2019';
 end
 
