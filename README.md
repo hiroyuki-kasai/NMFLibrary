@@ -101,11 +101,11 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 - Symmetric
 
     - **SymmANLS** (Symmetric ANLS)
-        - D. Kuang, C. Ding, H. Park, "Symmetric Nonnegative Matrix Factorization for Graph Clustering," The 12th SIAM International Conference on Data Mining (SDM'12), pp.106-117, 2012.
+        - D. Kuang, C. Ding, H. Park, "[Symmetric Nonnegative Matrix Factorization for Graph Clustering](https://epubs.siam.org/doi/abs/10.1137/1.9781611972825.10?mobileUi=0)," The 12th SIAM International Conference on Data Mining (SDM'12), pp.106-117, 2012.
 
-        - D. Kuang, S. Yun, H. Park, "SymNMF Nonnegative low-rank approximation of a similarity matrix for graph clustering," Journal of Global Optimization, vol.62, no.3, pp.545-574, 2015.
+        - D. Kuang, S. Yun, H. Park, "[SymNMF Nonnegative low-rank approximation of a similarity matrix for graph clustering](https://link.springer.com/article/10.1007/s10898-014-0247-2)," Journal of Global Optimization, vol.62, no.3, pp.545-574, 2015.
 
-        - Z. Zhu, X. Li, K. Liu, Q. Li, "Dropping Symmetry for Fast Symmetric Nonnegative Matrix Factorization," NIPS, 2018.
+        - Z. Zhu, X. Li, K. Liu, Q. Li, "[Dropping Symmetry for Fast Symmetric Nonnegative Matrix Factorization](https://papers.nips.cc/paper/7762-dropping-symmetry-for-fast-symmetric-nonnegative-matrix-factorization)," NIPS, 2018.
 
     - **SymmHALS** (Symmetric HALS)
         - Z. Zhu, X. Li, K. Liu, Q. Li, "Dropping Symmetry for Fast Symmetric Nonnegative Matrix Factorization," NIPS, 2018.
