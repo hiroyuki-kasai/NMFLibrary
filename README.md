@@ -1,11 +1,11 @@
 # NMFLibrary
 Matlab library for non-negative matrix factorization (NMF)
 
-Authors: [Hiroyuki Kasai](http://www.kasailab.com/kasai/index.html)
+Authors: [Hiroyuki Kasai](http://kasai.comm.waseda.ac.jp/kasai/)
 
 Last page update: May 21, 2019
 
-Latest library version: 1.8.0 (see Release notes for more info) 
+Latest library version: 1.8.0 (see Release notes for more info)
 
 <br />
 
