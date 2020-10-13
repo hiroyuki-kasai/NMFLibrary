@@ -86,7 +86,8 @@ function [A, iter, alpha] = nesterov_mnls_general(X, C, B, A_star, alpha, max_it
         cond_1 = max(max( abs(grad .* Y)));
         cond_2 = min((min (grad)));
         if cond_1 < tol_1 && cond_2 > - tol_2 && iter > 0
-            break        
+            break
+            %iter = iter + 1;
         else
             A = Y - 1/L * grad;
             A = max(A, 0);            
@@ -109,7 +110,7 @@ function [A, iter, alpha] = nesterov_mnls_general(X, C, B, A_star, alpha, max_it
         end
     end
     
-    A = Y;
+    %A = Y;
     
 end
 

@@ -5,7 +5,7 @@ Authors: [Hiroyuki Kasai](http://www.kasailab.com/kasai/index.html)
 
 Last page update: May 21, 2019
 
-Latest library version: 1.8.0 (see Release notes for more info)
+Latest library version: 1.8.0 (see Release notes for more info) 
 
 <br />
 

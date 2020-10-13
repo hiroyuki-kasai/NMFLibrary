@@ -69,6 +69,37 @@ options.lambda = 1; % decides the degree in [0,1] of nonsmoothing (use 0 for sta
 options.cost = 'EUC'; %- what cost function to use; 'eucl' (default) or 'kl'
 [w_nmfsc, infos_nmfsc] = nmf_sc(V, rank, options);       
 
+%%
+
+params = struct;
+
+% Objective function
+params.cf = 'kl';   %  'is', 'kl', 'ed'; takes precedence over setting the beta value
+  % alternately define: params.beta = 1;
+params.sparsity = 5;
+
+% Stopping criteria
+params.max_iter = 100;
+params.conv_eps = 1e-3;
+% Display evolution of objective function
+params.display   = 0;
+
+% Random seed: any value over than 0 sets the seed to that value
+params.random_seed = 1;
+
+% Optional initial values for W 
+%params.init_w
+% Number of components: if init_w is set and r larger than the number of
+% basis functions in init_w, the extra columns are randomly generated
+params.r = rank;
+% Optional initial values for H: if not set, randomly generated 
+%params.init_h
+
+% List of dimensions to update: if not set, update all dimensions.
+%params.w_update_ind = true(r,1); % set to false(r,1) for supervised NMF
+%params.h_update_ind = true(r,1);
+
+[w, h, objective] = snmf(V, params);
 
 
 %% plot
