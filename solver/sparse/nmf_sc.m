@@ -38,6 +38,7 @@ function [x, infos] = nmf_sc(V, rank, in_options)
 % Change log: 
 %
 %   May. 20, 2019 (Hiroyuki Kasai): Added initialization module.
+%   Oct. 14, 2020 (Haonan Huang): Corrected bugs.
 %
 
 
@@ -116,8 +117,8 @@ function [x, infos] = nmf_sc(V, rank, in_options)
 
             % Renormalize so rows of H have constant energy
             norms = sqrt(sum(H'.^2));
-            H = H./(norms'*ones(1,t));
-            W = W.*(ones(n,1)*norms);
+            H = H./(norms'*ones(1,n));  % fixed by Haonan Huang
+            W = W.*(ones(m,1)*norms);   % fixed by Haonan Huang
         else
             [H,stepsizeH] = update_with_SC(H,'H',stepsizeH);
         end
