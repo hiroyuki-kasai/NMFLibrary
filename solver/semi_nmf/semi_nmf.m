@@ -31,6 +31,7 @@ function [x, infos] = semi_nmf(V, rank, in_options)
 %
 % Modified by H.Kasai on Jul. 21, 2018
 % Modified by H.Kasai on Apr. 22, 2019 (Bug fixed)
+% Modified by H.Huangi on Oct. 14, 2020 (Bug fixed)
 
     
     % set dimensions and samples
@@ -77,24 +78,23 @@ function [x, infos] = semi_nmf(V, rank, in_options)
     start_time = tic();    
 
     % main loop
-    while (optgap > options.tol_optgap) && (epoch < options.max_epoch)             
+    while (optgap > options.tol_optgap) && (epoch < options.max_iter)             
 
         % update W
         HHT = H * H';
-        %HHT(isnan(HHT)) = 0;
-        %HHT(~isfinite(HHT)) = 0;
-        W = V * H' * pinv(HHT);  % Eq.(10)
+        %W = V * H' * inv(HHT);  % Eq.(10)  % fixed by HH  
+        W = V * H' / HHT;  % Eq.(10)  
         
         % update H
         VtW = V' * W;
         VtW_p = (abs(VtW)+VtW) ./ 2;  % Eq.(12)
         VtW_n = (abs(VtW)-VtW) ./ 2;  % Eq.(12)
         
-        HtWtW = H' * (W' * W);
-        HtWtW_p = (abs(HtWtW)+HtWtW) ./ 2;  % Eq.(12)
-        HtWtW_n = (abs(HtWtW)-HtWtW) ./ 2;  % Eq.(12)  
+        WtW = W' * W;
+        WtW_p = (abs(WtW)+WtW) ./ 2;  % Eq.(12) % fixed by HH
+        WtW_n = (abs(WtW)-WtW) ./ 2;  % Eq.(12) % fixed by HH         
         
-        Ht = H' .* sqrt((VtW_p+HtWtW_n) ./ (VtW_n+HtWtW_p+eps)); % Eq.(11)
+        Ht = H' .* sqrt((VtW_p+H'*WtW_n) ./ max(VtW_n+H'*WtW_p,eps)); % Eq.(11)
         H = Ht';
         
         
