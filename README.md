@@ -365,7 +365,7 @@ If you have any problems or questions, please contact the author: [Hiroyuki Kasa
 Release notes
 --------------
 * Version 1.8.1 (Oct. 14, 2020) 
-    - Bug fixed in nmf_sc.m. 
+    - Bug fixed in nmf_sc.m and semi_nmf (Thanks to Haonan Huang). 
 * Version 1.7.0 (June 27, 2019) 
     - Symmetic solvers are added.
     - Clustering quality measurements are integrated into store_nmf_infos.m. 
