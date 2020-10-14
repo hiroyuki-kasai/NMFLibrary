@@ -1,4 +1,11 @@
 function [init_factors, init_factors_opts] = generate_init_factors(V, rank, options)
+% Initialization algorithm 
+%
+% Created by H.Kasai on May 21, 2019
+%
+% Change log: 
+%
+% Modified by H.Huangi on Oct. 14, 2020 (Added 'LPinit')
 
     % V = WH + R
 
@@ -34,6 +41,13 @@ function [init_factors, init_factors_opts] = generate_init_factors(V, rank, opti
         end
             
         switch(alg)
+            
+            case 'LPinit'
+                H = LPinitSemiNMF(V, rank);
+                W = V * pinv(H);
+                
+                init_factors.W = W;
+                init_factors.H = H;             
 
             case 'random'
 

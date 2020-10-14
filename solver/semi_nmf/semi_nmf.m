@@ -42,7 +42,8 @@ function [x, infos] = semi_nmf(V, rank, in_options)
     local_options.max_iter  = 100;
     local_options.tolfun    = 1e-5;
     local_options.verbose   = 1; 
-    local_options.init_alg  = 'semi_random';
+    %local_options.init_alg  = 'semi_random';
+    local_options.init_alg  = 'LPinit';
     
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
