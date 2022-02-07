@@ -15,6 +15,18 @@ The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **n
 
 <br />
 
+Bibliograph
+----------------------------
+
+```
+@misc{kasai_NMFLibrary_2017,
+    Author = {H. Kasai},
+     Title = {{NMFLibrary}: MATLAB library for non-negative matrix factorization (NMF)},
+     Year  = {2017},
+     Howpublished = {\url{https://github.com/hiroyuki-kasai/NMFLibrary}}
+}
+```
+
 ## <a name="supp_solver"> List of the algorithms available in NMFLibrary </a>
 
 - Base NMF
