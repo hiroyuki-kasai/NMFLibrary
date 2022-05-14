@@ -11,7 +11,7 @@ Latest library version: 1.8.1 (see Release notes for more info)
 
 Announcement
 ----------
-We are waiting for your contribution. Please tell us your NMF solvers written by MATLAB.
+We are very welcome to your contribution. Please tell us your NMF solvers written by MATLAB, or your comments and suggestions.
 
 <br />
 
