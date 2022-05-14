@@ -13,7 +13,7 @@ Announcement
 ----------
 We are very welcome to your contribution. Please tell us 
 - NMF solvers written by MATLAB, 
-- ppplication MATLAB flies using NMF solvers, and
+- appplication MATLAB flies using NMF solvers, and
 - your comments and suggestions.
 
 <br />
