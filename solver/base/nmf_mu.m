@@ -125,7 +125,6 @@ function [x, infos] = nmf_mu(V, rank, in_options)
     
     % initialize
     epoch = 0;    
-    R_zero = zeros(m, n);
     grad_calc_count = 0; 
     
     if strcmp(options.alg, 'mu_mod')
@@ -147,7 +146,7 @@ function [x, infos] = nmf_mu(V, rank, in_options)
     elseif strcmp(options.metric, 'BETA-D')
         metric_param = options.d_beta;        
     end
-    [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, [], epoch, grad_calc_count, 0, options.metric, metric_param);
+    [infos, f_val, optgap] = store_nmf_infos(V, W, H, [], options, [], epoch, grad_calc_count, 0, options.metric, metric_param);
     
     if options.verbose > 1
         fprintf('MU (%s): Epoch = 0000, cost = %.16e, optgap = %.4e\n', options.alg, f_val, optgap); 
@@ -155,6 +154,7 @@ function [x, infos] = nmf_mu(V, rank, in_options)
 
     % set start time
     start_time = tic();
+    prev_time = start_time;
 
     % main loop
     while (optgap > options.tol_optgap) && (epoch < options.max_epoch)           
@@ -285,14 +285,16 @@ function [x, infos] = nmf_mu(V, rank, in_options)
         epoch = epoch + 1;         
         
         % store info
-        [infos, f_val, optgap] = store_nmf_infos(V, W, H, R_zero, options, infos, epoch, grad_calc_count, elapsed_time, options.metric, metric_param);  
+        [infos, f_val, optgap] = store_nmf_infos(V, W, H, [], options, infos, epoch, grad_calc_count, elapsed_time, options.metric, metric_param);  
         
         % display infos
         if options.verbose > 1
             if ~mod(epoch, disp_freq)
-                fprintf('MU (%s): Epoch = %04d, cost = %.16e, optgap = %.4e\n', options.alg, epoch, f_val, optgap);
+                fprintf('MU (%s): Epoch = %04d, cost = %.16e, optgap = %.4e, time = %e\n', options.alg, epoch, f_val, optgap, elapsed_time - prev_time);
             end
-        end        
+        end
+        
+        prev_time = elapsed_time;
     end
     
     if options.verbose > 0
