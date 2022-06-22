@@ -3,15 +3,39 @@ MATLAB library for non-negative matrix factorization (NMF)
 
 Authors: [Hiroyuki Kasai](http://kasai.comm.waseda.ac.jp/kasai/)
 
-Last page update: Oct. 14, 2020
+Last page update: Feb. 8, 2022
 
 Latest library version: 1.8.1 (see Release notes for more info)
+
+<br />
+
+Announcement
+----------
+We are very welcome to your contribution. Please tell us 
+- NMF solvers written by MATLAB, 
+- appplication MATLAB flies using NMF solvers, and
+- your comments and suggestions.
 
 <br />
 
 Introduction
 ----------
 The NMFLibrary is a **pure-Matlab** library of a collection of algorithms of **non-negative matrix factorization (NMF)**. 
+
+<br />
+
+Bibliograph
+----------------------------
+If this library is useful for you, please cite this as presented below:
+
+```
+@misc{kasai_NMFLibrary_2017,
+    Author = {Kasai, Hiroyuki},
+     Title = {{NMFLibrary}: MATLAB library for non-negative matrix factorization (NMF)},
+     Year  = {2017},
+     Howpublished = {\url{https://github.com/hiroyuki-kasai/NMFLibrary}}
+}
+```
 
 <br />
 
