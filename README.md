@@ -41,7 +41,7 @@ If this library is useful for you, please cite this as presented below:
 
 ## <a name="supp_solver"> List of solver algorithms available in NMFLibrary </a>
 
-- Frobenius-norm NMF
+- Frobenius-norm 
     - **Fro-MU** (multiplicative updates)
         - MU
             - D.D. Lee and H. S. Seung, "[Algorithms for non-negative matrix factorization](https://papers.nips.cc/paper/1861-algorithms-for-non-negative-matrix-factorization.pdf)," NIPS 2000. (for Euclidean distance and [Kullback-Leibler divergence](https://en.wikipedia.org/wiki/Kullback-Leibler_divergence) (KL))
@@ -70,7 +70,7 @@ If this library is useful for you, please cite this as presented below:
             - J. Kim, Y. He, and H. Park, "[Algorithms for nonnegative matrix and tensor factorizations: A unified view based on block coordinate descent framework](https://link.springer.com/article/10.1007/s10898-013-0035-4)," Journal of Global Optimization, 58(2), pp. 285-319, 2014.
             - J. Kim and H. Park, "[Fast nonnegative matrix factorization: An active-set-like method and comparisons](http://epubs.siam.org/doi/abs/10.1137/110821172)," SIAM Journal on Scientific Computing (SISC), 33(6), pp. 3261-3281, 2011.
 
-- Divergence-based NMF
+- Divergence-based 
     - **Div-MU**
         - MU
             - D.D. Lee and H. S. Seung, "[Algorithms for non-negative matrix factorization](https://papers.nips.cc/paper/1861-algorithms-for-non-negative-matrix-factorization.pdf)," NIPS 2000. (for Euclidean distance and [Kullback-Leibler divergence](https://en.wikipedia.org/wiki/Kullback-Leibler_divergence) (KL))
@@ -108,7 +108,7 @@ If this library is useful for you, please cite this as presented below:
         - W. Qian, B. Hong, D. Cai, X. He, and X. Li, "[Non-negative matrix factorization with sinkhorn distance](https://pdfs.semanticscholar.org/42b2/ec6e4453dc033d37b9fcb53a1313c018fa23.pdf)", IJCAI, pp.1960-1966, 2016.
 
     
-- Robust NMF
+- Robust 
 
     - **Robust-MU**
         N. Guan, D. Tao, Z. Luo, and B. Yuan, "[Online nonnegative matrix factorization with robust stochastic approximation](https://ieeexplore.ieee.org/document/6203594/)," IEEE Trans. Newral Netw. Learn. Syst., 2012.
@@ -169,7 +169,7 @@ If this library is useful for you, please cite this as presented below:
 
     - **SymmNewton** (Symmetric Newton)
 
-- Online/stochstic NMF
+- Online/stochstic 
 
     - **Incremental-MU** and **Online-MU**
         - S. S. Bucak and B. Gunsel, "[Incremental Subspace Learning via Non-negative Matrix Factorization](https://www.sciencedirect.com/science/article/pii/S0031320308003725)," Pattern Recognition, 2009.
@@ -190,7 +190,7 @@ If this library is useful for you, please cite this as presented below:
         - H. Kasai, "[Accelerated stochastic multiplicative update with gradient averaging for nonnegative matrix factorizations](https://ieeexplore.ieee.org/document/8553610)," EUSIPCO, 2018.
 
 
-- Probabilistic NMF
+- Probabilistic 
 
     - **PNMF-GIBBS** (Gibbs sampler for non-negative matrix factorisation, with ARD.) (not included)
         - M.N. Schmidt, O. Winther, L.K. Hansen, "[Bayesian non-negative matrix factorization](https://link.springer.com/chapter/10.1007/978-3-642-00599-2_68)," International Conference on Independent Component Analysis and Signal Separation, Springer Lecture Notes in Computer Science, Vol. 5441, 2009.
@@ -202,7 +202,7 @@ If this library is useful for you, please cite this as presented below:
 
     - **Prob-NM**
 
-- Deep NMF
+- Deep 
 
     - **Deep-Semi** and **Deep-Bidir-Semi**
 
@@ -248,20 +248,23 @@ If this library is useful for you, please cite this as presented below:
     - **ADMM-Seq-Conv** 
         - ADMM based convolutive non-negative matrix factorization
 
-- Projective NMF
+- Projective 
 
     - **projectiveNMF**
         - Z. Yang, and E. Oja, "Linear and nonlinear projective nonnegative matrix factorization," IEEE Transactions on Neural Networks, 21(5), pp.734-749, 2010.
 
-- Rank2 NMF
+- Rank2 
+
     - **Rank2-NMF**
         - Nicolas Gillis, "Nonnegative Matrix Factorization," SIAM, 2020.
 
 - Nonnegative matrix tri-factorization
+
     - **Sep-Symm-NMTF**
         - Arora, Ge, Halpern, Mimno, Moitra, Sontag, Wu, Zhu, "A practical algorithm for topic modeling with provable guarantees," International Conference on Machine Learning (ICML), pp. 280-288, 2013.
 
-- Nonnegative Under-approximation
+- Nonnegative under-approximation
+
     - **Recursive-NMU** (Recursive non-negative matrix underapproximation)
         - N. Gillis and F. Glineur, "Using Underapproximations for Sparse Nonnegative Matrix Factorization," Pattern Recognition 43 (4), pp. 1676-1687, 2010.
     
@@ -272,7 +275,7 @@ If this library is useful for you, please cite this as presented below:
     - **minvol-NMF**    
         - V. Leplat, A.M.S. Ang, N. Gillis, "Minimum-volume rank-deficient nonnegative matrix factorizations", ICASSP, 2019. 
 
-- Weighted Low-Rank matrix Approximation
+- Weighted Low-Rank matrix approximation
     - **WLRA**
 
 
@@ -298,10 +301,10 @@ If this library is useful for you, please cite this as presented below:
 |Divergence|Div-MU-KL|`div_mu_nmf`||`metric='kl-div'`|
 ||Div-MU-ALPHA|`div_mu_nmf`||`metric='alpha-div'`|
 ||Div-MU-BETA|`div_mu_nmf`||`metric='beta-div'`|
-||Div-MU-IS|`div_mu_nmf`||`metric='beta-div'``d_beta=0'|
-||Div-MU-KL|`div_mu_nmf`||`metric='beta-div'``d_beta=1'|
-||Div-ADMM-IS|`div_admm_nmf`||`metric='beta-div'``d_beta=0' |
-||Div-ADMM-KL|`div_admm_nmf`||`metric='beta-div'``d_beta=1' |
+||Div-MU-IS|`div_mu_nmf`||`metric='beta-div'` `d_beta=0'|
+||Div-MU-KL|`div_mu_nmf`||`metric='beta-div'` `d_beta=1'|
+||Div-ADMM-IS|`div_admm_nmf`||`metric='beta-div'` `d_beta=0' |
+||Div-ADMM-KL|`div_admm_nmf`||`metric='beta-div'` `d_beta=1' |
 ||KL-FPA|`kl_fpa_nmf`|||
 ||KL-BMD|`kl_bmd_nmf`|||
 |Semi|Semi-MU|`semi_mu_nmf`|||
@@ -351,9 +354,9 @@ If this library is useful for you, please cite this as presented below:
 ||ADMM-Seq-Conv|`admm_seq_conv_nmf`|||
 |Rank2|Rank2-NMF|`rank2nmf`|||
 |Nonnegative matrix tri-factorization|Sep-Symm-NMTF|`sep_symm_nmtf`|||
-|Nonnegative Under-approximation|recursive_nmu|`Recursive-NMUrecursive_nmu`|||
+|Nonnegative under-approximation|recursive_nmu|`Recursive-NMUrecursive_nmu`|||
 |Minimum-volume|minvol-NMF|`minvol_nmf`||
-|Weighted Low-Rank matrix Approximation|WLRA|`wlra`|||
+|Weighted Low-Rank matrix approximation|WLRA|`wlra`|||
 
 <br />
 
