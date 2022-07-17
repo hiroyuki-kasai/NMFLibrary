@@ -301,7 +301,7 @@ If this library is useful for you, please cite this as presented below:
 |Divergence|Div-MU-KL|`div_mu_nmf`||`metric='kl-div'`|
 ||Div-MU-ALPHA|`div_mu_nmf`||`metric='alpha-div'`|
 ||Div-MU-BETA|`div_mu_nmf`||`metric='beta-div'`|
-||Div-MU-IS|`div_mu_nmf`||`metric='beta-div'` `d_beta=0'|
+||Div-MU-IS|`div_mu_nmf`||`d_beta=0' `metric='beta-div'` `d_beta=0'|
 ||Div-MU-KL|`div_mu_nmf`||`metric='beta-div'` `d_beta=1'|
 ||Div-ADMM-IS|`div_admm_nmf`||`metric='beta-div'` `d_beta=0' |
 ||Div-ADMM-KL|`div_admm_nmf`||`metric='beta-div'` `d_beta=1' |
