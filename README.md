@@ -1,5 +1,4 @@
-# NMFLibrary
-MATLAB library for non-negative matrix factorization (NMF)
+# NMFLibrary: Non-negative Matrix Factorization Library in MATLAB
 
 Authors: [Hiroyuki Kasai](http://kasai.comm.waseda.ac.jp/kasai/)
 
