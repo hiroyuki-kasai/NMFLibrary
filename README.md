@@ -516,7 +516,7 @@ License
 - The NMFLibrary is **free**, **non-commercial** and **open** source.
 - The code provided iin NMFLibrary should only be used for **academic/research purposes**.
 - Third party files are ported and included as is.
-    - Many solvers (`wlra.m`, `spa.m`, `snpa.m`, `proj_sparse_nmf.m`, `rank2nmf.m`, `projective_nmf.m`, `alternating_onmf.m`, `recursive_nmu.m`, `sep_symm_nmtf.m`, `minvol_nmf.m`, `nnls_*.m`, `semi_bcd_nmf.m`) are ported from [the code of NMF book](https://gitlab.com/ngillis/nmfbook) written by Nicolas Gillis.
+    - Many solvers (`fro_mu_nmf.m`, `als_nmf.m`, `wlra.m`, `spa.m`, `snpa.m`, `proj_sparse_nmf.m`, `rank2nmf.m`, `projective_nmf.m`, `alternating_onmf.m`, `recursive_nmu.m`, `sep_symm_nmtf.m`, `minvol_nmf.m`, `nnls_*.m`, `semi_bcd_nmf.m`) are ported from [the code of NMF book](https://gitlab.com/ngillis/nmfbook) written by [Nicolas Gillis](https://sites.google.com/site/nicolasgillis/publications).
     - For ANLS algorithms: `nnlsm_activeset.m`, `nnls1_asgivens.m`, `nnlsm_blockpivot.m`, and `normalEqComb.m` written by Jingu Kim.
     - For PGD algorithm: `nlssubprob.m`.
     - For GNMF algorithm: `GNMF.m`, `GNMF_Multi.m`, `constructW.m` and `litekmeans.m` writtnen by Deng Cai.
@@ -530,7 +530,6 @@ License
     - For Convolutive algorithm: `mu_conv_nmf.m`, `heuristic_mu_conv_nmf.m`, `admm_y_conv_nmf.m`, and `admm_seq_conv_nmf.m` writtnen by lyn202206.
     - For Probabilistic algorithm: `prob_nmf.m` by NMF DTU Toolbox, Lars Kai Hansen.
     - For Probabilistic algorithm: vb_pro_nmf.m` is ported from the Python code originally written by T. Brouwer et. al..
-    - For acceleration sub-routines in [`fro_mu_nmf.m`](https://github.com/hiroyuki-kasai/NMFLibrary/blob/master/solver/base/fro_mu_nmf.m) and [`als_nmf.m`](https://github.com/hiroyuki-kasai/NMFLibrary/blob/master/solver/base/als_nmf.m) for MU and HALS from [Nicolas Gillis](https://sites.google.com/site/nicolasgillis/publications).
     - For dictionaly visualization: `plot_dictionnary.m`, `rescale.m`, and `getoptions.m`.
 
 
@@ -557,6 +556,11 @@ Release notes
 --------------
 * Version 2.0 (July 20, 2022) 
     - Major update.
+    - Many solvers are added. 
+    - Code structure of solvers is refactored. 
+    - Else
+        - Solver/user-defined stopping function is supported.
+        - Statistics display module is refined. 
 * Version 1.8.1 (Oct. 14, 2020) 
     - Bug fixed in sc_nmf.m and semi_mu_nmf, and added the LPinitSemiNMF algorithm into generate_init_factors.m (Thanks to Haonan Huang). 
 * Version 1.7.0 (June 27, 2019) 
