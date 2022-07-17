@@ -462,9 +462,9 @@ rank = 5;
 
 **Step 3: Perform solver**
 
-Now, you can perform optimization solvers, e.g., MU and Hierarchical ALS (HALS), calling [solver functions](#supp_solver), i.e., `fro_mu_nmf()` function and `als_nmf()` function after setting some optimization options. 
+Now, you can perform nmf solvers, e.g., Frobenius-norm MU and Hierarchical ALS (HALS), calling [solver functions](#supp_solver), i.e., `fro_mu_nmf()` function and `als_nmf()` function after setting some optimization options. 
 ```Matlab
-% MU
+% Fro-MU
 options.alg = 'mu';
 [w_mu, infos_mu] = fro_mu_nmf(V, rank, options);
 % Hierarchical ALS
@@ -477,8 +477,8 @@ They return the final solutions of `w` and the statistics information that inclu
 
 Finally, `display_graph()` provides output results of decreasing behavior of the cost values in terms of the number of iterrations (epochs) and time [sec]. 
 ```Matlab
-display_graph('epoch','cost', {'MU', 'HALS'}, {w_mu, w_hals}, {infos_mu, infos_hals});
-display_graph('time','cost', {'MU', 'HALS'}, {w_mu, w_hals}, {infos_mu, infos_hals});
+display_graph('epoch','cost', {'Fro-MU', 'HALS'}, {w_mu, w_hals}, {infos_mu, infos_hals});
+display_graph('time','cost', {'Fro-MU', 'HALS'}, {w_mu, w_hals}, {infos_mu, infos_hals});
 ```
 
 That's it!
@@ -516,7 +516,7 @@ License
 - The NMFLibrary is **free**, **non-commercial** and **open** source.
 - The code provided iin NMFLibrary should only be used for **academic/research purposes**.
 - Third party files are ported and included as is.
-    - Many solvers (`fro_mu_nmf.m`, `als_nmf.m`, `wlra.m`, `spa.m`, `snpa.m`, `proj_sparse_nmf.m`, `rank2nmf.m`, `projective_nmf.m`, `alternating_onmf.m`, `recursive_nmu.m`, `sep_symm_nmtf.m`, `minvol_nmf.m`, `nnls_*.m`, `semi_bcd_nmf.m`) are ported from [the codes](https://gitlab.com/ngillis/nmfbook) of [NMF book](https://sites.google.com/site/nicolasgillis/book) written by [Nicolas Gillis](https://sites.google.com/site/nicolasgillis/publications).
+    - Many solvers (`fro_mu_nmf.m`, `als_nmf.m`, `wlra.m`, `spa.m`, `snpa.m`, `proj_sparse_nmf.m`, `rank2nmf.m`, `projective_nmf.m`, `alternating_onmf.m`, `recursive_nmu.m`, `sep_symm_nmtf.m`, `minvol_nmf.m`, `nnls_*.m`, `semi_bcd_nmf.m` and others) are ported from [the codes](https://gitlab.com/ngillis/nmfbook) of [NMF book](https://sites.google.com/site/nicolasgillis/book) written by [Nicolas Gillis](https://sites.google.com/site/nicolasgillis/publications).
     - For ANLS algorithms: `nnlsm_activeset.m`, `nnls1_asgivens.m`, `nnlsm_blockpivot.m`, and `normalEqComb.m` written by Jingu Kim.
     - For PGD algorithm: `nlssubprob.m`.
     - For GNMF algorithm: `GNMF.m`, `GNMF_Multi.m`, `constructW.m` and `litekmeans.m` writtnen by Deng Cai.
