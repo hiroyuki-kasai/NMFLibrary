@@ -301,10 +301,10 @@ If this library is useful for you, please cite this as presented below:
 |Divergence|Div-MU-KL|`div_mu_nmf`||`metric='kl-div'`|
 ||Div-MU-ALPHA|`div_mu_nmf`||`metric='alpha-div'`|
 ||Div-MU-BETA|`div_mu_nmf`||`metric='beta-div'`|
-||Div-MU-IS|`div_mu_nmf`||`d_beta=0' `metric='beta-div'` `d_beta=0'|
-||Div-MU-KL|`div_mu_nmf`||`metric='beta-div'` `d_beta=1'|
-||Div-ADMM-IS|`div_admm_nmf`||`metric='beta-div'` `d_beta=0' |
-||Div-ADMM-KL|`div_admm_nmf`||`metric='beta-div'` `d_beta=1' |
+||Div-MU-IS|`div_mu_nmf`||`metric='beta-div'` `d_beta=0`|
+||Div-MU-KL|`div_mu_nmf`||`metric='beta-div'` `d_beta=1`|
+||Div-ADMM-IS|`div_admm_nmf`||`metric='beta-div'` `d_beta=0` |
+||Div-ADMM-KL|`div_admm_nmf`||`metric='beta-div'` `d_beta=1` |
 ||KL-FPA|`kl_fpa_nmf`|||
 ||KL-BMD|`kl_bmd_nmf`|||
 |Semi|Semi-MU|`semi_mu_nmf`|||
@@ -516,13 +516,21 @@ License
 -------
 - The NMFLibrary is **free**, **non-commercial** and **open** source.
 - The code provided iin NMFLibrary should only be used for **academic/research purposes**.
-- Third party files are included.
-    - Some solvers are ported from [the code of NMF book](https://gitlab.com/ngillis/nmfbook) written by Nicolas Gillis.
+- Third party files are ported and included as is.
+    - Many solvers (`wlra.m`, `spa.m`, `snpa.m`, `proj_sparse_nmf.m`, `rank2nmf.m`, `projective_nmf.m`, `alternating_onmf.m`, `recursive_nmu.m`, `sep_symm_nmtf.m`, `minvol_nmf.m`, `nnls_*.m`, `semi_bcd_nmf.m`) are ported from [the code of NMF book](https://gitlab.com/ngillis/nmfbook) written by Nicolas Gillis.
     - For ANLS algorithms: `nnlsm_activeset.m`, `nnls1_asgivens.m`, `nnlsm_blockpivot.m`, and `normalEqComb.m` written by Jingu Kim.
     - For PGD algorithm: `nlssubprob.m`.
     - For GNMF algorithm: `GNMF.m`, `GNMF_Multi.m`, `constructW.m` and `litekmeans.m` writtnen by Deng Cai.
-    - For SDNMF algorithm: `SDNMF.m`, and `SDNMF_Multi.m` writtnen by Wei Qian.
-    - For symmetric algorithms writtnen by D.Kang et al. and Z. Zhu et al.
+    - For SDNMF algorithm: `SDNMF.m` and `SDNMF_Multi.m` writtnen by Wei Qian.
+    - For Symmetric algorithms writtnen by D.Kang et al. and Z. Zhu et al.
+    - For KL-FPA algorithm: `kl_fpa_nmf.m` writtnen by Felipe Yanez.
+    - For KL-BMD algorithm: `BMD.m` writtnen by by LTK Hien.
+    - For Deep algorithm: `deep_semi_nmf.m`, deep_bidirectional_nmf.m` writtnen by G.Trigeorgis, and 'deep_multiview_semi_nmf.m' writtnen by H.Zhao.
+    - For PALM-Sparse-Smooth algorithm: `palm_sparse_smooth_nmf.m` writtnen by Raimon Fabregat.
+    - For Convex-MU algorithm: `convex_mu_nmf.m` writtnen by Yifeng Li.
+    - For Convolutive algorithm: `mu_conv_nmf.m`, `heuristic_mu_conv_nmf.m`, `admm_y_conv_nmf.m`, and `admm_seq_conv_nmf.m` writtnen by lyn202206.
+    - For Probabilistic algorithm: `prob_nmf.m` by NMF DTU Toolbox, Lars Kai Hansen.
+    - For Probabilistic algorithm: vb_pro_nmf.m` is ported from the Python code originally written by T. Brouwer et. al..
     - For acceleration sub-routines in [`fro_mu_nmf.m`](https://github.com/hiroyuki-kasai/NMFLibrary/blob/master/solver/base/fro_mu_nmf.m) and [`als_nmf.m`](https://github.com/hiroyuki-kasai/NMFLibrary/blob/master/solver/base/als_nmf.m) for MU and HALS from [Nicolas Gillis](https://sites.google.com/site/nicolasgillis/publications).
     - For dictionaly visualization: `plot_dictionnary.m`, `rescale.m`, and `getoptions.m`.
 
