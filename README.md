@@ -288,18 +288,20 @@ If this library is useful for you, please cite this as presented below:
 ||Acceralated Fro-MU|`fro_mu_nmf`|`acc_mu`||
 ||PGD|`pgd_nmf`|`pgd`||
 ||Direct PGD|`pgd_nmf`|`direct_pgd`||
-||Adaptive-step PGD|`pgd_nmf`|adp_step_pgd||
+||Adaptive-step PGD|`pgd_nmf`|`adp_step_pgd`||
 ||ALS|`als_nmf`|`als`||
 ||Hierarchical ALS|`als_nmf`|`hals_mu`||
 ||Acceralated hierarchical ALS|`als_nmf`|`acc_hals_mu`||
 ||ASGROUP|`anls_nmf`|`anls_asgroup`||
 ||ASGIVENS|`anls_nmf`|`anls_asgivens`||
 ||BPP|`anls_nmf`|`anls_bpp`||
-|Divergence|Div-MU-KL|`div_mu_nmf`|`metric='kl-div'`||
-||Div-MU-ALPHA|`div_mu_nmf`|`metric='alpha-div'`||
-||Div-MU-BETA|`div_mu_nmf`|`metric='beta-div'`||
-||Div-ADMM-IS|`div_admm_nmf`|`metric='beta-div'`, `d_beta=0' ||
-||Div-ADMM-KL|`div_admm_nmf`|`metric='beta-div'`, `d_beta=1' ||
+|Divergence|Div-MU-KL|`div_mu_nmf`||`metric='kl-div'`|
+||Div-MU-ALPHA|`div_mu_nmf`||`metric='alpha-div'`|
+||Div-MU-BETA|`div_mu_nmf`||`metric='beta-div'`|
+||Div-MU-IS|`div_mu_nmf`||`metric='beta-div'``d_beta=0'|
+||Div-MU-KL|`div_mu_nmf`||`metric='beta-div'``d_beta=1'|
+||Div-ADMM-IS|`div_admm_nmf`||`metric='beta-div'``d_beta=0' |
+||Div-ADMM-KL|`div_admm_nmf`||`metric='beta-div'``d_beta=1' |
 ||KL-FPA|`kl_fpa_nmf`|||
 ||KL-BMD|`kl_bmd_nmf`|||
 |Semi|Semi-MU|`semi_mu_nmf`|||
@@ -331,7 +333,7 @@ If this library is useful for you, please cite this as presented below:
 ||ASAG-MU-NMF|`asag_mu_nmf`|||
 ||Stochastic-MU|`smu_nmf`|||
 ||SVRMU|`svrmu_nmf`|||
-||R-SVRMU|`svrmu_nmf`|`robust=true`||
+||R-SVRMU|`svrmu_nmf`||`robust=true`|
 ||SAGMU|`sagmu_nmf`|||
 |Probabilistic|PNMF-VB|`vb_pro_nmf`|||
 ||Prob-NM|`prob_nmf`|||
@@ -339,8 +341,8 @@ If this library is useful for you, please cite this as presented below:
 ||Deep-Bidir-Semi|`deep_bidirectional_nmf`|||
 ||Deep-nsNMF|`deep_ns_nmf`|||
 ||Deep-Multiview-Semi|`deep_multiview_semi_nmf`|||
-|Convex|Convex-MU|`convex_mu_nmf`|`sub_mode='std'`||
-||Kernel-Convex-MU|`convex_mu_nmf`|`sub_mode='kernel'`||
+|Convex|Convex-MU|`convex_mu_nmf`||`sub_mode='std'`|
+||Kernel-Convex-MU|`convex_mu_nmf`||`sub_mode='kernel'`|
 |Separable|SPA|`spa`|||
 ||SNPA|`snpa`|||
 |Convolutive|MU-Conv|`mu_conv_nmf`|||
@@ -543,7 +545,7 @@ If you have any problems or questions, please contact the author: [Hiroyuki Kasa
 
 Release notes
 --------------
-* Version 2.0 (July 20, 202) 
+* Version 2.0 (July 20, 2022) 
     - Major update.
 * Version 1.8.1 (Oct. 14, 2020) 
     - Bug fixed in sc_nmf.m and semi_mu_nmf, and added the LPinitSemiNMF algorithm into generate_init_factors.m (Thanks to Haonan Huang). 
