@@ -6,7 +6,7 @@ function [update_flag, latest_version, latest_release_date, local_version] = che
 
     update_flag = 0;
 
-    site_url = 'https://raw.githubusercontent.com/hiroyuki-kasai/NMFLibrary/master/nmflibrary_version.m';
+    site_url = 'https://raw.githubusercontent.com/hiroyuki-kasai/NMFLibrary/master/auxiliary/nmflibrary_version.m';    
     filename_full_local = 'dl_nmflibrary_version.m';
 
     connection_available = check_network_connection();
@@ -35,14 +35,14 @@ end
 function available = check_network_connection()
     available = false;
     if ispc
-        [~,b]=system('ping -n 1 www.google.com');
+        [~, b] = system('ping -n 1 www.google.com');
     elseif isunix
-        [~,b]=system('ping -c 1 www.google.com');
+        [~, b] = system('ping -c 1 www.google.com');
     else
         error('how did you even get Matlab to work?')
     end
 
-    n = strfind(b,'cannot resolve');
+    n = strfind(b, 'cannot resolve');
     if n > 0
     else
         available = true;
