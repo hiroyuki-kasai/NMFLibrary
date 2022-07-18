@@ -43,10 +43,10 @@ If this library is useful for you, please cite this as presented below:
 - Frobenius-norm 
     - **Fro-MU** (multiplicative updates)
         - MU
-            - D.D. Lee and H. S. Seung, "[Algorithms for non-negative matrix factorization](https://papers.nips.cc/paper/1861-algorithms-for-non-negative-matrix-factorization.pdf)," NIPS 2000. (for Euclidean distance and [Kullback-Leibler divergence](https://en.wikipedia.org/wiki/Kullback-Leibler_divergence) (KL))
+            - D.D. Lee and H. S. Seung, "[Algorithms for non-negative matrix factorization](https://papers.nips.cc/paper/1861-algorithms-for-non-negative-matrix-factorization.pdf)," NIPS, 2000. (for Euclidean distance and [Kullback-Leibler divergence](https://en.wikipedia.org/wiki/Kullback-Leibler_divergence) (KL))
             - A.Cichocki, S.Amari, R.Zdunek, R.Kompass, G.Hori, and Z.He, "[Extended SMART algorithms for non-negative matrix factorization](https://link.springer.com/chapter/10.1007/11785231_58)," Artificial Intelligence and Soft Computing, 2006. (for alpha divergence and beta divergence)
         - Modified MU
-            - C.-J. Lin, "[On the convergence of multiplicative update algorithms for nonnegative matrix factorization](http://ieeexplore.ieee.org/document/4359171/)," IEEE Trans. Neural Netw. vol.18, no.6, pp.1589-1596, 2007. 
+            - C.-J. Lin, "[On the convergence of multiplicative update algorithms for nonnegative matrix factorization](http://ieeexplore.ieee.org/document/4359171/)," IEEE Transactions on Neural Network, vol.18, no.6, pp.1589-1596, 2007. 
         - Acceralated MU
             - N. Gillis and F. Glineur, "[Accelerated multiplicative updates and hierarchical ALS algorithms for nonnegative matrix factorization](https://arxiv.org/pdf/1107.5194.pdf)," Neural Computation, vol.24, no.4, pp. 1085-1105, 2012. 
 
@@ -76,7 +76,7 @@ If this library is useful for you, please cite this as presented below:
             - A.Cichocki, S.Amari, R.Zdunek, R.Kompass, G.Hori, and Z.He, "[Extended SMART algorithms for non-negative matrix factorization](https://link.springer.com/chapter/10.1007/11785231_58)," Artificial Intelligence and Soft Computing, 2006. (for alpha divergence and beta divergence)
 
     - **Div-ADMM**
-        - D.L. Sun and C. Fvotte, "Alternating direction method of multipliers for non-negative matrix factorization with the beta divergence," ICASSP 2014.
+        - D.L. Sun and C. Fvotte, "Alternating direction method of multipliers for non-negative matrix factorization with the beta divergence," IEEE ICASSP 2014.
 
     - **KL-FPA** (First-order primal-dual algorithm)
 
@@ -84,7 +84,6 @@ If this library is useful for you, please cite this as presented below:
 
     - **KL-BMD**
         - Block mirror descent method for KL-based non-negative matrix factorization
-
 - Semi
 
     - **Semi-MU** 
@@ -96,7 +95,7 @@ If this library is useful for you, please cite this as presented below:
 - Variant
 
     - **GNMF** (Graph Regularized NMF)
-        - D. Cai, X. He, X. Wu, and J. Han, "[Non-negative Matrix Factorization on Manifold](https://ieeexplore.ieee.org/document/4781101/)," Proc. 2008 Int. Conf. on Data Mining (ICDM), 2008. 
+        - D. Cai, X. He, X. Wu, and J. Han, "[Non-negative Matrix Factorization on Manifold](https://ieeexplore.ieee.org/document/4781101/)," ICDM, 2008. 
         - D. Cai, X. He, J. Han and T. Huang, "[Graph Regularized Non-negative Matrix Factorization for Data Representation](https://ieeexplore.ieee.org/document/5674058/)," IEEE Transactions on Pattern Analysis and Machine Intelligence, Vol.33, No.8, pp.1548-1560, 2011. 
 
 
@@ -116,7 +115,7 @@ If this library is useful for you, please cite this as presented below:
 
     - **Sparse-MU** (Sparse multiplicative upates (MU))
         - J. Eggert and E. Korner, "[Sparse coding and NMF](https://ieeexplore.ieee.org/document/1381036/)", IEEE International Joint Conference on Neural Networks, 2004.
-        - M. Schmidt, J. Larsen, and F. Hsiao, "[Wind noise reduction using non-negative sparse coding](https://ieeexplore.ieee.org/document/4414345/)", IEEE Workshop on Machine Learning for Signal Processing (MLSP), 2007.
+        - M. Schmidt, J. Larsen, and F. Hsiao, "[Wind noise reduction using non-negative sparse coding](https://ieeexplore.ieee.org/document/4414345/)", IEEE MLSP, 2007.
 
     - **Sparse-MU-V**
         - T. Virtanen, "Monaural sound source separation by non-negative factorization with temporal continuity and sparseness criteria," IEEE Transactions on Audio, Speech, and Language Processing, vol.15, no.3, 2007.
@@ -127,13 +126,13 @@ If this library is useful for you, please cite this as presented below:
         - Patrik O. Hoyer, "[Non-negative matrix factorization with sparseness constraints](http://www.jmlr.org/papers/volume5/hoyer04a/hoyer04a.pdf)," Journal of Machine Learning Research (JMLR), vol.5, pp.1457-1469, 2004.
 
     - **Nonsmooth-NMF**
-        - A. Pascual-Montano, J. M. Carazo, K. Kochi, D. Lehmann, and R. D. Pascual-Marqui, "[Nonsmooth Nonnegative Matrix Factorization (nsNMF)](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=1580485)," IEEE Transactions on Pattern Analysis and Machine Intelligence (PAMI), vol.28, no.3, pp.403-415, 2006. 
+        - A. Pascual-Montano, J. M. Carazo, K. Kochi, D. Lehmann, and R. D. Pascual-Marqui, "[Nonsmooth Nonnegative Matrix Factorization (nsNMF)](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=1580485)," IEEE Transactions on Pattern Analysis and Machine Intelligence, vol.28, no.3, pp.403-415, 2006. 
 
     - **NS-NMF** (Fast nonsmooth NMF)
         - Z. Yang, Y. Zhang, W. Yan, Y. Xiang, and S. Xie, "[A fast non-smooth nonnegative matrix factorization for learning sparse representation](https://ieeexplore.ieee.org/document/7559804/)," IEEE Access, vol.4, pp.5161-5168, 2016.
 
     - **Proj-Sparse**
-        - Patrik O. Hoyer, "[Non-negative matrix factorization with sparseness constraints](http://www.jmlr.org/papers/volume5/hoyer04a/hoyer04a.pdf)," Journal of Machine Learning Research (JMLR), vol.5, pp.1457-1469, 2004.
+        - P. O. Hoyer, "[Non-negative matrix factorization with sparseness constraints](http://www.jmlr.org/papers/volume5/hoyer04a/hoyer04a.pdf)," Journal of Machine Learning Research (JMLR), vol.5, pp.1457-1469, 2004.
         - R. Ohib, N. Gillis, Niccolò Dalmasso, S. Shah, V. K. Potluru, S. Plis, "Explicit Group Sparse Projection with Applications to Deep Learning and NMF," arXiv preprint:1912.03896, 2019
 
     - **PALM-Sparse-Smooth-NMF**
@@ -142,10 +141,10 @@ If this library is useful for you, please cite this as presented below:
 - Orthgotonal
 
     - **DTPP** (Orthgotonal multiplicative upates (MU))
-        - C. Ding, T. Li, W. Peng, and H. Park, "Orthogonal nonnegative matrix t-factorizations for clustering", 12th ACM SIGKDD international conference on Knowledge discovery and data mining (KDD), 2006.
+        - C. Ding, T. Li, W. Peng, and H. Park, "Orthogonal nonnegative matrix t-factorizations for clustering", ACM KDD, 2006.
 
     - **Orth-MU** (Orthgotonal multiplicative upates (MU))
-        - S. Choi, "[Algorithms for orthogonal nonnegative matrix factorization](https://ieeexplore.ieee.org/document/4634046/)", IEEE International Joint Conference on Neural Networks, 2008.
+        - S. Choi, "[Algorithms for orthogonal nonnegative matrix factorization](https://ieeexplore.ieee.org/document/4634046/)", IEEE IJCNN, 2008.
 
     - **ALT-ONMF**
         - F. Pompilia, N. Gillis, P.-A. Absil, and F. Glineur, "[Two algorithms for orthogonal nonnegative matrix factorization with application to clustering](https://www.sciencedirect.com/science/article/pii/S0925231214004068)," Neurocomputing, vol.141, no.2, pp.15-25, 2014.
@@ -157,14 +156,14 @@ If this library is useful for you, please cite this as presented below:
 - Symmetric
 
     - **SymmANLS** (Symmetric ANLS)
-        - D. Kuang, C. Ding, H. Park, "[Symmetric Nonnegative Matrix Factorization for Graph Clustering](https://epubs.siam.org/doi/abs/10.1137/1.9781611972825.10?mobileUi=0)," The 12th SIAM International Conference on Data Mining (SDM'12), pp.106-117, 2012.
+        - D. Kuang, C. Ding, H. Park, "[Symmetric Nonnegative Matrix Factorization for Graph Clustering](https://epubs.siam.org/doi/abs/10.1137/1.9781611972825.10?mobileUi=0)," SIAM SDM'12, 2012.
 
         - D. Kuang, S. Yun, H. Park, "[SymNMF Nonnegative low-rank approximation of a similarity matrix for graph clustering](https://link.springer.com/article/10.1007/s10898-014-0247-2)," Journal of Global Optimization, vol.62, no.3, pp.545-574, 2015.
 
         - Z. Zhu, X. Li, K. Liu, Q. Li, "[Dropping Symmetry for Fast Symmetric Nonnegative Matrix Factorization](https://papers.nips.cc/paper/7762-dropping-symmetry-for-fast-symmetric-nonnegative-matrix-factorization)," NIPS, 2018.
 
     - **SymmHALS** (Symmetric HALS)
-        - Z. Zhu, X. Li, K. Liu, Q. Li, "Dropping Symmetry for Fast Symmetric Nonnegative Matrix Factorization," NIPS, 2018.
+        - Z. Zhu, X. Li, K. Liu, Q. Li, "[Dropping Symmetry for Fast Symmetric Nonnegative Matrix Factorization](https://proceedings.neurips.cc/paper/2018/file/d9ff90f4000eacd3a6c9cb27f78994cf-Paper.pdf)," NIPS, 2018.
 
     - **SymmNewton** (Symmetric Newton)
 
@@ -177,10 +176,10 @@ If this library is useful for you, please cite this as presented below:
 
     - **Robust-Online-MU** (Robust online NMF)
         - R. Zhao and Y. F. Tan, "[Online nonnegative matrix factorization with outliers](https://ieeexplore.ieee.org/document/7676413/)," IEEE ICASSP2016, 2016.
-        - N. Guan, D. Tao, Z. Luo, and B. Yuan, "[Online nonnegative matrix factorization with robust stochastic approximation](https://ieeexplore.ieee.org/document/6203594/)," IEEE Trans. Newral Netw. Learn. Syst., 2012.
+        - N. Guan, D. Tao, Z. Luo, and B. Yuan, "[Online nonnegative matrix factorization with robust stochastic approximation](https://ieeexplore.ieee.org/document/6203594/)," IEEE Transactions on Newral Network Learninig Systems, 2012.
 
     - **ASAG-MU-NMF** (Asymmetric stochastic averaging gradient multiplicative updates)
-        - R. Serizel, S. Essid and G.Richard, "[Mini-batch stochastic approaches for accelerated multiplicative updates in nonnegative matrix factorisation with beta-divergence](https://ieeexplore.ieee.org/document/7738818/),", IEEE 26th International Workshop on Machine Learning for Signal Processing (MLSP), 2016.
+        - R. Serizel, S. Essid and G.Richard, "[Mini-batch stochastic approaches for accelerated multiplicative updates in nonnegative matrix factorisation with beta-divergence](https://ieeexplore.ieee.org/document/7738818/),", IEEE MLSP, 2016.
 
     - **SVRMU-NMF** (Stochastic multiplicative updates) and **SVRMU** (Stochastic variance reduced multiplicative updates)
         - H. Kasai, "[Stochastic variance reduced multiplicative update for nonnegative matrix factorization](https://arxiv.org/abs/1710.10781)," IEEE ICASSP, 2018.
@@ -192,9 +191,9 @@ If this library is useful for you, please cite this as presented below:
 - Probabilistic 
 
     - **PNMF-GIBBS** (Gibbs sampler for non-negative matrix factorisation, with ARD.) (not included)
-        - M.N. Schmidt, O. Winther, L.K. Hansen, "[Bayesian non-negative matrix factorization](https://link.springer.com/chapter/10.1007/978-3-642-00599-2_68)," International Conference on Independent Component Analysis and Signal Separation, Springer Lecture Notes in Computer Science, Vol. 5441, 2009.
+        - M. N. Schmidt, O. Winther, L.K. Hansen, "[Bayesian non-negative matrix factorization](https://link.springer.com/chapter/10.1007/978-3-642-00599-2_68)," International Conference on Independent Component Analysis and Signal Separation, Springer Lecture Notes in Computer Science, Vol. 5441, 2009.
 
-        - T. Brouwer, P. Lio, "[Bayesian Hybrid Matrix Factorisation for Data Integration](http://proceedings.mlr.press/v54/brouwer17a/brouwer17a.pdf)," 20th International Conference on Artificial Intelligence and Statistics (AISTATS), 2017.
+        - T. Brouwer, P. Lio, "[Bayesian Hybrid Matrix Factorisation for Data Integration](http://proceedings.mlr.press/v54/brouwer17a/brouwer17a.pdf)," AISTATS, 2017.
         
     - **PNMF-VB** (Variational Bayesian inference for non-negative matrix factorisation, with ARD)
         - T. Brouwer, J. Frellsen. P. Lio, "[Comparative Study of Inference Methods for Bayesian Nonnegative Matrix Factorisation](https://link.springer.com/chapter/10.1007/978-3-319-71249-9_31)," ECML PKDD 2017, 2017.
@@ -205,7 +204,7 @@ If this library is useful for you, please cite this as presented below:
 
     - **Deep-Semi** and **Deep-Bidir-Semi**
 
-        - G. Trigeorgis, K. Bousmalis, S. Zafeiriou and B. Schuller, "A deep semi-NMF model for learning hidden representations", ICML2014, 2014.
+        - G. Trigeorgis, K. Bousmalis, S. Zafeiriou and B. Schuller, "[A deep semi-NMF model for learning hidden representations](http://proceedings.mlr.press/v32/trigeorgis14.pdf)", ICML, 2014.
 
         - G. Trigeorgis, K. Bousmalis, S. Zafeiriou and B. Schuller, "A deep matrix factorization method for learning attribute representations," IEEE Transactions on Pattern Analysis and Machine Intelligence (PAMI), vol.39, no.3, pp.417-429, 2017.
 
@@ -213,25 +212,25 @@ If this library is useful for you, please cite this as presented below:
 
     - **Deep-Multiview-Semi**
 
-        - H. Zhao, Z. Ding, and Y. Fu, "Multi-view clustering via deep matrix factorization", AAAI2017, 2017.
+        - H. Zhao, Z. Ding, and Y. Fu, "[Multi-view clustering via deep matrix factorization](https://dl.acm.org/doi/10.5555/3298483.3298658)", AAAI, 2017.
 
 - Convex
 
     - **Convex-MU** and **Kernel-Convex-MU**
 
-        - C. Ding, T. Li, and M.I. Jordan, "Convex and semi-nonnegative matrix factorizations," IEEE Transations on Pattern Analysis and Machine Intelligence, vol. 32, no. 1, pp. 45-55, 2010.
+        - C. Ding, T. Li, and M.I. Jordan, "[Convex and semi-nonnegative matrix factorizations](https://ieeexplore.ieee.org/document/4685898)," IEEE Transations on Pattern Analysis and Machine Intelligence, vol. 32, no. 1, pp. 45-55, 2010.
         
-        - T. Li and C. Ding, "The Relationships Among Various Nonnegative Matrix Factorization Methods for Clustering," International Conference on Data Mining, 2006.
+        - T. Li and C. Ding, "[The relationships among various nonnegative matrix factorization methods for clustering](https://ieeexplore.ieee.org/document/4053063)," ICDM, 2006.
 
-        - Y. Li and A. Ngom, "A New Kernel Non-Negative Matrix Factorization and Its Application in Microarray Data Analysis," CIBCB, 2012.
+        - Y. Li and A. Ngom, "[A new kernel non-Negative matrix factorization and its application in microarray data analysis](https://ieeexplore.ieee.org/document/6217254)," CIBCB, 2012.
 
 - Separable
 
     - **SPA**
-        - N. Gillis and S.A. Vavasis, "Fast and Robust Recursive Algorithms for Separable Nonnegative Matrix Factorization,"  IEEE Trans. on Pattern Analysis and Machine Intelligence 36 (4), pp. 698-714, 2014.
+        - N. Gillis and S.A. Vavasis, "[Fast and robust recursive algorithms for separable nonnegative matrix factorization](https://ieeexplore.ieee.org/document/6656801),"  IEEE Transactions on Pattern Analysis and Machine Intelligence 36 (4), pp. 698-714, 2014.
 
     - **SNPA**
-        - N. Gillis, "Successive Nonnegative Projection Algorithm for Robust Nonnegative Blind Source Separation," SIAM J. on Imaging Sciences 7 (2), pp. 1420-1450, 2014.
+        - N. Gillis, "[Successive nonnegative projection algorithm for robust nonnegative blind source separation](https://epubs.siam.org/doi/abs/10.1137/130946782)," SIAM J. on Imaging Sciences 7 (2), pp. 1420-1450, 2014.
 
 - Convolutive
 
@@ -250,29 +249,29 @@ If this library is useful for you, please cite this as presented below:
 - Projective 
 
     - **projectiveNMF**
-        - Z. Yang, and E. Oja, "Linear and nonlinear projective nonnegative matrix factorization," IEEE Transactions on Neural Networks, 21(5), pp.734-749, 2010.
+        - Z. Yang, and E. Oja, "[Linear and nonlinear projective nonnegative matrix factorization](https://ieeexplore.ieee.org/document/5438836)," IEEE Transactions on Neural Networks, 21(5), pp.734-749, 2010.
 
 - Rank2 
 
     - **Rank2-NMF**
-        - Nicolas Gillis, "Nonnegative Matrix Factorization," SIAM, 2020.
+        - N, Gillis, "[Nonnegative Matrix Factorization](https://sites.google.com/site/nicolasgillis/book)," SIAM, 2020.
 
 - Nonnegative matrix tri-factorization
 
     - **Sep-Symm-NMTF**
-        - Arora, Ge, Halpern, Mimno, Moitra, Sontag, Wu, Zhu, "A practical algorithm for topic modeling with provable guarantees," International Conference on Machine Learning (ICML), pp. 280-288, 2013.
+        - S. Arora, R. Ge, Y. Halpern, D. Mimno, A. Moitra, D. Sontag, Y. Wu, M. Zhu, "[A practical algorithm for topic modeling with provable guarantees](https://people.csail.mit.edu/dsontag/papers/AroraEtAl_icml13.pdf)," ICML, 2013.
 
 - Nonnegative under-approximation
 
     - **Recursive-NMU** (Recursive non-negative matrix underapproximation)
-        - N. Gillis and F. Glineur, "Using Underapproximations for Sparse Nonnegative Matrix Factorization," Pattern Recognition 43 (4), pp. 1676-1687, 2010.
+        - N. Gillis and F. Glineur, "[Using underapproximations for sparse nonnegative matrix factorization](https://www.sciencedirect.com/science/article/abs/pii/S0031320309004324)," Pattern Recognition 43 (4), pp. 1676-1687, 2010.
     
-        - N. Gillis and R.J. Plemmons, "Dimensionality Reduction, Classification, and Spectral Mixture Analysis using Nonnegative Underapproximationm," Optical Engineering 50, 027001, 2011.
+        - N. Gillis and R.J. Plemmons, "[Dimensionality reduction, classification, and spectral mixture analysis using nonnegative underapproximationm](https://www.spiedigitallibrary.org/journals/optical-engineering/volume-50/issue-2/027001/Dimensionality-reduction-classification-and-spectral-mixture-analysis-using-non-negative/10.1117/1.3533025.short?SSO=1)," Optical Engineering 50, 027001, 2011.
 
 - Minimum-volume
 
     - **minvol-NMF**    
-        - V. Leplat, A.M.S. Ang, N. Gillis, "Minimum-volume rank-deficient nonnegative matrix factorizations", ICASSP, 2019. 
+        - V. Leplat, A.M.S. Ang, N. Gillis, "[Minimum-volume rank-deficient nonnegative matrix factorizations](https://ieeexplore.ieee.org/document/8682280)," IEEE ICASSP, 2019. 
 
 - Weighted Low-Rank matrix approximation
     - **WLRA**
@@ -316,8 +315,7 @@ If this library is useful for you, please cite this as presented below:
 ||Sparse-MU-KL|`sparse_mu_nmf`||`metric='kl-div'`|
 ||sparseNMF|`sparse_nmf`|||
 ||SC-NMF|`sc_nmf`|||
-||Nonsmooth-NMF|`ns_nmf`|||
-||NS-NMF|`ns_nmf`||`metric='euc'`, `update_alg='apg'`|
+||Nonsmooth-NMF|`ns_nmf`||`metric='euc'`, `update_alg='apg'`|
 ||Proj-Sparse|`proj_sparse_nmf`|||
 ||PALM-Sparse-Smooth|`palm_sparse_smooth_nmf`|||
 |Orthogonal|DTPP|`dtpp_nmf`|||
@@ -338,6 +336,7 @@ If this library is useful for you, please cite this as presented below:
 ||R-SVRMU|`svrmu_nmf`||`robust=true`|
 ||SAGMU|`sagmu_nmf`|||
 |Probabilistic|PNMF-VB|`vb_pro_nmf`|||
+||PNMF-VB-ARD|`vb_pro_nmf`||`options.ard=true`|
 ||Prob-NM|`prob_nmf`|||
 |Deep|Deep-Semi|`deep_semi_nmf`|||
 ||Deep-Bidir-Semi|`deep_bidirectional_nmf`|||
