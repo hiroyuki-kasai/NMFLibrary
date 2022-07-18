@@ -6,10 +6,6 @@ cd solver/;
 addpath(genpath(pwd));
 cd ..;
 
-cd solver_new/;
-addpath(genpath(pwd));
-cd ..;
-
 cd auxiliary/;
 addpath(genpath(pwd));
 cd ..;
@@ -23,5 +19,3 @@ addpath(genpath(pwd));
 cd ..;
 
 nmflibrary_message();
-
-
