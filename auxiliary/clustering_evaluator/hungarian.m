@@ -12,7 +12,7 @@ function [C,T]=hungarian(A)
 % Mathematical Software, 6(1):104-111, 1980.
 
 % v1.0  96-06-14. Niclas Borlin, niclas@cs.umu.se.
-%                 Department of Computing Science, Umeå University,
+%                 Department of Computing Science, Ume奪 University,
 %                 Sweden. 
 %                 All standard disclaimers apply.
 

@@ -9,14 +9,24 @@ function [x, infos] = svrmu_nmf(V, rank, in_options)
 %       w           solution of w
 %       infos       information
 %
-%    
+%
+% Reference:
+%       H. Kasai, 
+%       "Stochastic variance reduced multiplicative update for nonnegative matrix factorization," 
+%       IEEE ICASSP, 2018.
+%
+%   
+% This file is part of NMFLibrary.
+%
 % Created by H.Kasai on Mar. 22, 2017
 %
 % Change log: 
 %
-%   Mar. 15, 2018 (Hiroyuki Kasai): Fixed algorithm. 
+%       Mar. 15, 2018 (Hiroyuki Kasai): Fixed algorithm. 
 %
-%   May. 20, 2019 (Hiroyuki Kasai): Added initialization module.
+%       May. 20, 2019 (Hiroyuki Kasai): Added initialization module.
+%
+%       Jul. 12, 2022 (Hiroyuki Kasai): Modified code structures.
 %
 
 
@@ -76,10 +86,6 @@ function [x, infos] = svrmu_nmf(V, rank, in_options)
         R = zeros(m, n);
     end 
     
-    if options.verbose > 0
-        fprintf('# %s (%s,%s): started ...\n', mode, options.W_sub_mode, options.H_sub_mode);           
-    end     
-    
     if strcmp(options.rep_mode, 'adaptive')
         rhoh = 1+(m+m*rank)/(1*(rank+1));
         alpha = 2;
@@ -87,9 +93,14 @@ function [x, infos] = svrmu_nmf(V, rank, in_options)
     end    
    
     % initialize
+    method_name = sprintf('%s (%s,%s)', mode, options.W_sub_mode, options.H_sub_mode);    
     epoch = 0;  
-    l = zeros(m, options.batch_size) + options.lambda;      
     grad_calc_count = 0;
+    l = zeros(m, options.batch_size) + options.lambda;     
+
+    if options.verbose > 0
+        fprintf('# %s: started ...\n', method_name);           
+    end      
         
     % permute samples
     if options.permute_on
@@ -97,28 +108,29 @@ function [x, infos] = svrmu_nmf(V, rank, in_options)
     else
         perm_idx = 1:n;
     end   
-    V = V(:,perm_idx);
-    H = H(:,perm_idx);       
-
-    % select disp_freq 
-    disp_freq = set_disp_frequency(options);         
+    V = V(:, perm_idx);
+    H = H(:, perm_idx);      
     
     % store initial info
     clear infos;
-    [infos, f_val, optgap] = store_nmf_infos(V, Wt, H, R, options, [], epoch, grad_calc_count, 0);
+    [infos, f_val, optgap] = store_nmf_info(V, Wt, H, R, options, [], epoch, grad_calc_count, 0);
     
     if options.verbose > 1    
         fprintf('%s (%s,%s): Epoch = 0000, cost = %.16e, optgap = %.4e\n', mode, options.W_sub_mode, options.H_sub_mode, f_val, optgap); 
     end
          
-    % initialize elapsed_time
-    elapsed_time = 0;
-    
+    % set start time
+    start_time = tic();  
     
     % main outer loop
-    while (optgap > options.tol_optgap) && (epoch < options.max_epoch)   
-        % set start time
-        start_time = tic();
+    while true
+        
+        % check stop condition
+        [stop_flag, reason, max_reached_flag] = check_stop_condition(epoch, infos, options);
+        if stop_flag
+            display_stop_reason(epoch, infos, options, method_name, reason, max_reached_flag);
+            break;
+        end
         
         % store W and H, and calculate full grad
         W_0 = Wt;
@@ -270,28 +282,17 @@ function [x, infos] = svrmu_nmf(V, rank, in_options)
         end
         
         % measure elapsed time
-        elapsed_time = elapsed_time + toc(start_time); 
+        elapsed_time = toc(start_time);    
         
         % update epoch
         epoch = epoch + 1;          
 
         % store info
-        [infos, f_val, optgap] = store_nmf_infos(V, Wt, H, R, options, infos, epoch, grad_calc_count, elapsed_time);  
+        infos = store_nmf_info(V, Wt, H, R, options, infos, epoch, grad_calc_count, elapsed_time);  
         
-        % display infos
-        if options.verbose > 1
-            if ~mod(epoch, disp_freq)            
-                fprintf('%s (%s,%s): Epoch = %04d, cost = %.16e, optgap = %.4e, time = %e\n', mode, options.W_sub_mode, options.H_sub_mode, epoch, f_val, optgap, elapsed_time);
-            end
-        end  
-    end
-    
-    if options.verbose > 0
-        if optgap < options.tol_optgap
-            fprintf('# %s (%s,%s): Optimality gap tolerance reached: f_val = %.4e < f_opt = %.4e (%.4e)\n', mode, options.W_sub_mode, options.H_sub_mode, f_val, options.f_opt, options.tol_optgap);
-        elseif epoch == options.max_epoch
-            fprintf('# %s (%s,%s): Max epoch reached (%g).\n', mode, options.W_sub_mode, options.H_sub_mode, options.max_epoch);
-        end    
+        % display info
+        display_info(method_name, epoch, infos, options);
+
     end
     
     x.W = Wt;
@@ -299,8 +300,3 @@ function [x, infos] = svrmu_nmf(V, rank, in_options)
     x.R = R;   
     
 end
-
-
-
-
-

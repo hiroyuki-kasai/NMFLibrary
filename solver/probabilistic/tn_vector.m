@@ -66,4 +66,3 @@ function T = tn_vector()
         var(isinf(var)) = 0;
     end
 end
-

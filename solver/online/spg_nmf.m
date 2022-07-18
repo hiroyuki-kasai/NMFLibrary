@@ -9,14 +9,18 @@ function [x, infos] = spg_nmf(V, rank, in_options)
 %       w           solution of w
 %       infos       information
 %
-%    
+%
+% This file is part of NMFLibrary.
+%
 % Created by H.Kasai on Mar. 28, 2017
 %
 % Change log: 
 %
-%   Mar. 14, 2018 (Hiroyuki Kasai): Fixed algorithm. 
+%       Mar. 14, 2018 (Hiroyuki Kasai): Fixed algorithm. 
 %
-%   May. 20, 2019 (Hiroyuki Kasai): Added initialization module.
+%       May. 20, 2019 (Hiroyuki Kasai): Added initialization module.
+%
+%       Jul. 12, 2022 (Hiroyuki Kasai): Modified code structures.
 %
 
 
@@ -56,12 +60,7 @@ function [x, infos] = spg_nmf(V, rank, in_options)
         end
         options.h_repeat = 1;
     end
-    
-    
-    if options.verbose > 0
-        fprintf('# %s (%s): started ...\n', 'SPG-NMF', options.H_sub_mode);           
-    end     
- 
+
     % permute samples
     if options.permute_on
         perm_idx = randperm(n);
@@ -72,8 +71,14 @@ function [x, infos] = spg_nmf(V, rank, in_options)
     H = H(:,perm_idx);     
 
     % initialize
+    method_name = sprintf('SPG-NMF (%s,%s)', options.W_sub_mode, options.H_sub_mode);
     epoch = 0;    
     grad_calc_count = 0;
+    nesterov_alpha = 1; 
+
+    if options.verbose > 0
+        fprintf('# %s: started ...\n', method_name);           
+    end            
     
     if strcmp(options.rep_mode, 'adaptive')
         rhoh = 1+(m+m*rank)/(1*(rank+1));
@@ -81,29 +86,32 @@ function [x, infos] = spg_nmf(V, rank, in_options)
         delta = 0.01;       
     end     
     
-    % select disp_freq 
-    disp_freq = set_disp_frequency(options);         
-    
     % store initial info
     clear infos;
-    [infos, f_val, optgap] = store_nmf_infos(V, Wt, H, R, options, [], epoch, grad_calc_count, 0);
+    [infos, f_val, optgap] = store_nmf_info(V, Wt, H, R, options, [], epoch, grad_calc_count, 0);
     
     if options.verbose > 1
         fprintf('SPG-NMF (%s,%s): Epoch = 0000, cost = %.16e, optgap = %.4e\n', options.W_sub_mode, options.H_sub_mode, f_val, optgap); 
     end     
    
          
-    % initialize elapsed_time
-    elapsed_time = 0;
+    % set start time
+    start_time = tic();
     
-    nesterov_alpha = 1;
+
 
     % main outer loop
-    while (optgap > options.tol_optgap) && (epoch < options.max_epoch)   
-        % set start time
-        start_time = tic();        
+    while true
+        
+        % check stop condition
+        [stop_flag, reason, max_reached_flag] = check_stop_condition(epoch, infos, options);
+        if stop_flag
+            display_stop_reason(epoch, infos, options, method_name, reason, max_reached_flag);
+            break;
+        end  
         
         cnt = 0;
+
         % main inner loop
         for t = 1 : options.batch_size : n - 1
             cnt = cnt + 1;
@@ -170,37 +178,21 @@ function [x, infos] = spg_nmf(V, rank, in_options)
         end
 
         % measure elapsed time
-        elapsed_time = elapsed_time + toc(start_time); 
+        elapsed_time = toc(start_time);    
         
         % update epoch
         epoch = epoch + 1;         
         
         % store info
-        [infos, f_val, optgap] = store_nmf_infos(V, Wt, H, R, options, infos, epoch, grad_calc_count, elapsed_time);  
+        infos = store_nmf_info(V, Wt, H, R, options, infos, epoch, grad_calc_count, elapsed_time);  
         
-        % display infos
-        if options.verbose > 1
-            if ~mod(epoch,disp_freq)
-                fprintf('SPG-NMF (%s,%s): Epoch = %04d, cost = %.16e, optgap = %.4e, time = %e\n', options.W_sub_mode, options.H_sub_mode, epoch, f_val, optgap, elapsed_time);
-            end
-        end       
+        % display info
+        display_info(method_name, epoch, infos, options); 
+
     end
-    
-    if options.verbose > 0
-        if optgap < options.tol_optgap
-            fprintf('# SPG-NMF (%s,%s): Optimality gap tolerance reached: f_val = %.4e < f_opt = %.4e (%.4e)\n', options.W_sub_mode, options.H_sub_mode, f_val, options.f_opt, options.tol_optgap);
-        elseif epoch == options.max_epoch
-            fprintf('# SPG-NMF (%s,%s): Max epoch reached (%g).\n', options.W_sub_mode, options.H_sub_mode, options.max_epoch);
-        end    
-    end
+
     
     x.W = Wt;
     x.H(:,perm_idx) = H;
+
 end
-
-
-
-
-
-
-

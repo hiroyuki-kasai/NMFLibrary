@@ -1,6 +1,10 @@
 old/
 solver_new/
+solver_old/
+auxiliary_old/
 tmp_test/
 data_org/
 other_libs/
 !.gitignore
+.DS_Store
+*.swp

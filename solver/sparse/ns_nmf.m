@@ -1,16 +1,16 @@
 function [x, infos] = ns_nmf(V, rank, in_options)
-% Nonsmooth nonnegative matrix factorization (nsNMF)
+% Nonsmooth nonnegative matrix factorization (Nonsmooth-NMF)
 %
 % The problem of interest is defined as
 %
-%           min || V - W*S*H ||_F^2,
+%      min || V - W*S*H ||_F^2,
 %
-%           or
+%      or
 %
-%           min  D(V||W*S*H),
+%      min  D(V||W*S*H),
 %
-%           where 
-%           {V, W, S, H} > 0.
+%      where 
+%      {V, W, S, H} > 0.
 %
 % Given a non-negative matrix V, factorized non-negative matrices {W, S, H} are calculated.
 %
@@ -32,7 +32,7 @@ function [x, infos] = ns_nmf(V, rank, in_options)
 %
 % Reference:
 %       A. Pascual-Montano, J. M. Carazo, K. Kochi, D. Lehmann, and R. D. Pascual-Marqui, 
-%       "Nonsmooth nonnegative matrix factorization (nsNMF),"
+%       "Nonsmooth nonnegative matrix factorization (Nonsmooth-NMF),"
 %       IEEE Transactions on Pattern Analysis and Machine Intelligence (PAMI), vol.28, no.3, pp.403-415, 2006. 
 %
 %       Z. Yang, Y. Zhang, W. Yan, Y. Xiang, and S. Xie,
@@ -40,13 +40,40 @@ function [x, infos] = ns_nmf(V, rank, in_options)
 %       IEEE Access, vol.4, pp.5161-5168, 2016.
 %
 %
-% Created by Silja Polvi-Huttunen, University of Helsinki, Finland, 2014
+% This file is part of NMFLibrary.
+%
+% This file is originally created by Graham Grindlay.
+%
+% 2010-01-14 Graham Grindlay (grindlay@ee.columbia.edu)
+%
+% Copyright (C) 2008-2010 Graham Grindlay (grindlay@ee.columbia.edu)
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this program.  If not, see <http://www.gnu.org/licenses/>.
+%
+%
+% This file is partially created by Silja Polvi-Huttunen, University of Helsinki, Finland, 2014
+%
+%
 % Created by modifiying the original code by H.Kasai on Jul. 23, 2018 
-% Modified by H.Kasai on Jul. 29, 2018 
 %
 % Change log: 
 %
-%   May. 20, 2019 (Hiroyuki Kasai): Added initialization module.
+%       Jul. 29, 2019 (Hiroyuki Kasai): Modified.
+%
+%       May. 20, 2019 (Hiroyuki Kasai): Added initialization module.
+%
+%       Jun. 24, 2022 (Hiroyuki Kasai): Fixed a bug of W normalization.
 %
 
 
@@ -55,7 +82,7 @@ function [x, infos] = ns_nmf(V, rank, in_options)
 
     % set local options 
     local_options.theta         = 0.5; % decides the degree in [0,1] of nonsmoothing (use 0 for standard NMF)
-    local_options.metric        = 'EUC'; % 'EUC' (default) or 'KL'
+    local_options.metric_type   = 'euc'; % 'euc' (default) or 'kl-div'
     local_options.update_alg    = 'mu';  % 'mu' or 'apg'
     local_options.apg_maxiter   = 100;
     local_options.myeps         = 1e-16;
@@ -64,65 +91,72 @@ function [x, infos] = ns_nmf(V, rank, in_options)
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
     options = mergeOptions(options, in_options);  
-    
-    if options.verbose > 0
-        fprintf('# nsNMF: started ...\n');           
-    end     
-    
+
     % initialize factors
     init_options = options;
     [init_factors, ~] = generate_init_factors(V, rank, init_options);    
     W = init_factors.W;
     H = init_factors.H;     
-    R = init_factors.R;
 
-    I = eye(rank);
-    S = (1-options.theta)*I + (options.theta/rank)*ones(rank);
-    
     % initialize
+    method_name = 'Nonsmooth-NMF';      
     epoch = 0;    
-    grad_calc_count = 0; 
-    
-    % select disp_freq 
-    disp_freq = set_disp_frequency(options);      
+    grad_calc_count = 0;
+
+    if options.verbose > 0
+        fprintf('# %s: started ...\n', method_name);           
+    end      
+
+    % initialize for this algorithm    
+    I = eye(rank);
+    S = (1-options.theta) * I + (options.theta/rank) * ones(rank);
     
     % store initial info
     clear infos;
-    WS = W*S;    
-    [infos, f_val, optgap] = store_nmf_infos(V, WS, H, R, options, [], epoch, grad_calc_count, 0);
+    WS = W * S;    
+    [infos, f_val, optgap] = store_nmf_info(V, WS, H, [], options, [], epoch, grad_calc_count, 0);
     
     if options.verbose > 1
-        fprintf('nsNMF: Epoch = 0000, cost = %.16e, optgap = %.4e\n', f_val, optgap); 
+        fprintf('%s: Epoch = 0000, cost = %.16e, optgap = %.4e\n', method, f_val, optgap); 
     end  
 
     % set start time
     start_time = tic();
 
     % main loop
-    while (optgap > options.tol_optgap) && (epoch < options.max_epoch) 
+    while true
+        
+        % check stop condition
+        [stop_flag, reason, max_reached_flag] = check_stop_condition(epoch, infos, options);
+        if stop_flag
+            display_stop_reason(epoch, infos, options, method_name, reason, max_reached_flag);
+            break;
+        end
 
         if strcmp(options.update_alg, 'mu')
         
             % update H
-            WS = W*S;
-            if strcmp(options.metric, 'EUC')
-                H = H.*(WS'*V)./((WS'*WS)*H + 1e-9);
-            elseif strcmp(options.metric, 'KL')
-                H = H.*(WS'*(V./(WS*H + 1e-9)))./(sum(WS,1)'*ones(1,n));
+            WS = W * S;
+            if strcmp(options.metric_type, 'euc')
+                H = H .* (WS' * V) ./ ((WS' * WS) * H + 1e-9);
+            elseif strcmp(options.metric_type, 'kl-div')
+                H = H .* (WS' * (V./(WS * H + 1e-9))) ./ (sum(WS, 1)' * ones(1,n));
+            else
+                error('Invalid metric type')
             end  
 
             % normalize rows in H
-            [W,H] = rowsum_R_one(W,H); % normalize rows in H
+            [W, H] = normalize_WH(V, W, H, rank, 'type2');
 
             % update W
-            SH = S*H;
-            if strcmp(options.metric, 'EUC')
-                W = W.*(V*SH')./(W*(SH*SH') + 1e-9);
-            elseif strcmp(options.metric, 'KL')
-                W = W.*((V./(W*SH + 1e-9))*SH')./(ones(m,1)*sum(SH,2)');
+            SH = S * H;
+            if strcmp(options.metric_type, 'euc')
+                W = W .* (V * SH') ./ (W * (SH * SH') + 1e-9);
+            elseif strcmp(options.metric_type, 'kl-div')
+                W = W .* ((V ./ (W * SH + 1e-9)) * SH') ./ (ones(m, 1) * sum(SH,2)');
             end  
             
-        else % support only 'EUC' metric.
+        else % support only 'euc' metric.
             
             if 0
                 % update H
@@ -131,7 +165,7 @@ function [x, infos] = ns_nmf(V, rank, in_options)
 
 
                 % normalize rows in H
-                [W,H] = rowsum_R_one(W,H); % normalize rows in H
+                [W, H] = normalize_WH(V, W, H, rank, 'type2');                
 
                 % update W
                 SH = S*H;
@@ -140,7 +174,7 @@ function [x, infos] = ns_nmf(V, rank, in_options)
             else
                 
                 % update W
-                SH = S*H;
+                SH = S * H;
                 [W, ~, ~] = nesterov_mnls_general(V, [], SH', W, 1, options.apg_maxiter, 'basic');
                 %W_prev = W;
                 W = W + (W<options.myeps) .* options.myeps;
@@ -148,7 +182,7 @@ function [x, infos] = ns_nmf(V, rank, in_options)
                 % normalize W
                 if options.norm_w
                     %W11 = bsxfun(@rdivide,W,sqrt(sum(W.^2,1)));
-                    [W, ~] = data_normalization(W, [], 'std');
+                    W = normalize_W(W, 2); 
                 end
                 
                 % update H
@@ -169,27 +203,16 @@ function [x, infos] = ns_nmf(V, rank, in_options)
         epoch = epoch + 1;         
         
         % store info
-        WS = W*S;
-        [infos, f_val, optgap] = store_nmf_infos(V, WS, H, R, options, infos, epoch, grad_calc_count, elapsed_time);  
+        WS = W * S;
+        infos = store_nmf_info(V, WS, H, [], options, infos, epoch, grad_calc_count, elapsed_time);  
         
-        % display infos
-        if options.verbose > 1
-            if ~mod(epoch, disp_freq)
-                fprintf('nsNMF: Epoch = %04d, cost = %.16e, optgap = %.4e\n', epoch, f_val, optgap);
-            end
-        end      
+        % display info
+        display_info(method_name, epoch, infos, options);           
 
-    end
-    
-    if options.verbose > 0
-        if optgap < options.tol_optgap
-            fprintf('# nsNMF: Optimality gap tolerance reached: f_val = %.4e < f_opt = %.4e (%.4e)\n', f_val, f_opt, options.tol_optgap);
-        elseif epoch == options.max_epoch
-            fprintf('# nsNMF: Max epoch reached (%g).\n', options.max_epoch);
-        end 
-    end      
+    end     
 
     x.W = W;
     x.H = H;
     x.S = S;    
+    
 end

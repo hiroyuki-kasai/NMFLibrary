@@ -1,4 +1,4 @@
-function [N, F, K, Vo, V, Ro, class_label] = load_dataset(dataset, rho)
+function [N, F, K, Vo, V, Ro, class_label] = load_dataset(dataset, path, rho)
 
     switch dataset
         case 'PIE'
@@ -16,7 +16,7 @@ function [N, F, K, Vo, V, Ro, class_label] = load_dataset(dataset, rho)
             K = length(unique(class_label));
 
             max_gray_level = 50;
-            [Vo] = normalization(Vo_org, max_gray_level);    
+            [Vo] = normalize_image(Vo_org, max_gray_level);    
 
             [V, Ro] = add_outlier(rho, F, N, Vo);
 
@@ -34,7 +34,7 @@ function [N, F, K, Vo, V, Ro, class_label] = load_dataset(dataset, rho)
             K = length(unique(class_label));
 
             max_gray_level = 50;
-            [Vo] = normalization(Vo_org, max_gray_level);    
+            [Vo] = normalize_image(Vo_org, max_gray_level);    
 
             [V, Ro] = add_outlier(rho, F, N, Vo);
 
@@ -53,7 +53,7 @@ function [N, F, K, Vo, V, Ro, class_label] = load_dataset(dataset, rho)
             K = length(unique(class_label));
 
             max_gray_level = 50;
-            [Vo] = normalization(Vo_org, max_gray_level);    
+            [Vo] = normalize_image(Vo_org, max_gray_level);    
 
             [V, Ro] = add_outlier(rho, F, N, Vo);
 
@@ -61,15 +61,16 @@ function [N, F, K, Vo, V, Ro, class_label] = load_dataset(dataset, rho)
             
         case 'CBCL'
 
-
-            Vo_org = importdata('../data/CBCL_Face.mat');
+            %Vo_org = importdata('../data/CBCL_Face.mat');            
+            filename = sprintf('%s/CBCL_Face.mat', path);
+            Vo_org = importdata(filename);
             N = 1000;
             Vo_org = Vo_org(:,1:N);
             F = size(Vo_org, 1);
             K = 49;
 
             max_gray_level = 50;
-            [Vo] = normalization(Vo_org, max_gray_level);    
+            [Vo] = normalize_image(Vo_org, max_gray_level);    
 
             [V, Ro] = add_outlier(rho, F, N, Vo);
 

@@ -1,4 +1,11 @@
 function disp_freq = set_disp_frequency(options)
+% Function to set the frequency of statistic display
+%
+% This file is part of NMFLibrary.
+%
+% Created by H.Kasai
+%
+
 
     % select disp_freq 
     if options.verbose > 0

@@ -1,8 +1,9 @@
-function mse = calc_mse(Vo, W, H)
+function mse = calc_mse(V, W, H)
     
-    F = size(Vo, 1);
-    N = size(Vo, 2);
+    [m, n] = size(V);
 
-    mse = norm(Vo - W * H,'fro')^2 / (F*N);
+    f_val = nmf_cost(V, W, H, []);
+    
+    mse = 2 * f_val / (m*n);
 
 end

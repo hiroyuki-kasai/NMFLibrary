@@ -38,6 +38,7 @@ switch type
         end
         
     case 2
+        % bsxfun(@rdivide,W,sqrt(sum(W.^2,1)));
         for j = 1:size(W,3)
             for i = 1:size(W,2)
                 W(:,i,j) = W(:,i,j) ./ norm(W(:,i,j),2);

@@ -1,11 +1,11 @@
 function [x, infos] = sparse_nmf(V, rank, in_options)
-% Sparse Nonnegative matrix factorization (sparseNMF)
+% Sparse nonnegative matrix factorization (sparseNMF)
 %
 % The problem of interest is defined as
 %
-%           min D(V||W*H) + lambda * sum(H(:)),
-%           where 
-%           {V, W, H} > 0.
+%       min D(V||W*H) + lambda * sum(H(:)),
+%       where 
+%       {V, W, H} > 0.
 %
 %       L1-based sparsity constraint on H.
 %       Normalizes W column-wise.
@@ -31,12 +31,18 @@ function [x, infos] = sparse_nmf(V, rank, in_options)
 % Reference:
 %
 %
-% Created by Patrik Hoyer, 2006 (and modified by Silja Polvi-Huttunen, University of Helsinki, Finland, 2014)
+% This file is part of NMFLibrary.
+%
+% Created by Patrik Hoyer, 2006 (and modified by Silja Polvi-Huttunen, 
+% University of Helsinki, Finland, 2014)
+%
 % Modified by H.Kasai on Jul. 23, 2018
 %
 % Change log: 
 %
-%   May. 20, 2019 (Hiroyuki Kasai): Added initialization module.
+%       May. 20, 2019 (Hiroyuki Kasai): Added initialization module.
+%
+%       Jul. 14, 2022 (Hiroyuki Kasai): Fixed algorithm.
 %
 
 
@@ -45,15 +51,11 @@ function [x, infos] = sparse_nmf(V, rank, in_options)
 
     % set local options 
     local_options.lambda = 0;   % regularizer for sparsity
-    local_options.cost  = 'EUC'; % 'EUC' or 'KL'
+    local_options.cost  = 'euc'; % 'euc' or 'kl-div'
     
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
     options = mergeOptions(options, in_options);  
-    
-    if options.verbose > 0
-        fprintf('# sparseNMF: started ...\n');           
-    end     
     
     % initialize factors
     init_options = options;
@@ -62,16 +64,17 @@ function [x, infos] = sparse_nmf(V, rank, in_options)
     H = init_factors.H;      
     
     % initialize
+    method_name = 'sparseNMF';
     epoch = 0;    
-    R = zeros(m, n);
     grad_calc_count = 0; 
-    
-    % select disp_freq 
-    disp_freq = set_disp_frequency(options);      
+
+    if options.verbose > 0
+        fprintf('# %s: started ...\n', method_name);           
+    end      
     
     % store initial info
     clear infos;
-    [infos, f_val, optgap] = store_nmf_infos(V, W, H, R, options, [], epoch, grad_calc_count, 0, 'KL');
+    [infos, f_val, optgap] = store_nmf_info(V, W, H, [], options, [], epoch, grad_calc_count, 0);
     % store additionally different cost
     reg_val = options.lambda*sum(sum(H));
     f_val_total = f_val + reg_val;
@@ -86,7 +89,14 @@ function [x, infos] = sparse_nmf(V, rank, in_options)
     start_time = tic();
 
     % main loop
-    while (optgap > options.tol_optgap) && (epoch < options.max_epoch) 
+    while true
+        
+        % check stop condition
+        [stop_flag, reason, max_reached_flag] = check_stop_condition(epoch, infos, options);
+        if stop_flag
+            display_stop_reason(epoch, infos, options, method_name, reason, max_reached_flag);
+            break;
+        end
 
         % update H with MU
         %H = (H.*(W'*(V./(W*H))))/(1+alpha);
@@ -114,31 +124,19 @@ function [x, infos] = sparse_nmf(V, rank, in_options)
         epoch = epoch + 1;         
         
         % store info
-        [infos, f_val, optgap] = store_nmf_infos(V, W, H, R, options, infos, epoch, grad_calc_count, elapsed_time, 'KL');  
+        [infos, f_val, optgap] = store_nmf_info(V, W, H, [], options, infos, epoch, grad_calc_count, elapsed_time);  
         % store additionally different cost
         reg_val = options.lambda*sum(sum(H));
         f_val_total = f_val + reg_val;
         infos.cost_reg = [infos.cost_reg reg_val];
         infos.cost_total = [infos.cost_total f_val_total];   
-        
-        
-        % display infos
-        if options.verbose > 1
-            if ~mod(epoch, disp_freq)
-                fprintf('sparseNMF: Epoch = %04d, cost = %.16e, cost-reg = %.16e, optgap = %.4e\n', epoch, f_val, reg_val, optgap);
-            end
-        end      
 
-    end
-    
-    if options.verbose > 0
-        if optgap < options.tol_optgap
-            fprintf('# sparseNMF: Optimality gap tolerance reached: f_val = %.4e < f_opt = %.4e (%.4e)\n', f_val, f_opt, options.tol_optgap);
-        elseif epoch == options.max_epoch
-            fprintf('# sparseNMF: Max epoch reached (%g).\n', options.max_epoch);
-        end 
-    end    
+        % display info
+        display_info(method_name, epoch, infos, options);            
+
+    end 
 
     x.W = W;
     x.H = H;
+    
 end

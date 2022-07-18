@@ -1,5 +1,5 @@
 function [x, infos] = asag_mu_nmf(V, rank, in_options)
-% multiplicative update for non-negative matrix factorization (SAGA-MU-NMF) algorithm.
+% Asymmetric stochastic averaging gradient multiplicative update for non-negative matrix factorization (ASGA-MU-NMF) algorithm.
 %
 % Inputs:
 %       matrix      V
@@ -16,14 +16,18 @@ function [x, infos] = asag_mu_nmf(V, rank, in_options)
 %       IEEE 26th International Workshop on Machine Learning for Signal Processing (MLSP), 
 %       MLSP2016.
 %
-%    
+%   
+% This file is part of NMFLibrary.
+%
 % Created by H.Kasai on March. 22, 2017
 %
 % Change log: 
 %
-%   Oct. 27, 2017 (Hiroyuki Kasai): Fixed algorithm. 
+%       Oct. 27, 2017 (Hiroyuki Kasai): Fixed algorithm. 
 %
-%   May. 20, 2019 (Hiroyuki Kasai): Added initialization module.
+%       May. 20, 2019 (Hiroyuki Kasai): Added initialization module.
+%
+%       Jul. 12, 2022 (Hiroyuki Kasai): Modified code structures.
 %
 
 
@@ -38,20 +42,20 @@ function [x, infos] = asag_mu_nmf(V, rank, in_options)
     options = mergeOptions(get_nmf_default_options(), local_options);   
     options = mergeOptions(options, in_options); 
     
-    if options.verbose > 0
-        fprintf('# ASAG-MU-NM: started ...\n');           
-    end   
-    
     % initialize factors
     init_options = options;
     [init_factors, ~] = generate_init_factors(V, rank, init_options);    
     Wt = init_factors.W;
     H = init_factors.H; 
-    R = init_factors.R;     
 
     % initialize
+    method_name = 'ASAG-MU-NMF';    
     epoch = 0;    
     grad_calc_count = 0;
+
+    if options.verbose > 0
+        fprintf('# %s: started ...\n', method_name);           
+    end    
     
     % permute samples
     if options.permute_on
@@ -67,23 +71,26 @@ function [x, infos] = asag_mu_nmf(V, rank, in_options)
     Delta_minus = zeros(m, rank);
     Delta_plus = zeros(m, rank); 
     
-    % select disp_freq 
-    disp_freq = set_disp_frequency(options);     
-    
     % store initial info
     clear infos;
-    [infos, f_val, optgap] = store_nmf_infos(V, Wt, H, R, options, [], epoch, grad_calc_count, 0);
+    [infos, f_val, optgap] = store_nmf_info(V, Wt, H, [], options, [], epoch, grad_calc_count, 0);
     
     if options.verbose > 1
-        fprintf('ASAG-MU-NMF: Epoch = 0000, cost = %.16e, optgap = %.4e\n', f_val, optgap); 
+        fprintf('%s: Epoch = 0000, cost = %.16e, optgap = %.4e\n', method_name, f_val, optgap); 
     end     
          
     % set start time
     start_time = tic();
-    prev_time = start_time;    
     
     % main outer loop
-    while (optgap > options.tol_optgap) && (epoch < options.max_epoch)           
+    while true
+        
+        % check stop condition
+        [stop_flag, reason, max_reached_flag] = check_stop_condition(epoch, infos, options);
+        if stop_flag
+            display_stop_reason(epoch, infos, options, method_name, reason, max_reached_flag);
+            break;
+        end         
         
         cnt = 0;
         % main inner loop
@@ -119,31 +126,15 @@ function [x, infos] = asag_mu_nmf(V, rank, in_options)
         epoch = epoch + 1;          
         
         % store info
-        [infos, f_val, optgap] = store_nmf_infos(V, Wt, H, R, options, infos, epoch, grad_calc_count, elapsed_time);  
+        infos = store_nmf_info(V, Wt, H, [], options, infos, epoch, grad_calc_count, elapsed_time);  
         
-        % display infos
-        if options.verbose > 1
-            if ~mod(epoch,disp_freq)
-                fprintf('ASAG-MU-NMF: Epoch = %04d, cost = %.16e, optgap = %.4e, time = %e\n', epoch, f_val, optgap, elapsed_time - prev_time);
-            end
-        end  
-        
-        prev_time = elapsed_time;          
+        % display info
+        display_info(method_name, epoch, infos, options);
+       
     end
-    
-    if options.verbose > 0
-        if optgap < options.tol_optgap
-            fprintf('# ASAG-MU-NMF: Optimality gap tolerance reached: f_val = %.4e < f_opt = %.4e (%.4e)\n', f_val, f_opt, options.tol_optgap);
-        elseif epoch == options.max_epoch
-            fprintf('# ASAG-MU-NMF: Max epoch reached (%g).\n', options.max_epoch);
-        end     
-    end
+
     
     x.W = Wt;
     x.H(:,perm_idx) = H;
+
 end
-
-
-
-
-

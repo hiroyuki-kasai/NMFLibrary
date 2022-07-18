@@ -1,4 +1,17 @@
 function [Vo, Ro, No, V] = generate_syntheticdata(F, N, K, noise_level, rho)
+% Function to generate synthetic dataset
+%
+% This file is part of NMFLibrary.
+%
+% Created by H.Kasai
+%
+% Change log: 
+%
+%
+
+
+
+
 % 
 %     % Vo
 %     W = randn(F,K);
