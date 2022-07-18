@@ -3,7 +3,7 @@ function demo_face()
 % demonstration file for NMFLibrary.
 %
 % This file illustrates how to use this library. 
-% This demonstrates multiplicative updates (MU) algorithm and 
+% This demonstrates Frobenius-norm based multiplicative updates (MU) algorithm and 
 % hierarchical alternative least squares (Hierarchical ALS) algorithm.
 %
 % This file is part of NMFLibrary.
@@ -27,22 +27,22 @@ function demo_face()
 
 
     %% perform factroization
-    % MU
+    % Fro-MU
     options.alg = 'mu';
-    [w_nmf_mu, infos_nmf_mu] = nmf_mu(V, rank, options);
+    [w_mu, infos_mu] = fro_mu_nmf(V, rank, options);
     % Hierarchical ALS
     options.alg = 'hals';
-    [w_nmf_hals, infos_nmf_hals] = nmf_als(V, rank, options);       
+    [w_hals, infos_hals] = als_nmf(V, rank, options);       
     
     
     %% plot
-    display_graph('epoch','cost', {'MU', 'HALS'}, {w_nmf_mu, w_nmf_hals}, {infos_nmf_mu, infos_nmf_hals});
-    display_graph('time','cost', {'MU', 'HALS'}, {w_nmf_mu, w_nmf_hals}, {infos_nmf_mu, infos_nmf_hals});
+    display_graph('epoch','cost', {'MU', 'HALS'}, {w_mu, w_hals}, {infos_mu, infos_hals});
+    display_graph('time','cost', {'MU', 'HALS'}, {w_mu, w_hals}, {infos_mu, infos_hals});
     
     
     %% display basis elements obtained with different algorithms
-    plot_dictionnary(w_nmf_mu.W, [], [7 7]); 
-    plot_dictionnary(w_nmf_hals.W, [], [7 7]); 
+    plot_dictionnary(w_mu.W, [], [7 7]); 
+    plot_dictionnary(w_hals.W, [], [7 7]); 
 end
 
 
