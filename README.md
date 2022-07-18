@@ -2,7 +2,7 @@
 
 Authors: [Hiroyuki Kasai](http://kasai.comm.waseda.ac.jp/kasai/)
 
-Last page update: July 20, 2022
+Last page update: July 18, 2022
 
 Latest library version: 2.0 (see Release notes for more info)
 
@@ -554,7 +554,7 @@ If you have any problems or questions, please contact the author: [Hiroyuki Kasa
 
 Release notes
 --------------
-* Version 2.0 (July 20, 2022) 
+* Version 2.0 (July 18, 2022) 
     - Major update.
     - Many solvers are added. 
     - Code structure of solvers is refactored. 
