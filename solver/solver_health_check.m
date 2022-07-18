@@ -31,7 +31,6 @@ function solver_health_check()
     test_deep_nmf(V, rank, health_options);
     test_conv_nmf(V, rank, health_options);
     test_nmtf(V, rank, health_options);   
-
     test_minvolnmf(V, rank, health_options);
     test_recursive_nmu(V, rank, health_options);
     test_rank2nmf(V, rank, health_options);
@@ -42,7 +41,6 @@ function solver_health_check()
     test_robust_nmf(V, rank, health_options);
     test_prob_nmf(V, rank, health_options);
     test_divergence_nmf(V, rank, health_options);
-
     test_nenmf(V, rank, health_options);    
     test_orth_nmf(V, rank, health_options);      
     test_mu(V, rank, health_options);    
