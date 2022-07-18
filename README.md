@@ -76,11 +76,11 @@ If this library is useful for you, please cite this as presented below:
             - A.Cichocki, S.Amari, R.Zdunek, R.Kompass, G.Hori, and Z.He, "[Extended SMART algorithms for non-negative matrix factorization](https://link.springer.com/chapter/10.1007/11785231_58)," Artificial Intelligence and Soft Computing, 2006. (for alpha divergence and beta divergence)
 
     - **Div-ADMM**
-        - D.L. Sun and C. Fvotte, "Alternating direction method of multipliers for non-negative matrix factorization with the beta divergence," IEEE ICASSP 2014.
+        - D.L. Sun and C. Fvotte, "[Alternating direction method of multipliers for non-negative matrix factorization with the beta divergence](https://ieeexplore.ieee.org/document/6854796)," IEEE ICASSP 2014.
 
     - **KL-FPA** (First-order primal-dual algorithm)
 
-        - F. Yanez, and F. Bach, "Primal-Dual Algorithms for Non-negative Matrix Factorization with the Kullback-Leibler Divergence," IEEE ICASSP, 2017.
+        - F. Yanez, and F. Bach, "[Primal-dual algorithms for non-negative matrix factorization with the Kullback-Leibler divergence](https://ieeexplore.ieee.org/abstract/document/7952558?reload=true)," IEEE ICASSP, 2017.
 
     - **KL-BMD**
         - Block mirror descent method for KL-based non-negative matrix factorization
@@ -118,7 +118,7 @@ If this library is useful for you, please cite this as presented below:
         - M. Schmidt, J. Larsen, and F. Hsiao, "[Wind noise reduction using non-negative sparse coding](https://ieeexplore.ieee.org/document/4414345/)", IEEE MLSP, 2007.
 
     - **Sparse-MU-V**
-        - T. Virtanen, "Monaural sound source separation by non-negative factorization with temporal continuity and sparseness criteria," IEEE Transactions on Audio, Speech, and Language Processing, vol.15, no.3, 2007.
+        - T. Virtanen, "[Monaural sound source separation by non-negative factorization with temporal continuity and sparseness criteria](https://ieeexplore.ieee.org/document/4100700)," IEEE Transactions on Audio, Speech, and Language Processing, vol.15, no.3, 2007.
 
     - **sparseNMF** (Sparse NMF)
 
@@ -133,7 +133,7 @@ If this library is useful for you, please cite this as presented below:
 
     - **Proj-Sparse**
         - P. O. Hoyer, "[Non-negative matrix factorization with sparseness constraints](http://www.jmlr.org/papers/volume5/hoyer04a/hoyer04a.pdf)," Journal of Machine Learning Research (JMLR), vol.5, pp.1457-1469, 2004.
-        - R. Ohib, N. Gillis, Niccolò Dalmasso, S. Shah, V. K. Potluru, S. Plis, "Explicit Group Sparse Projection with Applications to Deep Learning and NMF," arXiv preprint:1912.03896, 2019
+        - R. Ohib, N. Gillis, Niccolò Dalmasso, S. Shah, V. K. Potluru, S. Plis, "[Explicit Group Sparse Projection with Applications to Deep Learning and NMF](https://arxiv.org/abs/1912.03896)," arXiv preprint:1912.03896, 2019
 
     - **PALM-Sparse-Smooth-NMF**
         - PALM framework with smoothness and sparsity constraints for non-negative matrix factorization.
@@ -141,7 +141,7 @@ If this library is useful for you, please cite this as presented below:
 - Orthgotonal
 
     - **DTPP** (Orthgotonal multiplicative upates (MU))
-        - C. Ding, T. Li, W. Peng, and H. Park, "Orthogonal nonnegative matrix t-factorizations for clustering", ACM KDD, 2006.
+        - C. Ding, T. Li, W. Peng, and H. Park, "[Orthogonal nonnegative matrix t-factorizations for clustering](https://dl.acm.org/doi/10.1145/1150402.1150420)", ACM KDD, 2006.
 
     - **Orth-MU** (Orthgotonal multiplicative upates (MU))
         - S. Choi, "[Algorithms for orthogonal nonnegative matrix factorization](https://ieeexplore.ieee.org/document/4634046/)", IEEE IJCNN, 2008.
@@ -391,6 +391,7 @@ Folders and files
     |--- nnls/                  - Solvers for nonnegativity-constrained least squares.
     |--- 3rd_party/             - Solvers provided by 3rd_party.
     |--- solver_health_check.m  - Health check scripts for solvers.
+|applications/                  - Some appplications using NMF.
 </pre>
 
 <br />                              
