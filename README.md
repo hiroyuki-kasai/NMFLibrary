@@ -206,7 +206,7 @@ If this library is useful for you, please cite this as presented below:
 
         - G. Trigeorgis, K. Bousmalis, S. Zafeiriou and B. Schuller, "[A deep semi-NMF model for learning hidden representations](http://proceedings.mlr.press/v32/trigeorgis14.pdf)", ICML, 2014.
 
-        - G. Trigeorgis, K. Bousmalis, S. Zafeiriou and B. Schuller, "A deep matrix factorization method for learning attribute representations," IEEE Transactions on Pattern Analysis and Machine Intelligence (PAMI), vol.39, no.3, pp.417-429, 2017.
+        - G. Trigeorgis, K. Bousmalis, S. Zafeiriou and B. Schuller, "[A deep matrix factorization method for learning attribute representations](https://ieeexplore.ieee.org/abstract/document/7453156)," IEEE Transactions on Pattern Analysis and Machine Intelligence (PAMI), vol.39, no.3, pp.417-429, 2017.
 
     - **Deep-nsNMF**
 
