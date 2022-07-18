@@ -352,7 +352,7 @@ If this library is useful for you, please cite this as presented below:
 ||ADMM-Seq-Conv|`admm_seq_conv_nmf`|||
 |Rank2|Rank2-NMF|`rank2nmf`|||
 |Nonnegative matrix tri-factorization|Sep-Symm-NMTF|`sep_symm_nmtf`|||
-|Nonnegative under-approximation|recursive_nmu|`Recursive-NMUrecursive_nmu`|||
+|Nonnegative under-approximation|recursive_nmu|`recursive_nmu`|||
 |Minimum-volume|minvol-NMF|`minvol_nmf`||
 |Weighted Low-Rank matrix approximation|WLRA|`wlra`|||
 
