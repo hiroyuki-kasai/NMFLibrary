@@ -392,6 +392,7 @@ Folders and files
     |--- 3rd_party/             - Solvers provided by 3rd_party.
     |--- solver_health_check.m  - Health check scripts for solvers.
 |applications/                  - Some appplications using NMF.
+|demo_python/                   - Demonstration script to use this package easily from python.
 </pre>
 
 <br />                              
@@ -565,6 +566,7 @@ Release notes
         - Acceleration algorithms on frobenius-norm based methods are added. 
         - Divergence-based methods are separated from frobenius-norm based methods.
         - Version update checking mechanism is supported. 
+        - Demonstration script to use this package from python is included. 
 * Version 1.8.1 (Oct. 14, 2020) 
     - Bug fixed in sc_nmf.m and semi_mu_nmf, and added the LPinitSemiNMF algorithm into generate_init_factors.m (Thanks to Haonan Huang). 
 * Version 1.7.0 (June 27, 2019) 
