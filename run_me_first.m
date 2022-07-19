@@ -1,21 +1,33 @@
-% Add folders to path.
+function [] = run_me_first(varargin)
 
-addpath(pwd);
+    if nargin < 1
+        message_flag = true;
+    else
+        message_flag = varargin{1};        
+    end
 
-cd solver/;
-addpath(genpath(pwd));
-cd ..;
+    % Add folders to path.    
+    addpath(pwd);
+    
+    cd solver/;
+    addpath(genpath(pwd));
+    cd ..;
+    
+    cd auxiliary/;
+    addpath(genpath(pwd));
+    cd ..;
+    
+    cd plotter/;
+    addpath(genpath(pwd));
+    cd ..;
+    
+    cd data/;
+    addpath(genpath(pwd));
+    cd ..;
+    
+    if message_flag
+        nmflibrary_message();
+    end
+end
 
-cd auxiliary/;
-addpath(genpath(pwd));
-cd ..;
 
-cd plotter/;
-addpath(genpath(pwd));
-cd ..;
-
-cd data/;
-addpath(genpath(pwd));
-cd ..;
-
-nmflibrary_message();
