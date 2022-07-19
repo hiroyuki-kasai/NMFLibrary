@@ -28,6 +28,5 @@ function [] = run_me_first(varargin)
     if message_flag
         nmflibrary_message();
     end
+
 end
-
-

@@ -38,9 +38,7 @@ function demo()
     
     
     %% plot
-    display_graph('epoch','cost', {'MU', 'HALS', 'Acc-HALS'}, {w_mu, w_hals, w_acchals}, {infos_mu, infos_hals, infos_acchals});
-    display_graph('time','cost', {'MU', 'HALS', 'Acc-HALS'}, {w_mu, w_hals, w_acchals}, {infos_mu, infos_hals, infos_acchals});
+    display_graph('epoch','cost', {'Fro-MU', 'HALS', 'Acc-HALS'}, {w_mu, w_hals, w_acchals}, {infos_mu, infos_hals, infos_acchals});
+    display_graph('time','cost', {'Fro-MU', 'HALS', 'Acc-HALS'}, {w_mu, w_hals, w_acchals}, {infos_mu, infos_hals, infos_acchals});
     
 end
-
-
