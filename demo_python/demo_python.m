@@ -15,15 +15,6 @@ function ret = demo_python(V, rank, py_dict_options)
     % extract options
     in_options = struct(py_dict_options)
 
-
-
-%     % set options
-%     if isfield(in_options, 'verbose')
-%         options.verbose = in_options.verbose;      
-%     else
-%         options.verbose = 1;  
-%     end
-
     % set local options
     local_options = [];    
     local_options.verbose = 1;
