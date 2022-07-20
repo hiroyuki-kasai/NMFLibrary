@@ -28,8 +28,21 @@ function opts = mergeOptions(opts1, opts2)
 
     opts = opts1;
     fields = fieldnames(opts2);
+%     for i = 1 : length(fields)
+%         opts.(fields{i}) = opts2.(fields{i});
+%     end
+
     for i = 1 : length(fields)
-        opts.(fields{i}) = opts2.(fields{i});
-    end
+        if strcmp(fields{i}, 'max_epoch') || strcmp(fields{i}, 'verbose')
+            if ischar(opts2.(fields{i}))
+                opts.(fields{i}) = str2double(opts2.(fields{i}));
+            else
+                opts.(fields{i}) = opts2.(fields{i});
+            end
+        else
+            opts.(fields{i}) = opts2.(fields{i});
+        end
+
+    end    
     
 end
