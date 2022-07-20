@@ -70,7 +70,7 @@ options['alg'] = 'acc_hals'
 options_m = eng.struct(options);
 [w_acc_hals, infos_acc_hals] = eng.als_nmf(V_m, rank, options_m, nargout=2)
 
-# store results
+# convert matlab.struct to list
 iter_mu = list(infos_mu['iter'][0])
 time_mu = list(infos_mu['time'][0])
 cost_mu = list(infos_mu['cost'][0])
