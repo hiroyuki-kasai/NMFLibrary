@@ -100,7 +100,7 @@ function [x, infos] = als_nmf(V, rank, in_options)
     H = init_factors.H;  
     
     % initialize
-    method_name = sprintf('ALS (%s:%s)', options.alg);
+    method_name = sprintf('ALS (%s:%s)', options.alg, options.sub_mode);
     epoch = 0;    
     grad_calc_count = 0;
 
@@ -140,7 +140,7 @@ function [x, infos] = als_nmf(V, rank, in_options)
     [infos, f_val, optgap] = store_nmf_info(V, W, H, [], options, [], epoch, grad_calc_count, 0);
     
     if options.verbose > 1
-        fprintf('ALS (%s:%s): Epoch = 0000, cost = %.16e, optgap = %.4e\n', options.alg, options.sub_mode, f_val, optgap); 
+        fprintf('%s: Epoch = 0000, cost = %.16e, optgap = %.4e\n', method_name, f_val, optgap); 
     end  
     
     % set start time
