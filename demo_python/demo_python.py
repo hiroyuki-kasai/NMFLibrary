@@ -40,19 +40,23 @@ n = 100
 V = np.random.random_sample((m,n))
 rank = 5
 
-# save mat file 
-scipy.io.savemat("test.mat", {'name':V})
+# set options for solvers
+options = dict()
+options['verbose'] = '1'
+options['max_epoch'] = '100'
 
 # add path of matlabAPI
 #sys.path.append('matlabroot/extern/engines/python/build/lib/')
 
 # import matlab module
 import matlab.engine
-
 eng = matlab.engine.start_matlab()
 
+# convert numpy array to matlab.double
+V_matlab = matlab.double(V.tolist())
+
 # call nmf module in matlab
-ret = eng.demo_python(rank)
+ret = eng.demo_python(V_matlab, rank, options)
 
 # store results
 mu_infos = ret['mu']
