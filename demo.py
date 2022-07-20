@@ -1,4 +1,17 @@
 '''
+    python demonstration file for NMFLibrary.
+
+    This file illustrates how to use this library. 
+    This demonstrates Frobenius-norm based 
+	- multiplicative updates (MU) algorithm,
+     	- hierarchical alternative least squares (HALS) algorithm, and
+     	- accelerated HALS algorithm.
+	
+    This file is part of NMFLibrary.
+
+    Created by H.Kasai on July 21, 2022
+
+
     To execute this script, the following setup is required. 
 
     See more details at 
