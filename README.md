@@ -428,7 +428,7 @@ V = rand(m,n);
 rank = 5;
 
 %% perform factroization
-% MU
+% Fro-MU
 options.alg = 'mu';
 [w_mu, infos_mu] = fro_mu_nmf(V, rank, options);
 % Hierarchical ALS
