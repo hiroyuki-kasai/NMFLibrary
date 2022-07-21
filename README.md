@@ -366,6 +366,7 @@ Folders and files
 ./run_me_first.m                - The scipt that you need to run first.
 ./demo.m                        - Demonstration script to check and understand this package easily. 
 ./demo_face.m                   - Demonstration script to check and understand this package easily. 
+./demo.py                       - Demonstration script to use this package easily from python. 
 |plotter/                       - Contains plotting tools to show convergence results and various plots.
 |auxiliary/                     - Some auxiliary tools for this project.
 |solver/                        - Contains various optimization algorithms.
@@ -392,7 +393,6 @@ Folders and files
     |--- 3rd_party/             - Solvers provided by 3rd_party.
     |--- solver_health_check.m  - Health check scripts for solvers.
 |applications/                  - Some appplications using NMF.
-|demo_python/                   - Demonstration script to use this package easily from python.
 </pre>
 
 <br />                              
