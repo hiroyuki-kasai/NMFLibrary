@@ -512,6 +512,29 @@ plot_dictionnary(w_hals.W, [], [7 7]);
 
 <br />
 
+How to use from python
+----------------------------
+
+**Step 1: Find the path to the MATLAB folder**
+
+Run `matlabroot`. 
+```Matlab
+matlabroot; 
+```
+
+**Step 2: Install the Engine API**
+
+To install the engine API, choose one of the following. You must call this python install command in the specified folder. The followings are examples in case of R2022a.
+
+- Windows
+
+```
+cd "c:\Program Files\MATLAB\R2022a\extern\engines\python"
+python setup.py install
+```
+
+<br />
+
 License
 -------
 - The NMFLibrary is **free**, **non-commercial** and **open** source.
