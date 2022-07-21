@@ -544,10 +544,13 @@ cd "/Applications/MATLAB_R2022a.app/extern/engines/python"
 python setup.py install
 ```
 
-**Step 3: Run demo code**
+**Step 3: Run demonstration code**
 ```
 python demo.py
 ```
+
+As for **Steps 1** and **2**, see more details [here](See more details at 
+    https://www.mathworks.com/help/matlab/matlab_external/install-the-matlab-engine-for-python.html).
 
 <br />
 
