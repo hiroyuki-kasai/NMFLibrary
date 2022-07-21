@@ -15,30 +15,35 @@
     To execute this script, the following setup is required. 
 
     See more details at 
-    https://jp.mathworks.com/help/matlab/matlab_external/install-the-matlab-engine-for-python.html
+    https://www.mathworks.com/help/matlab/matlab_external/install-the-matlab-engine-for-python.html
 
+    1. Find the path to the MATLAB folder. Start MATLAB and type matlabroot in the command window. Copy the path returned by matlabroot.
+
+    2. Install the Engine API
+
+       To install the engine API, choose one of the following. You must call this python install command in the specified folder.
 	
-    For Windos
+       - For Windows
 		cd "matlabroot\extern\engines\python"
 		python setup.py install
 
-	macOS or Linux
+       - macOS or Linux
 		cd "matlabroot/extern/engines/python"
 		python setup.py instal
 
-	Examples (R2022 case):
+	- Examples (R2022 case):
 
 	    For Windows 
-            cd "c:\Program Files\MATLAB\R2022a\extern\engines\python" 
-            python setup.py install
+ 		cd "c:\Program Files\MATLAB\R2022a\extern\engines\python" 
+ 		python setup.py install
 
-        For Linux
-            cd "/usr/local/MATLAB/R2022a/bin/matlab/extern/engines/python"
-            python setup.py install
+            For Linux
+		cd "/usr/local/MATLAB/R2022a/bin/matlab/extern/engines/python"
+		python setup.py install
 
-		For macOS
-			cd "/Applications/MATLAB_R2022a.app/extern/engines/python"
- 			python setup.py install 
+	    For macOS
+		cd "/Applications/MATLAB_R2022a.app/extern/engines/python"
+ 		python setup.py install 
 '''
 
 import sys
