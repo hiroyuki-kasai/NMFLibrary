@@ -517,7 +517,7 @@ How to use from python
 
 **Step 1: Find the path to the MATLAB folder**
 
-Run `matlabroot`. 
+Run `matlabroot` in the MATLAB command window. 
 ```Matlab
 matlabroot; 
 ```
@@ -527,10 +527,26 @@ matlabroot;
 To install the engine API, choose one of the following. You must call this python install command in the specified folder. The followings are examples in case of R2022a.
 
 - Windows
-
 ```
 cd "c:\Program Files\MATLAB\R2022a\extern\engines\python"
 python setup.py install
+```
+
+- Linux
+```
+cd "/usr/local/MATLAB/R2022a/bin/matlab/extern/engines/python"
+python setup.py install
+```
+
+- macOS
+```
+cd "/Applications/MATLAB_R2022a.app/extern/engines/python"
+python setup.py install
+```
+
+**Step 3: Run demo code**
+```
+python demo.py
 ```
 
 <br />
