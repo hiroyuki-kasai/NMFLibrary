@@ -600,6 +600,7 @@ Release notes
 * Version 2.1 (July 22, 2022) 
     - No-option is allowed in all solvers.
     - A python demonstration script is added. 
+    - Application scripts are added.
 * Version 2.0 (July 18, 2022) 
     - Major update.
     - New NMF models are added. 
