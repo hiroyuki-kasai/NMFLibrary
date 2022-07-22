@@ -7,6 +7,8 @@ function test_mu(varargin)
 % This file is part of NMFLibrary.
 %
 % Created by H.Kasai on OCt. 27, 2017
+%
+
 
     if nargin < 1
         clc;

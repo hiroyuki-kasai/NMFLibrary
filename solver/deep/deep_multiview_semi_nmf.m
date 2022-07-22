@@ -46,16 +46,6 @@ function [x, infos] = deep_multiview_semi_nmf(XX, rank_layers, in_options)
 
     % set dimensions and samples
     n = size(XX, 2);
-    
-    % set the number of views and rank_layers
-    num_of_views = numel(XX);
-    num_of_layers = numel(rank_layers);
-    
-    m_total = 0;
-    for i = 1 : num_of_views
-        m(i) = size(XX{i}, 1);
-        m_total = m_total + m(i);
-    end
 
     % set local options
     local_options.bUpdateZ      = true;
@@ -65,6 +55,10 @@ function [x, infos] = deep_multiview_semi_nmf(XX, rank_layers, in_options)
     local_options.gamma         = 0.1;
     local_options.beta          = 0.01;    
     
+    % check input options
+    if ~exist('in_options', 'var') || isempty(in_options)
+        in_options = struct();
+    end      
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
     options = mergeOptions(options, in_options);
@@ -79,6 +73,16 @@ function [x, infos] = deep_multiview_semi_nmf(XX, rank_layers, in_options)
     end      
     
     % initialize for this algorithm
+    % set the number of views and rank_layers
+    num_of_views = numel(XX);
+    num_of_layers = numel(rank_layers);
+    
+    m_total = 0;
+    for i = 1 : num_of_views
+        m(i) = size(XX{i}, 1);
+        m_total = m_total + m(i);
+    end
+    
     alpha = ones(num_of_views, 1).*(1/num_of_views); 
     
     Z = cell(num_of_views, num_of_layers);

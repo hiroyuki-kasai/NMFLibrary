@@ -54,6 +54,10 @@ function [x, infos] = snpa(V, num_col, in_options)
     local_options.inner_nnls_alg = 'fpgm';
     local_options.special_stop_condition = @(epoch, infos, options, stop_options) spna_stop_func(epoch, infos, options, stop_options);       
     
+    % check input options
+    if ~exist('in_options', 'var') || isempty(in_options)
+        in_options = struct();
+    end      
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
     options = mergeOptions(options, in_options);

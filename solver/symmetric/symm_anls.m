@@ -62,6 +62,10 @@ function [x, infos] = symm_anls(V, rank, in_options)
     local_options.init_alg  = 'symm_mean';
     local_options.use_kuang_code = true;
     
+    % check input options
+    if ~exist('in_options', 'var') || isempty(in_options)
+        in_options = struct();
+    end       
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
     options = mergeOptions(options, in_options);  

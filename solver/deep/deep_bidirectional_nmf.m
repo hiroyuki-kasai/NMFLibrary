@@ -63,7 +63,10 @@ function [x, infos] = deep_bidirectional_nmf(X, rank_layers, in_options)
     local_options.eval_clustering_acc = 0;
     local_options.classnum      = 0;    
     
-    
+    % check input options
+    if ~exist('in_options', 'var') || isempty(in_options)
+        in_options = struct();
+    end     
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
     options = mergeOptions(options, in_options); 
@@ -80,7 +83,6 @@ function [x, infos] = deep_bidirectional_nmf(X, rank_layers, in_options)
     if ~isempty(options.gnd) && options.classnum > 1
         options.eval_clustering_acc = 1;
     end    
-    
     
     % initialize Z and H
     Z = cell(1, num_of_layers);

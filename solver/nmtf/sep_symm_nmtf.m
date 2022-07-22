@@ -35,6 +35,10 @@ function [x, infos] = sep_symm_nmtf(V, rank, in_options)
     local_options = []; 
     local_options.delta = 1e-6;
     
+    % check input options
+    if ~exist('in_options', 'var') || isempty(in_options)
+        in_options = struct();
+    end      
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
     options = mergeOptions(options, in_options);
@@ -42,13 +46,11 @@ function [x, infos] = sep_symm_nmtf(V, rank, in_options)
     method_name = 'Sep-Symm-NMTF';
     if options.verbose > 0
         fprintf('# %s: started ...\n', method_name);           
-    end      
+    end     
 
-    
     % idendity K such that V(K,K) = W(K,:) S W(K,:)^T 
     spa_options.normalize = 1; 
     spa_sol = spa(V, rank, spa_options); 
-    
     
     % solve V(K,K) z = q = V(K,:) 
     q = V(:, spa_sol.K)' * ones(m,1); 

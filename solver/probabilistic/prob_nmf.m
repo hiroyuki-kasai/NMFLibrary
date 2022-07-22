@@ -44,6 +44,10 @@ function [x, infos] = prob_nmf(V, rank, in_options)
     % set local options
     local_options = [];
 
+    % check input options
+    if ~exist('in_options', 'var') || isempty(in_options)
+        in_options = struct();
+    end      
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
     options = mergeOptions(options, in_options); 

@@ -77,14 +77,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     local_options.gamma2 = 1.001;
     local_options.sub_mode = 'std';
     
+    % check input options
+    if ~exist('in_options', 'var') || isempty(in_options)
+        in_options = struct();
+    end       
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
     options = mergeOptions(options, in_options);
-    
-    if options.verbose > 0
-        fprintf('# PALM-Sparse-Smooth-NMF: started ...\n');           
-    end   
-    
+
     % initialize factors
     init_options = options;
     [init_factors, ~] = generate_init_factors(V, rank, init_options);    
@@ -132,7 +132,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     epoch = 0; 
     grad_calc_count = 0;
 
-         
+    if options.verbose > 0
+        fprintf('%s: started ...\n', method_name);           
+    end   
+            
     % store initial info
     clear infos;
     [infos, f_val, optgap] = store_nmf_info(V, W, H, [], options, [], epoch, grad_calc_count, 0);

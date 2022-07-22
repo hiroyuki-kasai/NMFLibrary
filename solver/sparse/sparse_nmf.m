@@ -53,6 +53,10 @@ function [x, infos] = sparse_nmf(V, rank, in_options)
     local_options.lambda = 0;   % regularizer for sparsity
     local_options.cost  = 'euc'; % 'euc' or 'kl-div'
     
+    % check input options
+    if ~exist('in_options', 'var') || isempty(in_options)
+        in_options = struct();
+    end       
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
     options = mergeOptions(options, in_options);  

@@ -61,6 +61,10 @@ function [x, infos] = spa(V, num_col, in_options)
     local_options.special_nmf_cost = @(V, W, H, R, options) spa_nmf_cost_func(V, W, H, R, options); 
     local_options.special_stop_condition = @(epoch, infos, options, stop_options) spa_stop_func(epoch, infos, options, stop_options);    
     
+    % check input options
+    if ~exist('in_options', 'var') || isempty(in_options)
+        in_options = struct();
+    end      
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
     options = mergeOptions(options, in_options);

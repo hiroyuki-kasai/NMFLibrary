@@ -110,6 +110,10 @@ function [x, infos] = convex_mu_nmf(V, rank, in_options)
     local_options.special_nmf_cost = @(V, W, H, R, options) convex_mu_nmf_cost_func(V, W, H, R, options);
     local_options.special_init_factors = @(V, rank, wh_flag, r_flag, options) convex_mu_initialize(V, rank, wh_flag, r_flag, options);    
     
+    % check input options
+    if ~exist('in_options', 'var') || isempty(in_options)
+        in_options = struct();
+    end     
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
     options = mergeOptions(options, in_options);

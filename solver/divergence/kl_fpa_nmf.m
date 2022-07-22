@@ -61,6 +61,10 @@ function [x, infos] = kl_fpa_nmf(V, rank, in_options)
     local_options.metric_type = 'kl-div';    
     local_options.inner_max_epoch = 5;
     
+    % check input options
+    if ~exist('in_options', 'var') || isempty(in_options)
+        in_options = struct();
+    end      
     % merge options
     options = mergeOptions(get_nmf_default_options(), local_options);   
     options = mergeOptions(options, in_options);
