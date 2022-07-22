@@ -1,4 +1,4 @@
-function test_symm()
+function test_symm(varargin)
 %
 % demonstration file for NMFLibrary.
 %
@@ -8,25 +8,40 @@ function test_symm()
 % This file is part of NMFLibrary.
 %
 % Created by H.Kasai on Jun. 24, 2019
+%
+% Change log: 
+%
+%
+%       Jul. 22, 2022 (Hiroyuki Kasai): Fixed bugs.
+%
 
-    clc;
-    clear;
-    close all;
 
-    %% generate synthetic data of (mxn) matrix
-    m = 1000;
-    V = rand(m, m);
-    V = (V + V')/2;
+    if nargin < 1
+        clc;
+        clear;
+        close all;
+        rng('default')
     
-    
-    %% initialize rank to be factorized
-    rank = 5;
-    
+        m = 500;
+        V = rand(m, m);
+        V = (V + V')/2;
+        rank = 20;
+        options = [];
+        options.verbose = 1;
+        options.max_epoch = 100; 
+        health_check_mode = false;
+    else
+        m = 500;
+        V = rand(m, m);
+        V = (V + V')/2;
+        rank = varargin{2}; 
+        options = varargin{3};
+        health_check_mode = true;
+    end
+
     
     %% set options
-    options.verbose = 1;
     options.calc_symmetry = true; 
-
 
 
     %% perform factroization
@@ -40,14 +55,16 @@ function test_symm()
     [w_symm_halsacc, infos_symm_halsacc] = symm_halsacc(V, rank, options);  
     
     
-    %% plot
-    display_graph('epoch','cost', {'Symm-ANLS', 'Symm-Newton', 'Symm-HALS'}, ...
-        {w_symm_anls, w_symm_newton, w_symm_halsacc}, {infos_symm_anls, infos_symm_newton, infos_symm_halsacc});
-    display_graph('time','cost', {'Symm-ANLS', 'Symm-Newton', 'Symm-HALS'}, ...
-        {w_symm_anls, w_symm_newton, w_symm_halsacc}, {infos_symm_anls, infos_symm_newton, infos_symm_halsacc});
-    
-    %% symmetry
-    display_graph('epoch','symmetry', {'Symm-ANLS', 'Symm-Newton', 'Symm-HALS'}, ...
-        {w_symm_anls, w_symm_newton, w_symm_halsacc}, {infos_symm_anls, infos_symm_newton, infos_symm_halsacc});      
+    if ~health_check_mode         
+        %% plot
+        display_graph('epoch','cost', {'Symm-ANLS', 'Symm-Newton', 'Symm-HALS'}, ...
+            {w_symm_anls, w_symm_newton, w_symm_halsacc}, {infos_symm_anls, infos_symm_newton, infos_symm_halsacc});
+        display_graph('time','cost', {'Symm-ANLS', 'Symm-Newton', 'Symm-HALS'}, ...
+            {w_symm_anls, w_symm_newton, w_symm_halsacc}, {infos_symm_anls, infos_symm_newton, infos_symm_halsacc});
+        
+        %% symmetry
+        display_graph('epoch','symmetry', {'Symm-ANLS', 'Symm-Newton', 'Symm-HALS'}, ...
+            {w_symm_anls, w_symm_newton, w_symm_halsacc}, {infos_symm_anls, infos_symm_newton, infos_symm_halsacc});    
+    end
     
 end

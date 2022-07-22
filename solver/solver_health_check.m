@@ -23,6 +23,7 @@ function solver_health_check()
 
 
     % execute test scripts for algorithms
+    test_symm(V, rank, health_options);
     test_separable(V, rank, health_options);
     test_prob_nmf(V, rank, health_options);
     test_sparse_nmf(V, rank, health_options);    
