@@ -1,7 +1,5 @@
 old/
-solver_new/
-solver_old/
-auxiliary_old/
+solver_*/
 tmp_test/
 data_org/
 other_libs/
