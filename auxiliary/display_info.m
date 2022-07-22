@@ -21,23 +21,43 @@ function [] = display_info(method_name, epoch, nmf_info, options)
     end
 
 
-    f_val = nmf_info.cost(end);
-    optgap = nmf_info.optgap(end);
-    process_time = nmf_info.time(end) - nmf_info.time(end-1);
+    if ~options.not_store_infos  
 
-    % display infos
-    if options.verbose > 1
-        if ~mod(epoch, options.disp_freq)
-            fprintf('%s: Epoch = %04d, cost = %.16e, optgap = %.4e, time = %e\n', method_name, epoch, f_val, optgap, process_time);
+        f_val = nmf_info.cost(end);
+        optgap = nmf_info.optgap(end);
+        process_time = nmf_info.time(end) - nmf_info.time(end-1);
+    
+        % display infos
+        if options.verbose > 1
+            if ~mod(epoch, options.disp_freq)
+                fprintf('%s: Epoch = %04d, cost = %.16e, optgap = %.4e, time = %e\n', method_name, epoch, f_val, optgap, process_time);
+            end
+        elseif options.verbose == 1
+    
+            if strcmp(method_name, 'SPA') || strcmp(method_name, 'SNPA')
+                textwaitbar(epoch, options.max_epoch-1, '  progress');
+            else
+                textwaitbar(epoch, options.max_epoch, '  progress');            
+            end
+            
         end
-    elseif options.verbose == 1
+    else
 
-        if strcmp(method_name, 'SPA') || strcmp(method_name, 'SNPA')
-            textwaitbar(epoch, options.max_epoch-1, '  progress');
-        else
-            textwaitbar(epoch, options.max_epoch, '  progress');            
+        % display infos
+        if options.verbose > 1
+            if ~mod(epoch, options.disp_freq)
+                fprintf('%s: Epoch = %04d\n', method_name, epoch);
+            end
+        elseif options.verbose == 1
+    
+            if strcmp(method_name, 'SPA') || strcmp(method_name, 'SNPA')
+                textwaitbar(epoch, options.max_epoch-1, '  progress');
+            else
+                textwaitbar(epoch, options.max_epoch, '  progress');            
+            end
+            
         end
-        
+
     end
 
 end

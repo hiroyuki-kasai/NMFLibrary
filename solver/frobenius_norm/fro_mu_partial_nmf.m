@@ -40,7 +40,7 @@ function [x, infos] = fro_mu_partial_nmf(V, rank, in_options)
     H = init_factors.H;      
     
     % initialize
-    method_name = sprintf('MU-Partial (%s:%s)', options.alg, options.metric);
+    method_name = sprintf('MU-Partial (%s:%s)', options.alg, options.metric_type);
     epoch = 0;    
     R_zero = zeros(m, n);
     grad_calc_count = 0;
@@ -51,7 +51,7 @@ function [x, infos] = fro_mu_partial_nmf(V, rank, in_options)
     
     % store initial info
     clear infos;
-    [infos, f_val, optgap] = store_nmf_info(V, W, H, R_zero, options, [], epoch, grad_calc_count, 0;
+    [infos, f_val, optgap] = store_nmf_info(V, W, H, R_zero, options, [], epoch, grad_calc_count, 0);
     
     if options.verbose > 1
         fprintf('MU-Partial (%s:%s): Epoch = 0000, cost = %.16e, optgap = %.4e\n', options.alg, options.metric, f_val, optgap); 

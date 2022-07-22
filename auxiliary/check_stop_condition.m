@@ -29,10 +29,12 @@ function [stop_flag, reason, max_reached_flag, rev_info] = check_stop_condition(
     rev_info = info;
 
 
-    if info.optgap(end) < options.tol_optgap
-        stop_flag = 1;
-        reason = sprintf('Optimality gap tolerance reached: f_val = %.4e < f_opt = %.4e (%.4e)\n', info.cost(end), options.f_opt, options.tol_optgap);
-        return;
+    if ~options.not_store_infos    
+        if info.optgap(end) < options.tol_optgap
+            stop_flag = 1;
+            reason = sprintf('Optimality gap tolerance reached: f_val = %.4e < f_opt = %.4e (%.4e)\n', info.cost(end), options.f_opt, options.tol_optgap);
+            return;
+        end
     end
     
     if epoch >= options.max_epoch    
