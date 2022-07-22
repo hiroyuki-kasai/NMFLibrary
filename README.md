@@ -47,7 +47,7 @@ If this library is useful for you, please cite this as presented below:
             - A.Cichocki, S.Amari, R.Zdunek, R.Kompass, G.Hori, and Z.He, "[Extended SMART algorithms for non-negative matrix factorization](https://link.springer.com/chapter/10.1007/11785231_58)," Artificial Intelligence and Soft Computing, 2006. (for alpha divergence and beta divergence)
         - Modified MU
             - C.-J. Lin, "[On the convergence of multiplicative update algorithms for nonnegative matrix factorization](http://ieeexplore.ieee.org/document/4359171/)," IEEE Transactions on Neural Network, vol.18, no.6, pp.1589-1596, 2007. 
-        - Acceralated MU
+        - Accelerated MU
             - N. Gillis and F. Glineur, "[Accelerated multiplicative updates and hierarchical ALS algorithms for nonnegative matrix factorization](https://arxiv.org/pdf/1107.5194.pdf)," Neural Computation, vol.24, no.4, pp.1085-1105, 2012. 
 
     - **PGD** (projected gradient descent)
@@ -59,7 +59,7 @@ If this library is useful for you, please cite this as presented below:
         - ALS
         - Hierarchical ALS (HALS)
             - A. Cichocki and P. Anh-Huy, "[Fast local algorithms for large scale nonnegative matrix and tensor factorizations](http://www.bsp.brain.riken.jp/publications/2009/Cichocki-Phan-IEICE_col.pdf)," IEICE Transactions on Fundamentals of Electronics, Communications and Computer Sciences, vol.92, no.3, pp.708-721, 2009.
-        - Acceralated Hierarchical ALS
+        - Accelerated Hierarchical ALS
             - N. Gillis and F. Glineur, "[Accelerated multiplicative updates and hierarchical ALS algorithms for nonnegative matrix factorization](https://arxiv.org/pdf/1107.5194.pdf)," Neural Computation, vol.24, no.4, pp.1085-1105, 2012. 
 
     - **ANLS** (alternative non-negative least squares)
@@ -286,13 +286,13 @@ If this library is useful for you, please cite this as presented below:
 |---|---|---|---|---|
 |Frobenius-norm|Fro-MU|`fro_mu_nmf`|`mu`|`metric='euc'`|
 ||Modified Fro-MU|`fro_mu_nmf`|`mod_mu`||
-||Acceralated Fro-MU|`fro_mu_nmf`|`acc_mu`||
+||Accelerated Fro-MU|`fro_mu_nmf`|`acc_mu`||
 ||PGD|`pgd_nmf`|`pgd`||
 ||Direct PGD|`pgd_nmf`|`direct_pgd`||
 ||Adaptive-step PGD|`pgd_nmf`|`adp_step_pgd`||
 ||ALS|`als_nmf`|`als`||
 ||Hierarchical ALS|`als_nmf`|`hals_mu`||
-||Acceralated Hierarchical ALS|`als_nmf`|`acc_hals_mu`||
+||Accelerated Hierarchical ALS|`als_nmf`|`acc_hals_mu`||
 ||ASGROUP|`anls_nmf`|`anls_asgroup`||
 ||ASGIVENS|`anls_nmf`|`anls_asgivens`||
 ||BPP|`anls_nmf`|`anls_bpp`||
@@ -327,7 +327,7 @@ If this library is useful for you, please cite this as presented below:
 ||SymmNewton|`symm_newton`|||
 |Online|Incremental-NMF|`incremental_mu_nmf`|||
 ||Online-MU|`online_mu_nmf`|||
-||Acceralated Online-MU|`acc_online_mu_nmf`|||
+||Accelerated Online-MU|`acc_online_mu_nmf`|||
 ||SPG|`spg_nmf`|||
 ||Robust-Online-MU|`robust_online_mu_nmf`|||
 ||ASAG-MU-NMF|`asag_mu_nmf`|||
