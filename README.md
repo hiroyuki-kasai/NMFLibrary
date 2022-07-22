@@ -109,7 +109,8 @@ If this library is useful for you, please cite this as presented below:
 - Robust 
 
     - **Robust-MU**
-        N. Guan, D. Tao, Z. Luo, and B. Yuan, "[Online nonnegative matrix factorization with robust stochastic approximation](https://ieeexplore.ieee.org/document/6203594/)," IEEE Transactions on Neural Networks and Learning Systems, 2012.
+
+        - N. Guan, D. Tao, Z. Luo, and B. Yuan, "[Online nonnegative matrix factorization with robust stochastic approximation](https://ieeexplore.ieee.org/document/6203594/)," IEEE Transactions on Neural Networks and Learning Systems, 2012.
 
 - Sparse
 
@@ -138,12 +139,12 @@ If this library is useful for you, please cite this as presented below:
     - **PALM-Sparse-Smooth-NMF**
         - PALM framework with smoothness and sparsity constraints for non-negative matrix factorization.
    
-- Orthgotonal
+- Orthogonal
 
-    - **DTPP** (Orthgotonal multiplicative upates (MU))
+    - **DTPP** (Orthogonal multiplicative upates (MU))
         - C. Ding, T. Li, W. Peng, and H. Park, "[Orthogonal nonnegative matrix t-factorizations for clustering](https://dl.acm.org/doi/10.1145/1150402.1150420)," ACM KDD, 2006.
 
-    - **Orth-MU** (Orthgotonal multiplicative upates (MU))
+    - **Orth-MU** (Orthogonal multiplicative upates (MU))
         - S. Choi, "[Algorithms for orthogonal nonnegative matrix factorization](https://ieeexplore.ieee.org/document/4634046/)." IEEE IJCNN, 2008.
 
     - **ALT-ONMF**
@@ -167,7 +168,7 @@ If this library is useful for you, please cite this as presented below:
 
     - **SymmNewton** (Symmetric Newton)
 
-- Online/stochstic 
+- Online/stochastic 
 
     - **Incremental-MU** and **Online-MU**
         - S. S. Bucak and B. Gunsel, "[Incremental Subspace Learning via Non-negative Matrix Factorization](https://www.sciencedirect.com/science/article/pii/S0031320308003725)," Pattern Recognition, 2009.
@@ -198,7 +199,7 @@ If this library is useful for you, please cite this as presented below:
     - **PNMF-VB** (Variational Bayesian inference for non-negative matrix factorisation, with ARD)
         - T. Brouwer, J. Frellsen. P. Lio, "[Comparative Study of Inference Methods for Bayesian Nonnegative Matrix Factorisation](https://link.springer.com/chapter/10.1007/978-3-319-71249-9_31)," ECML PKDD, 2017.
 
-    - **Prob-NM**
+    - **Prob-NMF**
 
 - Deep 
 
