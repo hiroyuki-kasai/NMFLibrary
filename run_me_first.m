@@ -24,6 +24,10 @@ function [] = run_me_first(varargin)
     cd data/;
     addpath(genpath(pwd));
     cd ..;
+
+    cd applications/;
+    addpath(genpath(pwd));
+    cd ..;    
     
     if message_flag
         nmflibrary_message();
