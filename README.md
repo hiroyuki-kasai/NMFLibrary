@@ -2,9 +2,9 @@
 
 Authors: [Hiroyuki Kasai](http://kasai.comm.waseda.ac.jp/kasai/)
 
-Last page update: July 18, 2022
+Last page update: July 22, 2022
 
-Latest library version: 2.0 (see Release notes for more info)
+Latest library version: 2.1 (see Release notes for more info)
 
 <br />
 
@@ -512,7 +512,7 @@ plot_dictionnary(w_hals.W, [], [7 7]);
 
 <br />
 
-How to use from python
+How to use NMFLibrary from python
 ----------------------------
 
 **Step 1: Find the path to the MATLAB folder**
@@ -597,6 +597,9 @@ If you have any problems or questions, please contact the author: [Hiroyuki Kasa
 
 Release notes
 --------------
+* Version 2.1 (July 22, 2022) 
+    - No-option is allowed in all solvers.
+    - A python demonstration script is added. 
 * Version 2.0 (July 18, 2022) 
     - Major update.
     - New NMF models are added. 
