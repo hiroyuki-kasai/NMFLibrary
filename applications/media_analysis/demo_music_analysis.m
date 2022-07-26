@@ -41,8 +41,8 @@ title('Spectrogram of original audio data');
 
 %% perform NMF
 X = X(1:100:end, 1:100:end); % sampling
-%[TFR, T, F] = tfrstft(X); % TFCT
-[TFR, F, T] = stft(X, Fs);
+[TFR, T, F] = tfrstft(X); % TFCT
+%[TFR, F, T] = stft(X, Fs);
 X = abs(TFR);
 
 options.verbose = 1;
