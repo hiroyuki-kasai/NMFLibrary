@@ -550,8 +550,7 @@ python setup.py install
 python demo.py
 ```
 
-As for **Steps 1** and **2**, see more details [here](See more details at 
-    https://www.mathworks.com/help/matlab/matlab_external/install-the-matlab-engine-for-python.html).
+As for **Steps 1** and **2**, see more details [here](https://www.mathworks.com/help/matlab/matlab_external/install-the-matlab-engine-for-python.html).
 
 <br />
 
