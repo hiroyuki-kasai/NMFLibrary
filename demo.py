@@ -75,17 +75,18 @@ eng.run_me_first(0, nargout=0)
 # convert numpy array to matlab.double
 V_m = matlab.double(V.tolist())
 
-# convert dictioary to matlab.struct
-options_m = eng.struct(options);
-
 # perform solvers in MATLAB 
 # Fro-MU
+options['alg'] = 'mu'               # select which algorithm to use
+options_m = eng.struct(options);    # convert dictioary to matlab.struct
 [w_mu, infos_mu] = eng.fro_mu_nmf(V_m, rank, options_m, nargout=2)
 # HALS
+options['alg'] = 'hals'		    # select which algorithm to use
+options_m = eng.struct(options);    # convert dictioary to matlab.struct
 [w_hals, infos_hals] = eng.als_nmf(V_m, rank, options_m, nargout=2)
 # ACC-HALS
-options['alg'] = 'acc_hals'
-options_m = eng.struct(options);
+options['alg'] = 'acc_hals'	    # select which algorithm to use
+options_m = eng.struct(options);    # convert dictioary to matlab.struct  
 [w_acc_hals, infos_acc_hals] = eng.als_nmf(V_m, rank, options_m, nargout=2)
 
 # convert matlab.struct to list
